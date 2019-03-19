@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:padding="10dp"
+        tools:context=".Activity.ProjectManagerInputActivity">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:paddingRight="20dp" >
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100">
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/signup_input_layout_name"
+                    android:layout_width="0dp"
+                    android:layout_weight="50"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp">
+                <EditText
+                        android:id="@+id/fromTime_manager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:maxLines="1"
+                        android:focusable="false"
+                        android:drawableStart="@drawable/ic_schedule_black_24dp"
+                        android:drawableLeft="@drawable/ic_schedule_black_24dp"
+                        android:drawablePadding="5dp"
+                        android:maxLength="50"
+                        android:hint="From-Time"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/signup_input_layout_email"
+                    android:layout_width="0dp"
+                    android:layout_weight="50"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp">
+                <EditText
+                        android:id="@+id/toTime_manager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:focusable="false"
+                        android:inputType="text"
+                        android:hint="To-Time"
+                        android:drawableStart="@drawable/ic_schedule_black_24dp"
+                        android:drawableLeft="@drawable/ic_schedule_black_24dp"
+                        android:drawablePadding="5dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100"
+        android:layout_marginTop="10dp">
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="50"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp">
+                <EditText android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:ems="10"
+                          android:focusable="false"
+                          android:id="@+id/date_manager"
+                          android:hint="From-Date"
+                          android:drawableStart="@drawable/ic_today_black_24dp"
+                          android:drawableLeft="@drawable/ic_today_black_24dp"
+                          android:drawablePadding="5dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="50"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_marginLeft="20dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp">
+                <EditText android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:ems="10"
+                          android:focusable="false"
+                          android:id="@+id/to_date_manager"
+                          android:hint="To-Date"
+                          android:drawableStart="@drawable/ic_today_black_24dp"
+                          android:drawableLeft="@drawable/ic_today_black_24dp"
+                          android:drawablePadding="5dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <Button android:id="@+id/select_days"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Week Days"
+                android:layout_margin="50dp"
+                android:background="@color/colorPrimary"
+                android:layout_marginTop="40dp"
+                android:textColor="@android:color/white"/>
+
+        <Button android:id="@+id/next_manager"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="NEXT"
+                android:background="@color/colorPrimary"
+                android:layout_marginTop="40dp"
+                android:textColor="@android:color/white"/>
+    </LinearLayout>
+</LinearLayout>

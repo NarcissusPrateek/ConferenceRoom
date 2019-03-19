@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:padding="10dp"
+        tools:context=".Spinner">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:paddingRight="20dp" >
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/signup_input_layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp">
+
+            <EditText
+                    android:id="@+id/fromTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:maxLines="1"
+                    android:focusable="false"
+                    android:drawableStart="@drawable/ic_schedule_black_24dp"
+                    android:drawableLeft="@drawable/ic_schedule_black_24dp"
+                    android:drawablePadding="5dp"
+                    android:maxLength="50"
+                    android:hint="From-Time"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/signup_input_layout_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp">
+            <EditText
+                    android:id="@+id/toTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:inputType="text"
+                    android:hint="To-Time"
+                    android:drawableStart="@drawable/ic_schedule_black_24dp"
+                    android:drawableLeft="@drawable/ic_schedule_black_24dp"
+                    android:drawablePadding="5dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp">
+            <EditText android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:ems="10"
+                      android:focusable="false"
+                      android:id="@+id/date"
+                      android:hint="Date"
+                      android:drawableStart="@drawable/ic_today_black_24dp"
+                      android:drawableLeft="@drawable/ic_today_black_24dp"
+                      android:drawablePadding="5dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <fr.ganfra.materialspinner.MaterialSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner2"
+                android:ems="10"
+                app:ms_arrowColor="@color/colorAccent"
+                app:ms_arrowSize="16dp"
+                app:ms_floatingLabelColor="#A9A9A9"
+                app:ms_floatingLabelText="Select Capacity"
+                app:ms_hint="Select Capacity"
+                app:ms_multiline="true"
+                app:ms_hintColor="#000000"
+                android:layout_marginTop="10dp"/>
+
+        <Button android:id="@+id/next"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="NEXT"
+                android:background="@color/colorPrimary"
+                android:layout_marginTop="40dp"
+                android:textColor="@android:color/white"/>
+    </LinearLayout>
+</LinearLayout>
