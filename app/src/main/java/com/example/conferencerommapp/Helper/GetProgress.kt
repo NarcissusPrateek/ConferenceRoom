@@ -13,5 +13,4 @@ class GetProgress {
             return progressDialog
         }
     }
-
 }
