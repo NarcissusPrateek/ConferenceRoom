@@ -9,6 +9,7 @@ class GetProgress {
         fun getProgressDialog(msg: String, context: Context) : ProgressDialog {
             var progressDialog = ProgressDialog(context)
             progressDialog.setMessage(msg)
+            progressDialog.setCancelable(false)
             return progressDialog
         }
     }

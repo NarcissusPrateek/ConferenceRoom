@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ConvertTimeInMillis
 import com.example.conferencerommapp.Helper.DateAndTimePicker
+import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import kotlinx.android.synthetic.main.activity_user_inputs.*
 
@@ -26,26 +28,29 @@ class UserInputActivity : AppCompatActivity() {
     lateinit var fromTimeEditText: EditText
     //@BindView(R.id.toTime)
     lateinit var toTimeEditText: EditText
-
+    lateinit var buildingActivityButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_inputs)
-      //  ButterKnife.bind(this)
+        //  ButterKnife.bind(this)
 
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>"))
 
-        dateEditText = findViewById(R.id.date)
-        fromTimeEditText = findViewById(R.id.fromTime)
-        toTimeEditText = findViewById(R.id.toTime)
-
+        initializeInputFields()
         setPickerToEdittextx()
-        var buildingActivityButton: Button = findViewById(R.id.next)
 
         buildingActivityButton.setOnClickListener {
             goToBuildingActivity()
         }
+    }
+
+    fun initializeInputFields() {
+        dateEditText = findViewById(R.id.date)
+        fromTimeEditText = findViewById(R.id.fromTime)
+        toTimeEditText = findViewById(R.id.toTime)
+        buildingActivityButton = findViewById(R.id.next)
     }
 
     fun setPickerToEdittextx() {
@@ -71,11 +76,13 @@ class UserInputActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 capacity = "2"
             }
+
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 capacity = spinner2.getItemAtPosition(position).toString()
             }
         }
     }
+
     fun validate(): Boolean {
         if (TextUtils.isEmpty(fromTimeEditText.text.trim())) {
             Toast.makeText(applicationContext, "Invalid From Time", Toast.LENGTH_SHORT).show()
@@ -95,6 +102,7 @@ class UserInputActivity : AppCompatActivity() {
     }
 
     fun goToBuildingActivity() {
+
         /*Validate each input field whether they are empty or not
             * If the field contains no values we show a toast to user saying that the value is invalid for particular field*/
         if (!validate()) {
@@ -138,12 +146,7 @@ class UserInputActivity : AppCompatActivity() {
                 * if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
                 */
                 else if ((min_milliseconds <= elapsed) && (max_milliseconds >= elapsed)) {
-                    val buildingintent = Intent(this@UserInputActivity, BuildingsActivity::class.java)
-                    buildingintent.putExtra(Constants.EXTRA_FROM_TIME, fromTimeEditText.text.toString())
-                    buildingintent.putExtra(Constants.EXTRA_TO_TIME, toTimeEditText.text.toString())
-                    buildingintent.putExtra(Constants.EXTRA_DATE, dateEditText.text.toString())
-                    buildingintent.putExtra(Constants.EXTRA_CAPACITY, capacity)
-                    startActivity(buildingintent)
+                    goToBuildingsActivity()
                 } else {
                     val builder = AlertDialog.Builder(this@UserInputActivity)
                     builder.setTitle("Check...")
@@ -159,6 +162,17 @@ class UserInputActivity : AppCompatActivity() {
             }
         }
 
+    }
+    fun goToBuildingsActivity() {
+        var mGetIntentDataFromActvity = GetIntentDataFromActvity()
+        mGetIntentDataFromActvity.fromtime = (dateEditText.text.toString() + " " + fromTimeEditText.text.toString()).trim()
+        mGetIntentDataFromActvity.totime = (dateEditText.text.toString() + " " + toTimeEditText.text.toString()).trim()
+        mGetIntentDataFromActvity.date = dateEditText.text.toString()
+        mGetIntentDataFromActvity.capacity = capacity
+
+        val buildingintent = Intent(this@UserInputActivity, BuildingsActivity::class.java)
+        buildingintent.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
+        startActivity(buildingintent)
     }
 }
 
