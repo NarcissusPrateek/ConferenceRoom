@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.R
 import kotlinx.android.synthetic.main.activity_project_manager_input.*
 import kotlinx.android.synthetic.main.activity_user_inputs.*
@@ -152,11 +153,11 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                     }
                     else if ((min <= elapsed) && (max >= elapsed)) {
                         val buildingintent = Intent(this@ProjectManagerInputActivity, Manager_Building::class.java)
-                        buildingintent.putExtra("FromTime", fromTime_manager.text.toString())
-                        buildingintent.putExtra("ToTime", toTime_manager.text.toString())
-                        buildingintent.putExtra("FromDate", date_manager.text.toString())
-                        buildingintent.putExtra("ToDate", to_date_manager.text.toString())
-                        buildingintent.putExtra("DayList", listOfDays)
+                        buildingintent.putExtra(Constants.EXTRA_FROM_TIME, fromTime_manager.text.toString())
+                        buildingintent.putExtra(Constants.EXTRA_TO_TIME, toTime_manager.text.toString())
+                        buildingintent.putExtra(Constants.EXTRA_DATE, date_manager.text.toString())
+                        buildingintent.putExtra(Constants.EXTRA_TO_DATE, to_date_manager.text.toString())
+                        buildingintent.putExtra(Constants.EXTRA_DAY_LIST, listOfDays)
                         startActivity(buildingintent)
                     }
                     else {
@@ -174,10 +175,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                     Toast.makeText(this@ProjectManagerInputActivity, "Details are Invalid!!!", Toast.LENGTH_LONG).show()
                 }
 
-            }
-
-
-        }
+            } }
     }
     fun getDays() {
         val mBuilder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)

@@ -1,175 +1,164 @@
 package com.example.conferencerommapp.Activity
 
 import android.app.AlertDialog
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.text.Html
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+
+import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.ConvertTimeInMillis
+import com.example.conferencerommapp.Helper.DateAndTimePicker
 import com.example.conferencerommapp.R
 import kotlinx.android.synthetic.main.activity_user_inputs.*
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class UserInputActivity : AppCompatActivity() {
 
-    companion object {
-        const val EXTRA_FROM_TIME = "com.example.conferencerommapp.Activity.EXTRA_FROM_TIME"
-        const val EXTRA_TO_TIME = "com.example.conferencerommapp.Activity.EXTRA_TO_TIME"
-        const val EXTRA_Date = "com.example.conferencerommapp.Activity.EXTRA_DATE"
-        const val EXTRA_CAPACITY = "com.example.conferencerommapp.Activity.EXTRA_CAPACITY"
-        const val EXTRA_BUILDING_ID = "com.example.conferencerommapp.Activity.EXTRA_BUILDING_ID"
-        const val EXTRA_ROOM_ID = "com.example.conferencerommapp.Activity.EXTRA_ROOM_ID"
-        const val EXTRA_ROOM_NAME = "com.example.conferencerommapp.Activity.EXTRA_ROOM_NAME"
-        const val EXTRA_BUILDING_NAME = "com.example.conferencerommapp.Activity.EXTRA_BUILDING_NAME"
-    }
+
+    lateinit var capacity: String
+    //@BindView(R.id.date)
+    lateinit var dateEditText: EditText
+    //@BindView(R.id.fromTime)
+    lateinit var fromTimeEditText: EditText
+    //@BindView(R.id.toTime)
+    lateinit var toTimeEditText: EditText
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_inputs)
+      //  ButterKnife.bind(this)
+
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>"))
 
+        dateEditText = findViewById(R.id.date)
+        fromTimeEditText = findViewById(R.id.fromTime)
+        toTimeEditText = findViewById(R.id.toTime)
 
-        var timeFormat = SimpleDateFormat("HH:mm ", Locale.US)
-        var dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        var capacity = ""
-        var date_text: EditText = findViewById(R.id.date)
-        var fromtime: EditText = findViewById(R.id.fromTime)
-        var totime: EditText = findViewById(R.id.toTime)
-        var building_avtivity_button: Button = findViewById(R.id.next)
+        setPickerToEdittextx()
+        var buildingActivityButton: Button = findViewById(R.id.next)
 
-        fromtime.setOnClickListener {
-            val now = Calendar.getInstance()
-            val timePickerDialog =
-                TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                    val selectedTime = Calendar.getInstance()
-                    selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                    selectedTime.set(Calendar.MINUTE, minute)
-
-                    var nowtime = timeFormat.format(selectedTime.time).toString()
-                    fromtime.text = Editable.Factory.getInstance().newEditable(nowtime)
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true)
-            timePickerDialog.show()
+        buildingActivityButton.setOnClickListener {
+            goToBuildingActivity()
         }
+    }
 
+    fun setPickerToEdittextx() {
 
-
-        totime.setOnClickListener {
-            val now = Calendar.getInstance()
-            val timePickerDialog =
-                TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                    val selectedTime = Calendar.getInstance()
-                    selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                    selectedTime.set(Calendar.MINUTE, minute)
-
-                    var nowtime = timeFormat.format(selectedTime.time).toString()
-                    totime.text = Editable.Factory.getInstance().newEditable(nowtime)
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true)
-            timePickerDialog.show()
-        }
-
-
-        date_text.setOnClickListener {
-            val now = Calendar.getInstance()
-            val datePicker =
-                DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                    //
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.set(Calendar.YEAR, year)
-                    selectedDate.set(Calendar.MONTH, month)
-                    selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                    var nowDate: String = dateFormat.format(selectedDate.time).toString()
-                    date_text.text = Editable.Factory.getInstance().newEditable(nowDate)
-                }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH))
-            datePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            datePicker.show()
-
-        }
-
+        // array of Integers for setting values into the spinner
         var options = arrayOf(2, 4, 6, 8, 10, 12, 14, 16)
+
+        // set Time picker for the edittext fromtime
+        fromTimeEditText.setOnClickListener {
+            DateAndTimePicker.getTimePickerDialog(this, fromTimeEditText)
+        }
+        // set Time picker for the edittext totime
+        toTimeEditText.setOnClickListener {
+            DateAndTimePicker.getTimePickerDialog(this, toTimeEditText)
+        }
+        // set Date picker for the edittext dateEditText
+        dateEditText.setOnClickListener {
+            DateAndTimePicker.getDatePickerDialog(this, dateEditText)
+        }
+        // a spinner for selecting room capacity
         spinner2.adapter = ArrayAdapter<Int>(this, android.R.layout.simple_list_item_1, options)
         spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 capacity = "2"
             }
-
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 capacity = spinner2.getItemAtPosition(position).toString()
             }
         }
-        building_avtivity_button.setOnClickListener {
-            if (TextUtils.isEmpty(fromtime.text.trim())) {
-                Toast.makeText(applicationContext, "Invalid From Time", Toast.LENGTH_SHORT).show()
+    }
+    fun validate(): Boolean {
+        if (TextUtils.isEmpty(fromTimeEditText.text.trim())) {
+            Toast.makeText(applicationContext, "Invalid From Time", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (TextUtils.isEmpty(toTimeEditText.text.trim())) {
+            Toast.makeText(applicationContext, "Invalid To Time", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (TextUtils.isEmpty(dateEditText.text.trim())) {
+            Toast.makeText(applicationContext, "Invalid Date", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (capacity.equals("Select Capacity")) {
+            Toast.makeText(applicationContext, "Invalid Capacity", Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            return true
+        }
+    }
 
-            } else if (TextUtils.isEmpty(totime.text.trim())) {
-                Toast.makeText(applicationContext, "Invalid To Time", Toast.LENGTH_SHORT).show()
-            } else if (TextUtils.isEmpty(date_text.text.trim())) {
-                Toast.makeText(applicationContext, "Invalid Date", Toast.LENGTH_SHORT).show()
-            } else if (capacity.equals("Select Capacity")) {
-                Toast.makeText(applicationContext, "Invalid Capacity", Toast.LENGTH_SHORT).show()
-            } else {
-                val startTime = fromTime.text.toString()
-                val endTime = totime.text.toString()
-                try {
-                    val sdf = SimpleDateFormat("HH:mm")
-                    val sdf1 = SimpleDateFormat("yyyy-M-dd HH:mm")
-                    val d1 = sdf.parse(startTime)
-                    val d2 = sdf.parse(endTime)
-                    val d3 = sdf1.parse(date_text.text.toString() + " " + fromTime.text.toString())
-                    val elapsed = d2.time - d1.time
-                    var min: Long = 900000
-                    val currtime = System.currentTimeMillis()
-                    val elapsed2 = d3.time - currtime
-                    Log.i("-----time---", d3.time.toString() + d3.toString())
-                    Log.i("-----current---", currtime.toString())
-                    Log.i("--------diff------", " " + elapsed2)
-                    var max: Long = 14400000
-                    if (elapsed2 < 0) {
-                        val builder = AlertDialog.Builder(this@UserInputActivity)
-                        builder.setTitle("Check...")
-                        builder.setMessage("From-Time must be greater than the current time...")
-                        builder.setPositiveButton("Ok") { dialog, which ->
-                        }
-                        val dialog: AlertDialog = builder.create()
-                        dialog.setCanceledOnTouchOutside(false)
-                        dialog.show()
-                    } else if ((min <= elapsed) && (max >= elapsed)) {
-                        val buildingintent = Intent(this@UserInputActivity, BuildingsActivity::class.java)
-                        buildingintent.putExtra(UserInputActivity.EXTRA_FROM_TIME, fromtime.text.toString())
-                        buildingintent.putExtra(UserInputActivity.EXTRA_TO_TIME, totime.text.toString())
-                        buildingintent.putExtra(UserInputActivity.EXTRA_Date, date_text.text.toString())
-                        buildingintent.putExtra(UserInputActivity.EXTRA_CAPACITY, capacity)
-                        startActivity(buildingintent)
-                    } else {
-                        val builder = AlertDialog.Builder(this@UserInputActivity)
-                        builder.setTitle("Check...")
-                        builder.setMessage("From-Time must be greater then To-Time and the meeting time must be less then 4 Hours")
-                        builder.setPositiveButton("Ok") { dialog, which ->
-                        }
-                        val dialog: AlertDialog = builder.create()
-                        dialog.setCanceledOnTouchOutside(false)
-                        dialog.show()
+    fun goToBuildingActivity() {
+        /*Validate each input field whether they are empty or not
+            * If the field contains no values we show a toast to user saying that the value is invalid for particular field*/
+        if (!validate()) {
+
+        } else {
+            val min_milliseconds: Long = 900000
+            val max_milliseconds: Long = 14400000
+
+            //Get the start and end time of meeting from the input fields
+            val startTime = fromTimeEditText.text.toString()
+            val endTime = toTimeEditText.text.toString()
+
+            //setting a aalert dialog instance for the current context
+
+            val builder = AlertDialog.Builder(this@UserInputActivity)
+            builder.setTitle("Check...")
+            try {
+
+                // getting the values for time validation variables from method calculateTimeInMillis
+                val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMiliis(
+                    startTime,
+                    endTime,
+                    date.text.toString()
+                )
+                /*if the elapsed2 < 0 that means the from time is less than the current time. In that case
+                   we restrict the user to move forword and show some message in alert that the time is not valid*/
+
+                if (elapsed2 < 0) {
+                    builder.setMessage("From-Time must be greater than the current time...")
+                    builder.setPositiveButton("Ok") { dialog, which ->
                     }
-                } catch (e: Exception) {
-                    Log.i("---------", e.message)
-                    Toast.makeText(this@UserInputActivity, "Details are Invalid!!!", Toast.LENGTH_LONG).show()
+                    val dialog: AlertDialog = builder.create()
+                    dialog.setCanceledOnTouchOutside(false)
+                    dialog.show()
                 }
-
+                /*
+                * if MIN_MILIISECONDS <= elapsed that means the meeting duration is more than 15 min
+                * if the above condition is not true than we show a message in alert that the meeting duration must be greater than 15 min
+                * if MAX_MILLISECONDS >= elapsed that means the meeting duration is less than 4hours
+                * if the above condition is not true than we show show a message in alert that the meeting duration must be less than 4hours
+                * if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
+                */
+                else if ((min_milliseconds <= elapsed) && (max_milliseconds >= elapsed)) {
+                    val buildingintent = Intent(this@UserInputActivity, BuildingsActivity::class.java)
+                    buildingintent.putExtra(Constants.EXTRA_FROM_TIME, fromTimeEditText.text.toString())
+                    buildingintent.putExtra(Constants.EXTRA_TO_TIME, toTimeEditText.text.toString())
+                    buildingintent.putExtra(Constants.EXTRA_DATE, dateEditText.text.toString())
+                    buildingintent.putExtra(Constants.EXTRA_CAPACITY, capacity)
+                    startActivity(buildingintent)
+                } else {
+                    val builder = AlertDialog.Builder(this@UserInputActivity)
+                    builder.setTitle("Check...")
+                    builder.setMessage("From-Time must be greater than To-Time and the meeting time must be less than 4 Hours")
+                    builder.setPositiveButton("Ok") { dialog, which ->
+                    }
+                    val dialog: AlertDialog = builder.create()
+                    dialog.setCanceledOnTouchOutside(false)
+                    dialog.show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@UserInputActivity, "Details are Invalid!!!", Toast.LENGTH_LONG).show()
             }
-
-
         }
 
     }
-
-
 }
+

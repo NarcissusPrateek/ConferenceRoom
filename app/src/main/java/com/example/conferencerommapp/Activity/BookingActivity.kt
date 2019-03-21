@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Activity
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -9,182 +10,84 @@ import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.conferencerommapp.Helper.CheckBoxAdapter
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Model.Booking
+import com.example.conferencerommapp.Model.BookingDetails
 import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import com.example.conferencerommapp.ViewModel.BookingViewModel
+import com.example.conferencerommapp.ViewModel.EmployeeViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import kotlinx.android.synthetic.main.activity_alertdialog_members.view.*
 import kotlinx.android.synthetic.main.activity_booking.*
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.ArrayList
-
-
+import java.util.*
 
 class BookingActivity : AppCompatActivity() {
 
-    var progressDialog: ProgressDialog? = null
-    var mGoogleSignInClient: GoogleSignInClient? = null
     var names = ArrayList<EmployeeList>()
     var customAdapter: CheckBoxAdapter? = null
+    lateinit var fromTimeTextview: TextView
+    lateinit var dateTextview: TextView
+    lateinit var roomNameTextview: TextView
+    lateinit var employeeNameTextview: TextView
+    lateinit var purposeEdittext: EditText
+    lateinit var buildingNameTextview: TextView
+    lateinit var bookButton: Button
+    lateinit var mEmployeeViewModel: EmployeeViewModel
+    lateinit var mBookingViewModel: BookingViewModel
+    var checkedEmployee = ArrayList<EmployeeList>()
+    var mBooking = Booking()
+    val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_booking)
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Confirm_Details) + "</font>"))
 
-        val txv_fromTime: TextView = findViewById(R.id.textView_from_time)
-        val txvDate: TextView = findViewById(R.id.textView_date)
-        val txvConfName: TextView = findViewById(R.id.textView_conf_name)
-        val txvemployeename: TextView = findViewById(com.example.conferencerommapp.R.id.textView_name)
-        var edittextPurpose = findViewById(com.example.conferencerommapp.R.id.editText_purpose) as EditText
-        val txvBildingname: TextView = findViewById(R.id.textView_buildingname)
-
-        val bundle: Bundle? = intent.extras
-        var fromtime = bundle!!.get(UserInputActivity.EXTRA_FROM_TIME).toString()
-        var totime = bundle.get(UserInputActivity.EXTRA_TO_TIME).toString()
-        var date = bundle.get(UserInputActivity.EXTRA_Date).toString()
-        var roomname = bundle.get(UserInputActivity.EXTRA_ROOM_NAME).toString()
-        var buildingname = bundle.get(UserInputActivity.EXTRA_BUILDING_NAME).toString()
-        var capacity = bundle.get(UserInputActivity.EXTRA_CAPACITY).toString()
-        var cid = bundle.get(UserInputActivity.EXTRA_ROOM_ID).toString()
-        var bid = bundle.get(UserInputActivity.EXTRA_BUILDING_ID).toString()
-        var count = 0
-
-        txv_fromTime.text = fromtime.split(" ")[1] + " - " + totime.split(" ")[1]
-        txvDate.text = date
-        txvConfName.text = roomname
-        txvBildingname.text = buildingname
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-
-        val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
-
-        val booking = Booking()
-        booking.Email = acct!!.email
-        booking.CId = cid.toInt()
-        booking.BId = bid.toInt()
-        booking.FromTime = fromtime
-        booking.ToTime = totime
-        txvemployeename.text = acct.displayName
-
-        var servicebuilder = Servicebuilder.buildService(ConferenceService::class.java)
-        var requestCall = servicebuilder.getEmployees()
-        requestCall.enqueue(object : Callback<List<EmployeeList>> {
-            override fun onFailure(call: Call<List<EmployeeList>>, t: Throwable) {
-                Toast.makeText(this@BookingActivity, "On failure while Loading the EmployeeList", Toast.LENGTH_LONG)
-                    .show()
-                return
-            }
-            override fun onResponse(call: Call<List<EmployeeList>>, response: Response<List<EmployeeList>>) {
-                Log.i("----Response--------",response.body().toString())
-                var empList = response.body()
-                for (item in empList!!) {
-                    item.isSelected = false
-                    names.add(item)
-                }
-                Log.i("-------", names.toString())
-            }
-        })
-        var checkedEmployee = ArrayList<EmployeeList>()
-        val mBuilder = android.app.AlertDialog.Builder(this@BookingActivity)
-        mBuilder.setTitle("Select atmax ${capacity} members.")
-        mBuilder.setCancelable(false)
-        editText_person.setOnClickListener {
-            customAdapter = CheckBoxAdapter(names, checkedEmployee, this@BookingActivity)
-            var view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
-            view.recycler_view.adapter = customAdapter
-            view.clear_Text.setOnClickListener {
-                view.editTextSearch.setText("")
-            }
-            view.editTextSearch.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                }
-
-                override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                }
-
-                override fun afterTextChanged(editable: Editable) {
-                    filter(editable.toString())
-                }
-            })
-            mBuilder.setPositiveButton("Ok") { dialogInterface, which ->
-                var email = ""
-                var name = ""
-                Log.i("-------List of Employee",customAdapter!!.getList().toString())
-                var EmployeeList = customAdapter!!.getList()
-                var size = EmployeeList.size
-                for (item in EmployeeList.indices) {
-                    if(EmployeeList.get(item).isSelected!!) {
-                        name =  name + EmployeeList[item].Name.toString()
-                        email = email + EmployeeList[item].Email.toString()
-                        if (item != (size - 1)) {
-                            name += ","
-                            email += ","
-                        }
-                    }
-                }
-                editText_person.setText(name)
-                booking.CCMail = email
-                Log.i("-------------", name)
-                Log.i("-------------", booking.CCMail)
-            }
-            mBuilder.setNegativeButton("Cancel") { dialog: DialogInterface?, which: Int ->
-                editText_person.setText("")
-                booking.CCMail = ""
-            }
-            mBuilder.setView(view)
-            var builder = mBuilder.create()
-            builder.show()
-            var buttonPositive = builder.getButton(AlertDialog.BUTTON_POSITIVE)
-                    var buttonNegative = builder.getButton(AlertDialog.BUTTON_NEGATIVE)
-                    var buttonNutral = builder.getButton(AlertDialog.BUTTON_NEUTRAL)
-
-                    buttonPositive.setBackgroundColor(Color.WHITE)
-                    buttonPositive.setTextColor(Color.parseColor("#0072BC"))
-
-                    buttonNegative.setBackgroundColor(Color.WHITE)
-                    buttonNegative.setTextColor(Color.RED)
-        }
-        book_button.setOnClickListener {
-            if (edittextPurpose.text.toString().trim().isEmpty()) {
-                Toast.makeText(this@BookingActivity, "Enter the purpose of meeting.", Toast.LENGTH_SHORT).show()
-            } else if (booking.CCMail.isNullOrEmpty()) {
-                Toast.makeText(this@BookingActivity, "Select members for meeting!.", Toast.LENGTH_SHORT).show()
-            } else if (count > (capacity.toInt() - 1)) {
-                Toast.makeText(this@BookingActivity, "Select according to the room capacity.", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                progressDialog = ProgressDialog(this@BookingActivity)
-                progressDialog!!.setMessage("Processing....")
-                progressDialog!!.setCancelable(false)
-                progressDialog!!.show()
-                //booking_progress.visibility = View.VISIBLE
-                booking.Purpose = edittextPurpose.text.toString()
-                booking.CName = roomname
-                addBookingDetails(booking, booking.Email.toString())
+        // this method will Initialize all input fields
+        initializeInputFields()
+        var mBookingDetails = getIntentData()
+        setDataToTextview(mBookingDetails, acct!!.displayName.toString())
+        setDialogForSelectingMeetingMembers()
+        setDialog(mBookingDetails)
+        addDataToObject(mBookingDetails)
+        bookButton.setOnClickListener {
+            if (validateInput()) {
+                addBooking(mBooking)
             }
         }
     }
+
+    fun addDataToObject(mBookingDetails: BookingDetails) {
+        mBooking.Email = acct!!.email
+        mBooking.CId = mBookingDetails.cId!!.toInt()
+        mBooking.BId = mBookingDetails.bId!!.toInt()
+        mBooking.FromTime = mBookingDetails.fromTime!!
+        mBooking.ToTime = mBookingDetails.toTime!!
+    }
+
+    fun validateInput(): Boolean {
+        if (purposeEdittext.text.toString().trim().isEmpty()) {
+            Toast.makeText(this, "Invalid purpose!", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (employeeNameTextview.text.toString().trim().isEmpty()) {
+            Toast.makeText(this, "Add Members!", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
     fun filter(text: String) {
         val filterdNames = ArrayList<EmployeeList>()
         for (s in names) {
@@ -195,30 +98,131 @@ class BookingActivity : AppCompatActivity() {
         }
         customAdapter!!.filterList(filterdNames)
     }
-    private fun addBookingDetails(booking: Booking, email: String) {
-        val service = Servicebuilder.buildService(ConferenceService::class.java)
-        val requestCall: Call<ResponseBody> = service.addBookingDetails(booking)
-        requestCall.enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                progressDialog!!.dismiss()
-                Log.i("-----------",t.message)
-                Toast.makeText(this@BookingActivity, "Error on Failure", Toast.LENGTH_LONG).show()
-            }
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Log.i("-------#####-----", response.toString())
-                progressDialog!!.dismiss()
-                if (response.isSuccessful) {
-                    val code = response.body()
-                    val intent = Intent(Intent(this@BookingActivity, Main2Activity::class.java))
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this@BookingActivity, "Unable to Book.... ", Toast.LENGTH_LONG).show()
+    fun initializeInputFields() {
+        fromTimeTextview = findViewById(R.id.textView_from_time)
+        dateTextview = findViewById(R.id.textView_date)
+        roomNameTextview = findViewById(R.id.textView_conf_name)
+        employeeNameTextview = findViewById(com.example.conferencerommapp.R.id.textView_name)
+        purposeEdittext = findViewById(com.example.conferencerommapp.R.id.editText_purpose)
+        buildingNameTextview = findViewById(R.id.textView_buildingname)
+        bookButton = findViewById(R.id.book_button)
+
+    }
+
+    fun getIntentData(): BookingDetails {
+        val bundle: Bundle? = intent.extras
+        var mBookingDetails = BookingDetails()
+        mBookingDetails.fromTime = bundle!!.get(Constants.EXTRA_FROM_TIME).toString()
+        mBookingDetails.toTime = bundle.get(Constants.EXTRA_TO_TIME).toString()
+        mBookingDetails.date = bundle.get(Constants.EXTRA_DATE).toString()
+        mBookingDetails.roomName = bundle.get(Constants.EXTRA_ROOM_NAME).toString()
+        mBookingDetails.buildingName = bundle.get(Constants.EXTRA_BUILDING_NAME).toString()
+        mBookingDetails.capacity = bundle.get(Constants.EXTRA_CAPACITY).toString()
+        mBookingDetails.cId = bundle.get(Constants.EXTRA_ROOM_ID).toString()
+        mBookingDetails.bId = bundle.get(Constants.EXTRA_BUILDING_ID).toString()
+        return mBookingDetails
+    }
+
+    fun setDataToTextview(mBookingDetails: BookingDetails, userName: String) {
+        fromTimeTextview.text =
+            mBookingDetails.fromTime!!.split(" ")[1] + " - " + mBookingDetails.toTime!!.split(" ")[1]
+        dateTextview.text = mBookingDetails.date!!
+        roomNameTextview.text = mBookingDetails.roomName!!
+        buildingNameTextview.text = mBookingDetails.buildingName!!
+        employeeNameTextview.text = userName
+    }
+
+    fun setDialogForSelectingMeetingMembers() {
+        mEmployeeViewModel = ViewModelProviders.of(this).get(EmployeeViewModel::class.java)
+        mEmployeeViewModel.getEmployeeList().observe(this, Observer {
+            names.clear()
+            for (item in it!!) {
+                item.isSelected = false
+                names.add(item)
+            }
+            Log.i("-------4545-----", names.toString())
+        })
+    }
+
+    fun setDialog(mBookingDetails: BookingDetails) {
+        val mBuilder = AlertDialog.Builder(this@BookingActivity)
+        mBuilder.setTitle("Select atmax ${mBookingDetails.capacity} members.")
+        mBuilder.setCancelable(false)
+        editText_person.setOnClickListener {
+            Log.i("-----------", names.toString())
+            customAdapter = CheckBoxAdapter(names, checkedEmployee, this@BookingActivity)
+            var view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
+            view.recycler_view.adapter = customAdapter
+            view.clear_Text.setOnClickListener {
+                view.editTextSearch.setText("")
+            }
+            setClickListnerOnEditText(view)
+            mBuilder.setPositiveButton("Ok") { dialogInterface, which ->
+                var email = ""
+                var name = ""
+                var EmployeeList = customAdapter!!.getList()
+                var size = EmployeeList.size
+                for (item in EmployeeList.indices) {
+                    if (EmployeeList.get(item).isSelected!!) {
+                        name += EmployeeList[item].Name.toString()
+                        email += EmployeeList[item].Email.toString()
+                        if (item != (size - 1)) {
+                            name += ","
+                            email += ","
+                        }
+                    }
                 }
+                editText_person.setText(name)
+                mBooking.CCMail = email
+                Log.i("-------------", name)
+                Log.i("-------------", mBooking.CCMail)
+            }
+            mBuilder.setNegativeButton("Cancel") { dialog: DialogInterface?, which: Int ->
+                editText_person.setText("")
+                mBooking.CCMail = ""
+            }
+            mBuilder.setView(view)
+            var builder = mBuilder.create()
+            builder.show()
+            setBuilderConfiguration(builder)
+        }
+    }
 
+    fun setClickListnerOnEditText(view: View) {
+        view.editTextSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
             }
 
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+            }
+
+            override fun afterTextChanged(editable: Editable) {
+                filter(editable.toString())
+            }
+        })
+    }
+
+    fun setBuilderConfiguration(builder: AlertDialog) {
+        var buttonPositive = builder.getButton(AlertDialog.BUTTON_POSITIVE)
+        var buttonNegative = builder.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+        buttonPositive.setBackgroundColor(Color.WHITE)
+        buttonPositive.setTextColor(Color.parseColor("#0072BC"))
+
+        buttonNegative.setBackgroundColor(Color.WHITE)
+        buttonNegative.setTextColor(Color.RED)
+    }
+
+    fun addBooking(mBooking: Booking) {
+        mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
+        mBookingViewModel.addBookingDetails(this, mBooking).observe(this, Observer {
+            if (it == 200) {
+                startActivity(Intent(this@BookingActivity, Main2Activity::class.java))
+                finish()
+            } else {
+                Log.i("--------", "" + it)
+            }
         })
     }
 }

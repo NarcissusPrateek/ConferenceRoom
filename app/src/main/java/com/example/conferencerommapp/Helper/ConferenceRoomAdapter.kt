@@ -10,7 +10,7 @@ import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.R
 
 
-class ConferenceRoomAdapter(private val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<ConferenceRoomAdapter.ViewHolder>() {
+class ConferenceRoomAdapter(val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<ConferenceRoomAdapter.ViewHolder>() {
 
 	companion object {
 		var mClickListener: BtnClickListener? = null

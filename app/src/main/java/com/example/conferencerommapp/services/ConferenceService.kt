@@ -30,13 +30,13 @@ interface ConferenceService  {
     @POST("api/UserLogin")
     fun addEmployee(@Body newEmoployee: Employee) : Call<ResponseBody>
 
-    @POST("api/BookMeeting")
+    @POST("api/Booking")
     fun addBookingDetails(@Body booking: Booking) : Call<ResponseBody>
 
     @POST("api/CancelBooking")
     fun cancelBooking(@Body cancel: CancelBooking) : Call<ResponseBody>
 
-    @GET("api/AllEmployeeList")
+    @GET("api/Employee")
     fun getEmployees() : Call<List<EmployeeList>>
 
     @POST("api/RecurringMeeting")

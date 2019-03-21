@@ -8,6 +8,7 @@ import android.text.Html
 import android.util.Log
 import android.widget.Toast
 import com.example.conferencerommapp.Helper.BuildingAdapter
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Model.Building
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
@@ -48,11 +49,11 @@ class Manager_Building : AppCompatActivity() {
 
 
         val bundle: Bundle? = intent.extras
-        val from = bundle!!.get("FromTime").toString()
-        val to = bundle.get("ToTime").toString()
-        val from_Date = bundle.get("FromDate").toString()
-        val to_Date = bundle.get("ToDate").toString()
-        val listOfDays = bundle.getIntegerArrayList("DayList")
+        val from = bundle!!.get(Constants.EXTRA_FROM_TIME).toString()
+        val to = bundle.get(Constants.EXTRA_TO_TIME).toString()
+        val from_Date = bundle.get(Constants.EXTRA_DATE).toString()
+        val to_Date = bundle.get(Constants.EXTRA_TO_DATE).toString()
+        val listOfDays = bundle.getIntegerArrayList(Constants.EXTRA_DAY_LIST)
 
         getDateAccordingToDay(from, to, from_Date, to_Date, listOfDays)
         Log.i("---------", from_List.toString())
@@ -70,20 +71,20 @@ class Manager_Building : AppCompatActivity() {
                     progressDialog!!.dismiss()
                     val buildingList: List<Building>? = response.body()
                     Log.i("-----------", buildingList.toString())
-                    building_recycler_view.adapter = BuildingAdapter(buildingList!!,
-                        object : BuildingAdapter.BtnClickListener {
-                            override fun onBtnClick(buildingId: String?, buildingname: String?) {
-                                val intent = Intent(this@Manager_Building, Manager_Conference_Room::class.java)
-                                intent.putExtra("BuildingId", buildingId)
-                                intent.putExtra("FromTime", from_List)
-                                intent.putExtra("ToTime", to_list)
-                                intent.putExtra("FromDate", from_Date)
-                                intent.putExtra("ToDate", to_Date)
-                                intent.putExtra("BuildingName", buildingname)
-                                startActivity(intent)
-                            }
-
-                        })
+//                    building_recycler_view.adapter = BuildingAdapter(buildingList!!,
+//                        object : BuildingAdapter.BtnClickListener {
+//                            override fun onBtnClick(buildingId: String?, buildingname: String?) {
+//                                val intent = Intent(this@Manager_Building, Manager_Conference_Room::class.java)
+//                                intent.putExtra(Constants.EXTRA_BUILDING_ID, buildingId)
+//                                intent.putExtra(Constants.EXTRA_FROM_TIME_LIST, from_List)
+//                                intent.putExtra(Constants.EXTRA_TO_TIME_LIST, to_list)
+//                                intent.putExtra(Constants.EXTRA_DATE, from_Date)
+//                                intent.putExtra(Constants.EXTRA_TO_DATE, to_Date)
+//                                intent.putExtra(Constants.EXTRA_BUILDING_NAME, buildingname)
+//                                startActivity(intent)
+//                            }
+//
+//                        })
                 } else {
                     Toast.makeText(applicationContext, "Unable to Load Buildings", Toast.LENGTH_LONG).show()
                 }

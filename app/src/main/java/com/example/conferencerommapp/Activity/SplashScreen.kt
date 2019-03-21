@@ -41,20 +41,20 @@ class SplashScreen : AppCompatActivity() {
             progressDialog!!.show()
             //logo.visibility = View.GONE
             //login_progress.visibility = View.VISIBLE
-            val account = GoogleSignIn.getLastSignedInAccount(this)
-            if (account != null) {
-                prefs = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-                connectTOBackend(account.email)
-                //finish()
-            } else {
-//                val intent : Intent = Intent(applicationContext,UserInputActivity::class.java)
-//                startActivity(intent)
-//                finish()
-                prefs = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-                val intent: Intent = Intent(applicationContext, SignIn::class.java)
+//            val account = GoogleSignIn.getLastSignedInAccount(this)
+//            if (account != null) {
+//                prefs = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+//                connectTOBackend(account.email)
+//                //finish()
+//            } else {
+                val intent : Intent = Intent(applicationContext,UserInputActivity::class.java)
                 startActivity(intent)
                 finish()
-            }
+//                prefs = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+//                val intent: Intent = Intent(applicationContext, SignIn::class.java)
+//                startActivity(intent)
+                finish()
+            //}
         }
         logoHandler.postDelayed(logoRunnable, 3000)
     }

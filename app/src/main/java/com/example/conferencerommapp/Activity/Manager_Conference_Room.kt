@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.Html
 import android.widget.Toast
 import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.Model.FetchConferenceRoom
 import com.example.conferencerommapp.Model.ManagerConference
@@ -31,12 +32,7 @@ class Manager_Conference_Room : AppCompatActivity() {
         loadConferenceRoom()
     }
 
-    override fun onResume() {
-        super.onResume()
-        //  loadConferenceRoom()
-    }
-
-    public fun loadConferenceRoom() {
+    fun loadConferenceRoom() {
 
         progressDialog = ProgressDialog(this@Manager_Conference_Room)
         progressDialog!!.setMessage("Loading....")
@@ -45,12 +41,12 @@ class Manager_Conference_Room : AppCompatActivity() {
 
 
         val bundle: Bundle = intent.extras
-        val fromDate = bundle.get("FromDate").toString()
-        val toDate = bundle.get("ToDate").toString()
-        val from =  bundle.getStringArrayList("FromTime")
-        val to =  bundle.getStringArrayList("ToTime")
-        val buildingId = bundle.get("BuildingId").toString()
-        val building_name = bundle.get("BuildingName").toString()
+        val fromDate = bundle.get(Constants.EXTRA_DATE).toString()
+        val toDate = bundle.get(Constants.EXTRA_TO_DATE).toString()
+        val from = bundle.getStringArrayList(Constants.EXTRA_FROM_TIME_LIST)
+        val to = bundle.getStringArrayList(Constants.EXTRA_TO_TIME_LIST)
+        val buildingId = bundle.get(Constants.EXTRA_BUILDING_ID).toString()
+        val building_name = bundle.get(Constants.EXTRA_BUILDING_NAME).toString()
 
 
         var inputs = ManagerConference()
@@ -67,7 +63,6 @@ class Manager_Conference_Room : AppCompatActivity() {
                 Toast.makeText(applicationContext, "on failure on loading rooms" + t.message, Toast.LENGTH_LONG).show()
 
             }
-
             override fun onResponse(call: Call<List<ConferenceRoom>>, response: Response<List<ConferenceRoom>>) {
                 progressDialog!!.dismiss()
                 if (response.isSuccessful) {
@@ -82,22 +77,22 @@ class Manager_Conference_Room : AppCompatActivity() {
                         }
                         val dialog: AlertDialog = builder.create()
                         dialog.show()
-
                     } else {
                         conference_recycler_view.adapter = ConferenceRoomAdapter(conferenceRoomList!!,
                             object : ConferenceRoomAdapter.BtnClickListener {
                                 override fun onBtnClick(roomId: String?, roomname: String?) {
-                                    val intent = Intent(this@Manager_Conference_Room, ManagerBookingActivity::class.java)
-                                    intent.putExtra("RoomId", roomId)
-                                    intent.putExtra("BuildingId", buildingId)
-                                    intent.putExtra("FromTime", from)
-                                    intent.putExtra("ToTime", to)
-                                    intent.putExtra("FromDate", fromDate)
-                                    intent.putExtra("ToDate", toDate)
-                                    intent.putExtra("RoomName", roomname)
-                                    intent.putExtra("BuildingName", building_name)
+                                    val intent =
+                                        Intent(this@Manager_Conference_Room, ManagerBookingActivity::class.java)
+                                    intent.putExtra(Constants.EXTRA_ROOM_ID, roomId)
+                                    intent.putExtra(Constants.EXTRA_BUILDING_ID, buildingId)
+                                    intent.putExtra(Constants.EXTRA_FROM_TIME_LIST, from)
+                                    intent.putExtra(Constants.EXTRA_TO_TIME_LIST, to)
+                                    intent.putExtra(Constants.EXTRA_DATE, fromDate)
+                                    intent.putExtra(Constants.EXTRA_TO_DATE, toDate)
+                                    intent.putExtra(Constants.EXTRA_ROOM_NAME, roomname)
+                                    intent.putExtra(Constants.EXTRA_BUILDING_NAME, building_name)
                                     startActivity(intent)
-                                     finish()
+                                    finish()
 
                                 }
                             })

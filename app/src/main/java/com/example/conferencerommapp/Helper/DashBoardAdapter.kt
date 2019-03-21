@@ -112,7 +112,7 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val contex: Co
                     }else {
                         var builder = AlertDialog.Builder(contex)
                         builder.setTitle("Confirm ")
-                        builder.setMessage("Press ok to Delete the booking for the date '${listItems.get(which).toString()}'")
+                        builder.setMessage("Press ok to Delete the mBooking for the date '${listItems.get(which).toString()}'")
                         builder.setPositiveButton("Ok") { dialog, postion ->
                             var can = CancelBooking()
                             can.CId = dashboardItemList[position].CId
