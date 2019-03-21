@@ -34,7 +34,7 @@ class ConferenceRoomActivity : AppCompatActivity() {
         mFetchRoom.ToTime = mIntentDataFromActvity.totime
         mFetchRoom.Capacity = mIntentDataFromActvity.capacity!!.toInt()
         mFetchRoom.BId = mIntentDataFromActvity.buildingId!!.toInt()
-        getViewModel(mIntentDataFromActvity, mFetchRoom)
+        getViewModel(mIntentDataFromActvity, mFetchRoom) //add methd
     }
     fun getIntentData(): GetIntentDataFromActvity {
         return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
