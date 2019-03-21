@@ -24,7 +24,7 @@ interface ConferenceService  {
     @GET("api/UserLogin")
     fun getRequestCode(@Query( "email") email : String?) : Call<Int>
 
-    @GET("api/UserDashboard")
+    @GET("api/Dashboard")
     fun getDashboard(@Query( "email") email : String?) : Call<List<Dashboard>>
 
     @POST("api/UserLogin")

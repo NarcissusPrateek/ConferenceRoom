@@ -1,7 +1,6 @@
 package com.example.conferencerommapp.Activity
 
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -28,7 +27,6 @@ import com.example.conferencerommapp.ViewModel.BookingViewModel
 import com.example.conferencerommapp.ViewModel.EmployeeViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import kotlinx.android.synthetic.main.activity_alertdialog_members.view.*
-import kotlinx.android.synthetic.main.activity_booking.*
 import java.util.*
 
 class BookingActivity : AppCompatActivity() {
@@ -44,9 +42,10 @@ class BookingActivity : AppCompatActivity() {
     lateinit var bookButton: Button
     lateinit var mEmployeeViewModel: EmployeeViewModel
     lateinit var mBookingViewModel: BookingViewModel
+    lateinit var addPersonEdittext: EditText
     var checkedEmployee = ArrayList<EmployeeList>()
     var mBooking = Booking()
-    val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -57,6 +56,7 @@ class BookingActivity : AppCompatActivity() {
 
         // this method will Initialize all input fields
         initializeInputFields()
+        val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         var mBookingDetails = getIntentData()
         setDataToTextview(mBookingDetails, acct!!.displayName.toString())
         setDialogForSelectingMeetingMembers()
@@ -70,18 +70,21 @@ class BookingActivity : AppCompatActivity() {
     }
 
     fun addDataToObject(mBookingDetails: BookingDetails) {
+        val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
+        Log.i("----email---", acct!!.email.toString())
         mBooking.Email = acct!!.email
         mBooking.CId = mBookingDetails.cId!!.toInt()
         mBooking.BId = mBookingDetails.bId!!.toInt()
         mBooking.FromTime = mBookingDetails.fromTime!!
         mBooking.ToTime = mBookingDetails.toTime!!
+        mBooking.CName = mBookingDetails.roomName!!
     }
 
     fun validateInput(): Boolean {
         if (purposeEdittext.text.toString().trim().isEmpty()) {
             Toast.makeText(this, "Invalid purpose!", Toast.LENGTH_SHORT).show()
             return false
-        } else if (employeeNameTextview.text.toString().trim().isEmpty()) {
+        } else if (addPersonEdittext.text.trim().isEmpty()) {
             Toast.makeText(this, "Add Members!", Toast.LENGTH_SHORT).show()
             return false
         }
@@ -105,9 +108,9 @@ class BookingActivity : AppCompatActivity() {
         roomNameTextview = findViewById(R.id.textView_conf_name)
         employeeNameTextview = findViewById(com.example.conferencerommapp.R.id.textView_name)
         purposeEdittext = findViewById(com.example.conferencerommapp.R.id.editText_purpose)
+        addPersonEdittext = findViewById(R.id.editText_person)
         buildingNameTextview = findViewById(R.id.textView_buildingname)
         bookButton = findViewById(R.id.book_button)
-
     }
 
     fun getIntentData(): BookingDetails {
@@ -121,6 +124,7 @@ class BookingActivity : AppCompatActivity() {
         mBookingDetails.capacity = bundle.get(Constants.EXTRA_CAPACITY).toString()
         mBookingDetails.cId = bundle.get(Constants.EXTRA_ROOM_ID).toString()
         mBookingDetails.bId = bundle.get(Constants.EXTRA_BUILDING_ID).toString()
+        mBookingDetails.roomName = bundle.get(Constants.EXTRA_ROOM_NAME).toString()
         return mBookingDetails
     }
 
@@ -149,7 +153,7 @@ class BookingActivity : AppCompatActivity() {
         val mBuilder = AlertDialog.Builder(this@BookingActivity)
         mBuilder.setTitle("Select atmax ${mBookingDetails.capacity} members.")
         mBuilder.setCancelable(false)
-        editText_person.setOnClickListener {
+        addPersonEdittext.setOnClickListener {
             Log.i("-----------", names.toString())
             customAdapter = CheckBoxAdapter(names, checkedEmployee, this@BookingActivity)
             var view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
@@ -173,13 +177,12 @@ class BookingActivity : AppCompatActivity() {
                         }
                     }
                 }
-                editText_person.setText(name)
+                addPersonEdittext.setText(name)
                 mBooking.CCMail = email
-                Log.i("-------------", name)
-                Log.i("-------------", mBooking.CCMail)
+
             }
             mBuilder.setNegativeButton("Cancel") { dialog: DialogInterface?, which: Int ->
-                editText_person.setText("")
+                addPersonEdittext.setText("")
                 mBooking.CCMail = ""
             }
             mBuilder.setView(view)
@@ -202,7 +205,6 @@ class BookingActivity : AppCompatActivity() {
             }
         })
     }
-
     fun setBuilderConfiguration(builder: AlertDialog) {
         var buttonPositive = builder.getButton(AlertDialog.BUTTON_POSITIVE)
         var buttonNegative = builder.getButton(AlertDialog.BUTTON_NEGATIVE)
@@ -215,6 +217,8 @@ class BookingActivity : AppCompatActivity() {
     }
 
     fun addBooking(mBooking: Booking) {
+        mBooking.Purpose = purposeEdittext.text.toString()
+        Log.i("------Booking object", mBooking.toString())
         mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
         mBookingViewModel.addBookingDetails(this, mBooking).observe(this, Observer {
             if (it == 200) {
