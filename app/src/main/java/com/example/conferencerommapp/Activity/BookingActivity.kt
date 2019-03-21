@@ -22,6 +22,7 @@ import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Model.Booking
 import com.example.conferencerommapp.Model.BookingDetails
 import com.example.conferencerommapp.Model.EmployeeList
+import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BookingViewModel
 import com.example.conferencerommapp.ViewModel.EmployeeViewModel
@@ -57,11 +58,11 @@ class BookingActivity : AppCompatActivity() {
         // this method will Initialize all input fields
         initializeInputFields()
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
-        var mBookingDetails = getIntentData()
-        setDataToTextview(mBookingDetails, acct!!.displayName.toString())
+        var mIntentDataFromActivity = getIntentData()
+        setDataToTextview(mIntentDataFromActivity, acct!!.displayName.toString())
         setDialogForSelectingMeetingMembers()
-        setDialog(mBookingDetails)
-        addDataToObject(mBookingDetails)
+        setDialog(mIntentDataFromActivity)
+        addDataToObject(mIntentDataFromActivity)
         bookButton.setOnClickListener {
             if (validateInput()) {
                 addBooking(mBooking)
@@ -69,14 +70,13 @@ class BookingActivity : AppCompatActivity() {
         }
     }
 
-    fun addDataToObject(mBookingDetails: BookingDetails) {
+    fun addDataToObject(mBookingDetails: GetIntentDataFromActvity) {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
-        Log.i("----email---", acct!!.email.toString())
         mBooking.Email = acct!!.email
-        mBooking.CId = mBookingDetails.cId!!.toInt()
-        mBooking.BId = mBookingDetails.bId!!.toInt()
-        mBooking.FromTime = mBookingDetails.fromTime!!
-        mBooking.ToTime = mBookingDetails.toTime!!
+        mBooking.CId = mBookingDetails.roomId!!.toInt()
+        mBooking.BId = mBookingDetails.buildingId!!.toInt()
+        mBooking.FromTime = mBookingDetails.fromtime!!
+        mBooking.ToTime = mBookingDetails.totime!!
         mBooking.CName = mBookingDetails.roomName!!
     }
 
@@ -113,24 +113,13 @@ class BookingActivity : AppCompatActivity() {
         bookButton = findViewById(R.id.book_button)
     }
 
-    fun getIntentData(): BookingDetails {
-        val bundle: Bundle? = intent.extras
-        var mBookingDetails = BookingDetails()
-        mBookingDetails.fromTime = bundle!!.get(Constants.EXTRA_FROM_TIME).toString()
-        mBookingDetails.toTime = bundle.get(Constants.EXTRA_TO_TIME).toString()
-        mBookingDetails.date = bundle.get(Constants.EXTRA_DATE).toString()
-        mBookingDetails.roomName = bundle.get(Constants.EXTRA_ROOM_NAME).toString()
-        mBookingDetails.buildingName = bundle.get(Constants.EXTRA_BUILDING_NAME).toString()
-        mBookingDetails.capacity = bundle.get(Constants.EXTRA_CAPACITY).toString()
-        mBookingDetails.cId = bundle.get(Constants.EXTRA_ROOM_ID).toString()
-        mBookingDetails.bId = bundle.get(Constants.EXTRA_BUILDING_ID).toString()
-        mBookingDetails.roomName = bundle.get(Constants.EXTRA_ROOM_NAME).toString()
-        return mBookingDetails
+    fun getIntentData(): GetIntentDataFromActvity {
+        return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
-    fun setDataToTextview(mBookingDetails: BookingDetails, userName: String) {
+    fun setDataToTextview(mBookingDetails: GetIntentDataFromActvity, userName: String) {
         fromTimeTextview.text =
-            mBookingDetails.fromTime!!.split(" ")[1] + " - " + mBookingDetails.toTime!!.split(" ")[1]
+            mBookingDetails.fromtime!!.split(" ")[1] + " - " + mBookingDetails.totime!!.split(" ")[1]
         dateTextview.text = mBookingDetails.date!!
         roomNameTextview.text = mBookingDetails.roomName!!
         buildingNameTextview.text = mBookingDetails.buildingName!!
@@ -149,7 +138,7 @@ class BookingActivity : AppCompatActivity() {
         })
     }
 
-    fun setDialog(mBookingDetails: BookingDetails) {
+    fun setDialog(mBookingDetails: GetIntentDataFromActvity) {
         val mBuilder = AlertDialog.Builder(this@BookingActivity)
         mBuilder.setTitle("Select atmax ${mBookingDetails.capacity} members.")
         mBuilder.setCancelable(false)
@@ -224,8 +213,10 @@ class BookingActivity : AppCompatActivity() {
             if (it == 200) {
                 startActivity(Intent(this@BookingActivity, Main2Activity::class.java))
                 finish()
-            } else {
-                Log.i("--------", "" + it)
+            } else if(it == 404){
+                Toast.makeText(this, "Server not found!Please try again", Toast.LENGTH_SHORT).show()
+            }else {
+                Toast.makeText(this, "internal server error occured", Toast.LENGTH_SHORT).show()
             }
         })
     }

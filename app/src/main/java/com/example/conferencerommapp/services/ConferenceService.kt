@@ -18,7 +18,7 @@ interface ConferenceService  {
     fun getBuildingList() : Call<List<Building>>
 
 
-    @POST("api/AllRoomsWithStatus")
+    @POST("api/RoomsWithStatus")
     fun getConferenceRoomList(@Body availableRoom: FetchConferenceRoom) : Call<List<ConferenceRoom>>
 
     @GET("api/UserLogin")

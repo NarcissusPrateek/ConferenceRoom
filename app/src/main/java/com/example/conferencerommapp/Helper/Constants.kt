@@ -14,5 +14,6 @@ class Constants {
         const val EXTRA_DAY_LIST = "com.example.conferencerommapp.Activity.EXTRA_DAY_LIST"
         const val EXTRA_FROM_TIME_LIST = "com.example.conferencerommapp.Activity.EXTRA_FROM_TIME_LIST"
         const val EXTRA_TO_TIME_LIST = "com.example.conferencerommapp.Activity.EXTRA_TO_TIME_LIST"
+        const val EXTRA_INTENT_DATA = "com.example.conferencerommapp.Activity.EXTRA_INTENT_DATA"
     }
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.example.conferencerommapp.Helper.BuildingAdapter
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
 
@@ -27,19 +28,19 @@ class BuildingsActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>"))
 
-        // getting the data from intent
-
-        val bundle: Bundle? = intent.extras
-        val from = bundle!!.get(Constants.EXTRA_FROM_TIME).toString()
-        val to = bundle.get(Constants.EXTRA_TO_TIME).toString()
-        val date = bundle.get(Constants.EXTRA_DATE).toString()
-        val capacity = bundle.get(Constants.EXTRA_CAPACITY).toString()
-        val DateFromTime = date + " " + from
-        val DateToTime = date + " " + to
-
-
         recyclerView = findViewById(R.id.building_recycler_view)
 
+        // getting the data from intent
+        var mIntentDataFromActivity: GetIntentDataFromActvity = getIntentData()
+        getViewModel(mIntentDataFromActivity)
+
+    }
+
+    fun getIntentData(): GetIntentDataFromActvity {
+        return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
+    }
+
+    fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity) {
         // creating the object of BuildingViewModel class
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
 
@@ -51,20 +52,15 @@ class BuildingsActivity : AppCompatActivity() {
             customAdapter = BuildingAdapter(this,
                 it!!,
                 object : BuildingAdapter.BtnClickListener {
-                    override fun onBtnClick(buildingId: String?, buildingname: String?) {
-                        val intent = Intent(this@BuildingsActivity, ConferenceRoomActivity::class.java)
-                        intent.putExtra(Constants.EXTRA_BUILDING_ID, buildingId)
-                        intent.putExtra(Constants.EXTRA_FROM_TIME, DateFromTime)
-                        intent.putExtra(Constants.EXTRA_TO_TIME, DateToTime)
-                        intent.putExtra(Constants.EXTRA_DATE, date)
-                        intent.putExtra(Constants.EXTRA_CAPACITY, capacity)
-                        intent.putExtra(Constants.EXTRA_BUILDING_NAME, buildingname)
-                        startActivity(intent)
+                    override fun onBtnClick(buildingId: String?, buildingName: String?) {
+                        mIntentDataFromActivity.buildingId = buildingId
+                        mIntentDataFromActivity.buildingName = buildingName
+                        goToNextActivity(mIntentDataFromActivity)
                     }
                 }
             )
             recyclerView.adapter = customAdapter
-            if ( mBuildingsViewModel.getBuildingList(this).hasActiveObservers()){
+            if (mBuildingsViewModel.getBuildingList(this).hasActiveObservers()) {
                 mBuildingsViewModel.getBuildingList(this).removeObservers(this)
             }
         })
@@ -75,5 +71,11 @@ class BuildingsActivity : AppCompatActivity() {
         super.onRestart()
         Log.i("---------", "on ReStart is called")
         mBuildingsViewModel.mBuildingsRepository!!.makeApiCall(this)
+    }
+
+    fun goToNextActivity(mIntentDataFromActivity: GetIntentDataFromActvity) {
+        val intent = Intent(this@BuildingsActivity, ConferenceRoomActivity::class.java)
+        intent.putExtra(Constants.EXTRA_INTENT_DATA, mIntentDataFromActivity)
+        startActivity(intent)
     }
 }
