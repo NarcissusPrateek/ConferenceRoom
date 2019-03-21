@@ -26,6 +26,11 @@ class BookingRepository {
     }
     fun addBookigDetails(context: Context, mBoooking: Booking): LiveData<Int> {
         makeCallToApi(context, mBoooking)
+
+        if(mStatus == null) {
+            mStatus = MutableLiveData()
+            makeCallToApi(context, mBoooking)
+        }
         return mStatus!!
     }
     fun makeCallToApi(context: Context, mBoooking: Booking) {

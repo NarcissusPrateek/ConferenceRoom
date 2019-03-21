@@ -34,7 +34,7 @@ class ConferenceRoomActivity : AppCompatActivity() {
         setContentView(R.layout.activity_conference_room)
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Select_Room) + "</font>"))
-        //loadConferenceRoom()
+
 
         val bundle: Bundle = intent.extras
         val from = bundle.get(Constants.EXTRA_FROM_TIME).toString()
