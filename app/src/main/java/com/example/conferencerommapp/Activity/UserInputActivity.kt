@@ -163,6 +163,7 @@ class UserInputActivity : AppCompatActivity() {
         }
 
     }
+
     fun goToBuildingsActivity() {
         var mGetIntentDataFromActvity = GetIntentDataFromActvity()
         mGetIntentDataFromActvity.fromtime = (dateEditText.text.toString() + " " + fromTimeEditText.text.toString()).trim()

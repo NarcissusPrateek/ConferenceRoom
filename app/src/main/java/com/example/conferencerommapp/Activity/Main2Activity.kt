@@ -49,17 +49,17 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         loadDashboard()
     }
 
-    override fun onResume() {
-        super.onResume()
-        var acct = GoogleSignIn.getLastSignedInAccount(application)
-        mBookingDashboardViewModel.getBookingList(this, acct!!.email.toString())
-    }
-
+     /**
+     * on pressing of back button this function will clear the activity stack and close the application
+     */
     override fun onBackPressed() {
         super.onBackPressed()
         finishAffinity()
     }
 
+    /**
+     * this function will set action to the item in navigation drawer like HR or Logout or Project Manager
+     */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout -> {
@@ -82,6 +82,11 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         return true
     }
 
+    /**
+     * this function will set items in the navigation view and calls another function for setting the item according to role
+     * if there is no image at the particular url provided by google than we will set a dummy imgae
+     * else we set the image provided by google and set the name according to the google display name
+     */
     fun setNavigationViewItem() {
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -102,6 +107,12 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         setItemInDrawerByRole()
     }
 
+    /**
+     * this function will set item in navigation drawer according to the data stored in the sharedpreference
+     * if the code is 11 than the role is HR
+     * if the code is 12 than the role is Project manager
+     * else the role is normal user
+     */
     fun setItemInDrawerByRole() {
         val pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         var code = pref.getInt("Code", 10)
@@ -115,6 +126,11 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
+    /**
+     * this function gets the data from Backend
+     * if there is no data from backend than it will set view to empty
+     * else it will call another function for filtering the data
+     */
     fun loadDashboard() {
         var acct = GoogleSignIn.getLastSignedInAccount(application)
         var email = acct!!.email.toString()
@@ -131,6 +147,24 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         })
     }
 
+    /**
+     * on Restart of activity it will call a function which will get the updated data from backend
+     */
+    override fun onRestart() {
+        super.onRestart()
+        getUpdatedDataFromApi()
+    }
+
+    /**
+     * get the updated data from backend
+     */
+    fun getUpdatedDataFromApi() {
+        mBookingDashboardViewModel.getBookingList(this, "prateek300patel@gmail.com")
+    }
+
+    /**
+     * this function will call a function which will filter the data after that set the filtered data to adapter
+     */
     fun setFilteredDataToAdapter(dashboardItemList: List<Dashboard>) {
         finalList.clear()
         getFilteredList(dashboardItemList)
@@ -138,6 +172,9 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         dashbord_recyclerview1.adapter = DashBoardAdapter(finalList, this@Main2Activity)
     }
 
+    /**
+     * perform filter task on List of all booking whether they are of recurring type of not
+     */
     fun getFilteredList(dashboardItemList: List<Dashboard>) {
         for (item in dashboardItemList) {
             var flag = 0

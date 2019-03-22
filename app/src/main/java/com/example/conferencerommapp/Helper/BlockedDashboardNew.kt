@@ -69,12 +69,12 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val contex: Co
 //        })
 //        if(currentPosition == position) {
 //            if(holder.linearLayout.visibility==View.GONE) {
-//                var animmation: Animation = AnimationUtils.loadAnimation(contex, R.anim.animation)
+//                var animmation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.animation)
 //                holder.linearLayout.visibility = View.VISIBLE
 //                holder.linearLayout.startAnimation(animmation)
 //            }
 //            else{
-//                var animation: Animation = AnimationUtils.loadAnimation(contex, R.anim.close)
+//                var animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
 //                holder.linearLayout.visibility=View.GONE
 //                holder.linearLayout.startAnimation(animation)
 //            }

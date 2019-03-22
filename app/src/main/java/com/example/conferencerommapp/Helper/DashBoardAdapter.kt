@@ -22,8 +22,7 @@ import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.CancelBookingViewModel
 
-
-class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val contex: Context) :
+class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val mContext: Context) :
 
     androidx.recyclerview.widget.RecyclerView.Adapter<DashBoardAdapter.ViewHolder>() {
 
@@ -45,44 +44,51 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val contex: Co
         var datefrom = fromtime!!.split("T")
         var dateto = totime!!.split("T")
 
-        holder.txvFrom.text = datefrom.get(1) + " - " + dateto.get(1)
+        holder.fromtimetextview.text = datefrom.get(1) + " - " + dateto.get(1)
 
         setButtonFunctionalityAccordingToStatus(holder, position)
 
         setFunctionOnButton(holder, position)
     }
 
-    private fun cancelBooking(mCancel: CancelBooking, context: Context) {
+    /**
+     * A function for cancel a booking
+     */
+    private fun cancelBooking(mCancel: CancelBooking, mContext: Context) {
 
         //setting the observer for making the api call for cancelling the booking
-
-        var mCancelBookingViewModel = ViewModelProviders.of(context as Main2Activity).get(CancelBookingViewModel::class.java)
-        mCancelBookingViewModel.cancelBooking(context, mCancel).observe(context, Observer {
+        var mCancelBookingViewModel = ViewModelProviders.of(mContext as Main2Activity).get(CancelBookingViewModel::class.java)
+        mCancelBookingViewModel.cancelBooking(mContext, mCancel).observe(mContext, Observer {
             if(it == 200) {
-                context.mBookingDashboardViewModel.getBookingList(context, mCancel.Email.toString())
+                //mContext.mBookingDashboardViewModel.getBookingList(mContext, mCancel.Email.toString())
+                mContext.getUpdatedDataFromApi()
             }else {
-                Toast.makeText(context, "Response Error", Toast.LENGTH_LONG).show()
+                Toast.makeText(mContext, "Response Error", Toast.LENGTH_LONG).show()
             }
         })
     }
 
+    /**
+     * it will return number of items contains in recyclerview view
+     */
     override fun getItemCount(): Int {
         return dashboardItemList.size
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        val txvBName: TextView = itemView.findViewById(R.id.building_name)
-        val txvRoomName: TextView = itemView.findViewById(R.id.conferenceRoomName)
-        val txvFrom: TextView = itemView.findViewById(R.id.from_time)
-        val txvDate: TextView = itemView.findViewById(R.id.date)
-        val txvPurpose: TextView = itemView.findViewById(R.id.purpose)
-        val btnCancel: Button = itemView.findViewById(R.id.btnCancel)
+        val buildingNameTextview: TextView = itemView.findViewById(R.id.building_name)
+        val roomNameTextview: TextView = itemView.findViewById(R.id.conferenceRoomName)
+        val fromtimetextview: TextView = itemView.findViewById(R.id.from_time)
+        val dateTextview: TextView = itemView.findViewById(R.id.date)
+        val purposeTextview: TextView = itemView.findViewById(R.id.purpose)
+        val cancelButton: Button = itemView.findViewById(R.id.btnCancel)
         val linearLayout: LinearLayout = itemView.findViewById(R.id.linearlayout)
         val card: CardView = itemView.findViewById(R.id.card)
-        val btnShow: Button = itemView.findViewById(R.id.btnshow)
+        val showButton: Button = itemView.findViewById(R.id.btnshow)
         var dashboard: Manager? = null
     }
 
+    //function for setting Animation for RecyclerView item
     fun setAnimationToTheRecyclerViewItem(holder: ViewHolder, position: Int) {
         holder.card.setOnClickListener(View.OnClickListener {
             currentPosition = position
@@ -91,32 +97,38 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val contex: Co
         })
         if (currentPosition == position) {
             if (holder.linearLayout.visibility == View.GONE) {
-                var animmation: Animation = AnimationUtils.loadAnimation(contex, R.anim.animation)
+                var animmation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.animation)
                 holder.linearLayout.visibility = View.VISIBLE
                 holder.linearLayout.startAnimation(animmation)
             } else {
-                var animation: Animation = AnimationUtils.loadAnimation(contex, R.anim.close)
+                var animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
                 holder.linearLayout.visibility = View.GONE
                 holder.linearLayout.startAnimation(animation)
             }
 
         } else {
-            var animation: Animation = AnimationUtils.loadAnimation(contex, R.anim.close)
+            var animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
             holder.linearLayout.visibility = View.GONE
             holder.linearLayout.startAnimation(animation)
         }
     }
 
+    /**
+     * set data to the field of view
+     */
     fun setDataToFields(holder: ViewHolder, position: Int) {
         holder.dashboard = dashboardItemList[position]
-        holder.txvBName.text = dashboardItemList[position].BName
-        holder.txvRoomName.text = dashboardItemList[position].CName
-        holder.txvPurpose.text = dashboardItemList[position].Purpose
-        holder.btnShow.setOnClickListener {
+        holder.buildingNameTextview.text = dashboardItemList[position].BName
+        holder.roomNameTextview.text = dashboardItemList[position].CName
+        holder.purposeTextview.text = dashboardItemList[position].Purpose
+        holder.showButton.setOnClickListener {
             setMeetingMembers(position)
         }
     }
 
+    /**
+     * set data for the dialog items
+      */
     fun setMeetingMembers(position: Int) {
         var list = dashboardItemList[position].Name
         var arrayList = ArrayList<String>()
@@ -125,7 +137,7 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val contex: Co
         }
         var listItems = arrayOfNulls<String>(arrayList.size)
         arrayList.toArray(listItems)
-        val builder = android.app.AlertDialog.Builder(contex)
+        val builder = android.app.AlertDialog.Builder(mContext)
         builder.setTitle("Members of meeting.")
         builder.setItems(listItems, DialogInterface.OnClickListener { dialog, which -> }
         )
@@ -133,21 +145,27 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val contex: Co
         mDialog.show()
     }
 
+    /**
+     * set button text according to the type of meeting and booking status
+     */
     fun setButtonFunctionalityAccordingToStatus(holder: ViewHolder, position: Int) {
 
         if (dashboardItemList[position].fromlist.size == 1)
-            holder.txvDate.text = dashboardItemList[position].FromTime!!.split("T").get(0)
+            holder.dateTextview.text = dashboardItemList[position].FromTime!!.split("T").get(0)
         else {
             setDataToDialogShowDates(holder, position)
         }
     }
 
+    /**
+     * if the meeting is recurring then add dates of meeting to the data field
+     */
     fun setDataToDialogShowDates(holder: ViewHolder, position: Int) {
 
-        holder.txvDate.text = "Show Dates"
-        holder.txvDate.setTextColor(Color.parseColor("#0072BC"))
-        holder.btnCancel.visibility = View.INVISIBLE
-        holder.txvDate.setOnClickListener {
+        holder.dateTextview.text = "Show Dates"
+        holder.dateTextview.setTextColor(Color.parseColor("#0072BC"))
+        holder.cancelButton.visibility = View.INVISIBLE
+        holder.dateTextview.setOnClickListener {
             var list = dashboardItemList[position].fromlist
             var arrayList = ArrayList<String>()
             for (item in list!!) {
@@ -155,25 +173,25 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val contex: Co
             }
             var listItems = arrayOfNulls<String>(arrayList.size)
             arrayList.toArray(listItems)
-            val builder = android.app.AlertDialog.Builder(contex)
+            val builder = android.app.AlertDialog.Builder(mContext)
             builder.setTitle("Dates Of Meeting.")
             builder.setItems(listItems, DialogInterface.OnClickListener { dialog, which ->
                 if (dashboardItemList[position].Status[which] == "Cancelled") {
-                    Toast.makeText(contex, "Cancelled by HR! Please check your Email", Toast.LENGTH_LONG).show()
+                    Toast.makeText(mContext, "Cancelled by HR! Please check your Email", Toast.LENGTH_LONG).show()
                 } else {
                     //make api call here
-                    var builder = AlertDialog.Builder(contex)
+                    var builder = AlertDialog.Builder(mContext)
                     builder.setTitle("Confirm ")
                     builder.setMessage("Press ok to Delete the mBooking for the date '${listItems.get(which).toString()}'")
                     builder.setPositiveButton("Ok") { dialog, postion ->
-                        var can = CancelBooking()
-                        can.CId = dashboardItemList[position].CId
-                        can.Email = dashboardItemList[position].Email
-                        can.FromTime =
+                        var mCancel = CancelBooking()
+                        mCancel.CId = dashboardItemList[position].CId
+                        mCancel.Email = dashboardItemList[position].Email
+                        mCancel.FromTime =
                             listItems.get(which).toString() + "T" + dashboardItemList[position].FromTime!!.split("T")[1]
-                        can.ToTime =
+                        mCancel.ToTime =
                             listItems.get(which).toString() + "T" + dashboardItemList[position].FromTime!!.split("T")[1]
-                        cancelBooking(can, contex)
+                        cancelBooking(mCancel, mContext)
                     }
                     builder.setNegativeButton("Cancel") { dialog, postion ->
                     }
@@ -188,15 +206,19 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val contex: Co
         }
     }
 
+    /**
+     * if the booking is cancelled by HR than do nothing and set clickable property to false
+     * if the booking is not cancelled and user wants to cancel it than allow user to cancel the booking
+     */
     fun setFunctionOnButton(holder: ViewHolder, position: Int) {
         if (dashboardItemList[position].Status[0].trim() == "Cancelled") {
-            holder.btnCancel.text = "Cancelled"
-            holder.btnCancel.isEnabled = false
+            holder.cancelButton.text = "Cancelled"
+            holder.cancelButton.isEnabled = false
         } else {
-            holder.btnCancel.text = "Cancel"
-            holder.btnCancel.isEnabled = true
-            holder.btnCancel.setOnClickListener {
-                var builder = AlertDialog.Builder(contex)
+            holder.cancelButton.text = "Cancel"
+            holder.cancelButton.isEnabled = true
+            holder.cancelButton.setOnClickListener {
+                var builder = AlertDialog.Builder(mContext)
                 builder.setTitle("Confirm ")
                 builder.setMessage("Are you sure you want to cancel the meeting?")
                 builder.setPositiveButton("YES") { dialog, which ->
@@ -205,8 +227,7 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val contex: Co
                     cancel.ToTime = dashboardItemList[position].ToTime
                     cancel.FromTime = dashboardItemList[position].FromTime
                     cancel.Email = dashboardItemList.get(position).Email
-                    //Log.i("---------", cancel.toString())
-                    cancelBooking(cancel, contex)
+                    cancelBooking(cancel, mContext)
                 }
                 builder.setNegativeButton("No") { dialog, which ->
                 }

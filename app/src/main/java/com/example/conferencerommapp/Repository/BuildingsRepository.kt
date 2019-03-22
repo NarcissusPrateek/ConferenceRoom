@@ -15,6 +15,7 @@ import retrofit2.Response
 
 class BuildingsRepository {
     var mBuildinglist: MutableLiveData<List<Building>>? = null
+
     companion object {
         var mBuildingsRepository: BuildingsRepository? = null
         fun getInstance(): BuildingsRepository {
@@ -25,10 +26,8 @@ class BuildingsRepository {
         }
     }
     fun getBuildingList(context: Context): LiveData<List<Building>> {
-       // if(mBuildinglist == null) {
-            mBuildinglist = MutableLiveData()
-            makeApiCall(context)
-        //}
+        mBuildinglist = MutableLiveData()
+        makeApiCall(context)
         return mBuildinglist!!
     }
     fun makeApiCall(context: Context) {
@@ -38,9 +37,10 @@ class BuildingsRepository {
         val requestCall: Call<List<Building>> = conferenceService.getBuildingList()
         requestCall.enqueue(object : Callback<List<Building>> {
             override fun onFailure(call: Call<List<Building>>, t: Throwable) {
-               progressDialog.dismiss()
+                progressDialog.dismiss()
                 Log.i("-----------", "error on failure")
             }
+
             override fun onResponse(call: Call<List<Building>>, response: Response<List<Building>>) {
                 progressDialog.dismiss()
                 Log.i("-----Building Updated", response.body().toString())

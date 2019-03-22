@@ -39,10 +39,12 @@ class CancelBookingRepository {
         var requestCall: Call<ResponseBody> = serviceBuilder.cancelBooking(mCancel)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                progressDialog.dismiss()
                 Toast.makeText(context, "Error on Failure", Toast.LENGTH_LONG).show()
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                progressDialog.dismiss()
                 if (response.isSuccessful) {
                     mStatus!!.value = response.code()
                 } else {

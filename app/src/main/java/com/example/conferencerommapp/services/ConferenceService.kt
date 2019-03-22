@@ -1,12 +1,11 @@
 package com.example.conferencerommapp.services
 
-import androidx.core.content.res.FontResourcesParserCompat
 import com.example.conferencerommapp.Blocked
 import com.example.conferencerommapp.BuildingConference
 import com.example.conferencerommapp.BuildingT
 import com.example.conferencerommapp.Helper.Unblock
 import com.example.conferencerommapp.Model.*
-import com.example.conferencerommapp.addConferenceRoom
+import com.example.conferencerommapp.AddConferenceRoom
 import com.example.myapplication.Models.ConferenceList
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -46,11 +45,11 @@ interface ConferenceService  {
     fun getMangerConferenceRoomList(@Body availableRoom: ManagerConference) : Call<List<ConferenceRoom>>
 //    // Pratheek's.....
 
-    @POST("api/AddBuilding")
-    fun addBuilding(@Body newBuilding:addBuilding):Call<ResponseBody>
+    @POST("api/Building")
+    fun addBuilding(@Body newBuilding:AddBuilding):Call<ResponseBody>
 
-    @POST("api/addconferenceroom")
-    fun addConference(@Body newConferenceRoom: addConferenceRoom):Call<ResponseBody>
+    @POST("api/conference")
+    fun addConference(@Body newConferenceRoom: AddConferenceRoom):Call<ResponseBody>
 
     @POST("api/BlockConfirmation")
     fun blockConfirmation(@Body room: BlockRoom) :Call<BlockingConfirmation>
@@ -70,9 +69,8 @@ interface ConferenceService  {
     @POST("api/unblocking")
     fun unBlockingConferenceRoom(@Body room: Unblock) : Call<ResponseBody>
 
-    @GET("api/BuildingConferenceRooms/{id}")
-    fun conferencelist(@Path("id")id : Int) : Call<List<ConferenceList>>
-
+    @GET("api/Conference/{id}")
+    fun conferencelist(@Query("buildingid") id : Int) : Call<List<ConferenceList>>
 
     //@GET("destination")
     //fun getDestinationList(@Query( "country") country : String?, @Query("counnt") count: Int) : Call<List<Destination>>

@@ -21,24 +21,24 @@ class ConferenceRoomActivity : AppCompatActivity() {
     lateinit var mConfereenceRoomViewModel: ConferenceRoomViewModel
     lateinit var customAdapter: ConferenceRoomAdapter
     lateinit var recyclerView: RecyclerView
+    lateinit var mIntentDataFromActvity: GetIntentDataFromActvity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conference_room)
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Select_Room) + "</font>"))
 
-        var mIntentDataFromActvity = getIntentData()
+        mIntentDataFromActvity = getIntentData()
 
-        var mFetchRoom = FetchConferenceRoom()
-        mFetchRoom.FromTime = mIntentDataFromActvity.fromtime
-        mFetchRoom.ToTime = mIntentDataFromActvity.totime
-        mFetchRoom.Capacity = mIntentDataFromActvity.capacity!!.toInt()
-        mFetchRoom.BId = mIntentDataFromActvity.buildingId!!.toInt()
+        var mFetchRoom = setDataToObjectForApiCall(mIntentDataFromActvity)
+
         getViewModel(mIntentDataFromActvity, mFetchRoom) //add methd
     }
+
     fun getIntentData(): GetIntentDataFromActvity {
         return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
+
     fun getViewModel(mIntentDataFromActvity: GetIntentDataFromActvity, mFetchRoom: FetchConferenceRoom) {
         recyclerView = findViewById(R.id.conference_recycler_view)
         mConfereenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
@@ -55,9 +55,24 @@ class ConferenceRoomActivity : AppCompatActivity() {
             recyclerView.adapter = customAdapter
         })
     }
+
     fun goToNextActivity(mIntentDataFromActvity: GetIntentDataFromActvity) {
         val intent = Intent(this@ConferenceRoomActivity, BookingActivity::class.java)
         intent.putExtra(Constants.EXTRA_INTENT_DATA, mIntentDataFromActvity)
         startActivity(intent)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        mConfereenceRoomViewModel.getConferenceRoomList(this, setDataToObjectForApiCall(mIntentDataFromActvity))
+    }
+
+    fun setDataToObjectForApiCall(mIntentDataFromActvity: GetIntentDataFromActvity): FetchConferenceRoom {
+        var mFetchRoom = FetchConferenceRoom()
+        mFetchRoom.FromTime = mIntentDataFromActvity.fromtime
+        mFetchRoom.ToTime = mIntentDataFromActvity.totime
+        mFetchRoom.Capacity = mIntentDataFromActvity.capacity!!.toInt()
+        mFetchRoom.BId = mIntentDataFromActvity.buildingId!!.toInt()
+        return mFetchRoom
     }
 }

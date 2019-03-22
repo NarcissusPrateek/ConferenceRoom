@@ -2,6 +2,7 @@ package com.example.conferencerommapp.Repository
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.GetProgress
@@ -37,10 +38,11 @@ class BookingDashboardRepository {
         requestCall.enqueue(object : Callback<List<Dashboard>> {
             override fun onFailure(call: Call<List<Dashboard>>, t: Throwable) {
                 progressDialog.dismiss()
+                Toast.makeText(context, "Server not Found!", Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<List<Dashboard>>, response: Response<List<Dashboard>>) {
                 progressDialog.dismiss()
-                Log.i("------dashboard list", response.body().toString())
+                Log.i("------112dashboard list", response.body().toString())
                 mBookingList!!.value = response.body()
             }
         })
