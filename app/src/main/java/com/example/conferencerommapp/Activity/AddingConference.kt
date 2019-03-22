@@ -10,7 +10,6 @@ import android.widget.*
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import kotlinx.android.synthetic.main.activity_adding_conference.*
-import kotlinx.android.synthetic.main.toolbar.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -43,7 +42,7 @@ class AddingConference : AppCompatActivity() {
 
         add_conference_room.setOnClickListener {
             val conferenceRoom: EditText = findViewById(R.id.conference_Name)
-            var room = addConferenceRoom()
+            var room = AddConferenceRoom()
             if (conferenceRoom.text.trim().isEmpty()) {
                 Toast.makeText(this@AddingConference, "Please Enter Room Name", Toast.LENGTH_LONG).show()
             } else if (capacity.equals("Please Select Capacity")) {
@@ -62,7 +61,7 @@ class AddingConference : AppCompatActivity() {
 
     }
 
-    private fun addingRoom(room: addConferenceRoom) {
+    private fun addingRoom(room: AddConferenceRoom) {
         val conferenceRoomapi = Servicebuilder.buildService(ConferenceService::class.java)
         val addconferencerequestCall: Call<ResponseBody> = conferenceRoomapi.addConference(room)
         addconferencerequestCall.enqueue(object : Callback<ResponseBody> {

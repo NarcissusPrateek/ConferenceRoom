@@ -9,82 +9,81 @@ import android.text.Html
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.example.conferencerommapp.ConferenceDashBoard
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.conferencerommapp.Helper.GetProgress
-import com.example.conferencerommapp.Model.addBuilding
+import com.example.conferencerommapp.Model.AddBuilding
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.Repository.AddBuildingRepository
+import com.example.conferencerommapp.ViewModel.AddBuildingViewModel
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
-import kotlinx.android.synthetic.main.app_bar_main2.*
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.math.absoluteValue
 
 class AddingBuilding : AppCompatActivity() {
 
+    //Initializing the variable
     var progressDialog: ProgressDialog? = null
+    lateinit var buildingnameEditText : EditText
+    lateinit var buildingplaceEditText : EditText
+    lateinit var addbuildingButton : Button
+    lateinit var mAddBuildingViewModel: AddBuildingViewModel
+    var mAddBuilding = AddBuilding()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding_building)
         val actionBar = supportActionBar
-
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Add_Buildings) + "</font>"))
-        val add: Button = findViewById(R.id.addbuilding)
 
-        add.setOnClickListener {
-            val bName: TextView = findViewById(R.id.input_buildingName)
-            val bplace: TextView = findViewById(R.id.input_buildingPlace)
-            var build = addBuilding()
-            build.BName = bName.text.toString().trim()
-            build.Place = bplace.text.toString().trim()
-            if (TextUtils.isEmpty(bName.text)) {
-                Toast.makeText(this@AddingBuilding, "Invalid building name!", Toast.LENGTH_LONG).show()
-            } else if (TextUtils.isEmpty(bplace.text)) {
-                Toast.makeText(this@AddingBuilding, "invalid place name!", Toast.LENGTH_LONG).show()
-            } else {
-//                progressDialog = ProgressDialog(this)
-//                progressDialog!!.setMessage("Adding...")
-//                progressDialog!!.setCancelable(false)
-//                progressDialog!!.show()
-                progressDialog = GetProgress.getProgressDialog("Adding...", this@AddingBuilding)
-                progressDialog!!.show()
-                addBuild(build)
-            }
+        addbuildingButton = findViewById(R.id.addbuilding)
+
+        addbuildingButton.setOnClickListener {
+            getBuildingDetails()
+            if(validateInputs())
+               addBuild(mAddBuilding)
         }
     }
-    private fun addBuild(build: addBuilding) {
-        val buildapi = Servicebuilder.buildService(ConferenceService::class.java)
-        val addconferencerequestCall: Call<ResponseBody> = buildapi.addBuilding(build)
-        addconferencerequestCall.enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                progressDialog!!.dismiss()
-                Toast.makeText(applicationContext, "some backend problem", Toast.LENGTH_SHORT).show()
-            }
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                val builder = AlertDialog.Builder(this@AddingBuilding)
-                builder.setTitle("Status")
-                Log.i("-----------",response.toString())
-                progressDialog!!.dismiss()
-                if (response.isSuccessful) {
-                    builder.setMessage("Building added successfully.")
-                    builder.setPositiveButton("Ok") { dialog, which ->
-                        finish()
-                    }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
-                } else {
-                    builder.setMessage("Unable to Add! Please try again")
-                    builder.setPositiveButton("Ok") { dialog, which ->
-                    }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
-                    //Toast.makeText(applicationContext, "Unable to post", Toast.LENGTH_SHORT).show()
-                }
+
+    //Get the data from the Fields
+    fun getBuildingDetails(){
+        buildingnameEditText = findViewById(R.id.input_buildingName)
+        buildingplaceEditText = findViewById(R.id.input_buildingPlace)
+        addDataToObject(mAddBuilding)
+    }
+
+    //Add the Data to the Objects
+    private fun addDataToObject(mAddBuilding: AddBuilding) {
+        mAddBuilding.BName = buildingnameEditText.text.toString().trim()
+        mAddBuilding.Place = buildingplaceEditText.text.toString().trim()
+    }
+
+    //Validate the Inputs
+    fun validateInputs(): Boolean {
+        if (buildingnameEditText.text.toString().trim().isEmpty()) {
+            Toast.makeText(this, "Enter the Building Name", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (buildingplaceEditText.text.trim().isEmpty()) {
+            Toast.makeText(this, "Enter the Building Place", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
+    //Calling the ViewModel
+    private fun addBuild(building: AddBuilding) {
+        mAddBuildingViewModel = ViewModelProviders.of(this).get(AddBuildingViewModel::class.java)
+        mAddBuildingViewModel.addBuildingDetails(this,building)!!.observe(this, Observer{
+            if (it == 200){
+                    //finish()
             }
 
         })
