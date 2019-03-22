@@ -1,6 +1,5 @@
 package com.example.conferencerommapp.Repository
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -28,10 +27,10 @@ class ConferenceRoomRepository {
         }
     }
     fun getConferenceRoomList(context: Context, room: FetchConferenceRoom): LiveData<List<ConferenceRoom>> {
-        if (mConferenceRoomList == null) {
+        //if (mConferenceRoomList == null) {
             mConferenceRoomList = MutableLiveData()
             makeApiCall(context, room)
-        }
+        //}
         return mConferenceRoomList!!
     }
     fun makeApiCall(context: Context, room: FetchConferenceRoom) {

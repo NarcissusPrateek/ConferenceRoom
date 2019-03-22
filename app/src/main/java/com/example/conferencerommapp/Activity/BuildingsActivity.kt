@@ -25,24 +25,24 @@ class BuildingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_building_list)
 
+        Log.i("----------", "onCreate")
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>"))
 
         recyclerView = findViewById(R.id.building_recycler_view)
-
+        mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
         // getting the data from intent
         var mIntentDataFromActivity: GetIntentDataFromActvity = getIntentData()
         getViewModel(mIntentDataFromActivity)
 
     }
-
     fun getIntentData(): GetIntentDataFromActvity {
         return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
     fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity) {
         // creating the object of BuildingViewModel class
-        mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
+
 
         //setting a observer on getBuildingList() method of BuildingViewModel to observe the data
         mBuildingsViewModel.getBuildingList(this).observe(this, Observer {
@@ -60,12 +60,9 @@ class BuildingsActivity : AppCompatActivity() {
                 }
             )
             recyclerView.adapter = customAdapter
-            if (mBuildingsViewModel.getBuildingList(this).hasActiveObservers()) {
-                mBuildingsViewModel.getBuildingList(this).removeObservers(this)
-            }
+
         })
     }
-
     // onRestart  of activity we make the api call to referesh the data
     override fun onRestart() {
         super.onRestart()

@@ -13,7 +13,7 @@ class ConferenceRoomViewModel : ViewModel() {
     var mConferenceRoomRepository: ConferenceRoomRepository? = null
     var mConferenceRoomList: MutableLiveData<List<ConferenceRoom>>? = null
 
-    fun getConferenceRoomList(context: Context, room: FetchConferenceRoom): LiveData<List<ConferenceRoom>> {
+    fun getConferenceRoomList(context: Context, room: FetchConferenceRoom): MutableLiveData<List<ConferenceRoom>> {
         if (mConferenceRoomList == null) {
             mConferenceRoomRepository = ConferenceRoomRepository.getInstance()
             mConferenceRoomList = mConferenceRoomRepository!!.getConferenceRoomList(

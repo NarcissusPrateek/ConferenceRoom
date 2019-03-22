@@ -10,10 +10,9 @@ import com.example.conferencerommapp.Repository.BookingRepository
 class BookingViewModel: ViewModel() {
     var mBookingRepository: BookingRepository? = null
     var mStatus: MutableLiveData<Int>? = null
-    fun addBookingDetails(context: Context, mBooking: Booking): LiveData<Int> {
+    fun addBookingDetails(context: Context, mBooking: Booking): MutableLiveData<Int> {
         mBookingRepository = BookingRepository.getInstance()
         mStatus = mBookingRepository!!.addBookigDetails(context, mBooking) as MutableLiveData<Int>
         return mStatus!!
     }
-
 }
