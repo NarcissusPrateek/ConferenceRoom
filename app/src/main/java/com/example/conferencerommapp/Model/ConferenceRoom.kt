@@ -4,18 +4,19 @@ import com.google.gson.annotations.SerializedName
 
 data class ConferenceRoom(
 
-    @SerializedName("CId")
-    var conf_id: Int? = null,
+    @SerializedName("roomId")
+    var roomId: Int? = null,
 
-   @SerializedName("CName")
-    var conf_name: String? = null,
+    @SerializedName("roomName")
+    var roomName: String? = null,
 
-    @SerializedName("Capacity")
-    var conf_capacity: String? = null,
+    @SerializedName("capacity")
+    var roomCapacity: String? = null,
 
-    @SerializedName("BId")
-    var building_id: String? = null,
+    @SerializedName("buildingId")
+    var buildingId: String? = null,
 
+    @SerializedName("status")
     var Status: String? = null
 
 )

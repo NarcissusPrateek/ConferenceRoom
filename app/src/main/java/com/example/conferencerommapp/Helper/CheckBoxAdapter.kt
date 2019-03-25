@@ -14,30 +14,33 @@ import com.example.conferencerommapp.R
 
 class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee: ArrayList<EmployeeList>, var context: Context) : RecyclerView.Adapter<CheckBoxAdapter.ViewHolder>() {
 
-
-    //var checkedTeachers = ArrayList<EmployeeList>()
+    /**
+     * attach a view for the recyclerview items
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_alertdialog, null)
-
         return ViewHolder(v)
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val teacher = employee[position]
-        holder.nameTxt.text = teacher.Name
-        holder.myCheckBox.isChecked = teacher.isSelected!!
-        if(teacher.isSelected!!) {
-            if(checkedEmployee.contains(teacher)) {
+        val employee = employee[position]
+        holder.nameTxt.text = employee.name
+        holder.myCheckBox.isChecked = employee.isSelected!!
+        if(employee.isSelected!!) {
+            if(checkedEmployee.contains(employee)) {
 
             }else {
-                checkedEmployee.add(teacher)
+                checkedEmployee.add(employee)
             }
         }
+
+        /**
+         * get the selected employee by user
+         */
         holder.setItemClickListener(object : ViewHolder.ItemClickListener {
             override fun onItemClick(v: View, pos: Int) {
                 val myCheckBox = v as CheckBox
-                val currentTeacher = employee[pos]
+                val currentTeacher = this@CheckBoxAdapter.employee[pos]
                 if (myCheckBox.isChecked) {
                     currentTeacher.isSelected = true
                     checkedEmployee.add(currentTeacher)
@@ -48,20 +51,22 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
             }
         })
     }
+
+    /**
+     * function will return the number of items present in the recyclerview
+     */
     override fun getItemCount(): Int {
         return employee.size
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         var nameTxt: TextView
-        //var emailTxt: TextView
         var myCheckBox: CheckBox
 
         lateinit var myItemClickListener: ItemClickListener
 
         init {
             nameTxt = itemView.findViewById(R.id.textViewName)
-            //emailTxt = itemView.findViewById(R.id.textViewEmail)
             myCheckBox = itemView.findViewById(R.id.checkBox)
             myCheckBox.setOnClickListener(this)
         }
@@ -79,11 +84,17 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
         }
     }
 
+    /**
+     * fuction will update recyclerview items according to the filtered data
+     */
     fun filterList(filterdNames: ArrayList<EmployeeList>) {
         this.employee = filterdNames
         notifyDataSetChanged()
     }
 
+    /**
+     * return the checkedEmployees list selected by the user
+     */
     fun getList(): ArrayList<EmployeeList> {
         return checkedEmployee
     }

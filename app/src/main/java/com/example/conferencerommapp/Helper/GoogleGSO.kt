@@ -7,7 +7,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 class GoogleGSO {
     companion object {
-        fun getGoogleSignInClient(context: Context) : GoogleSignInClient {
+        /**
+         * this function configure GoogleSignInOption and returns a object of GoogleSignIn
+         */
+        fun getGoogleSignInClient(context: Context): GoogleSignInClient {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build()

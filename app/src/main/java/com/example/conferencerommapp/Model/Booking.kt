@@ -1,24 +1,30 @@
 package com.example.conferencerommapp.Model
 
+import com.google.gson.annotations.SerializedName
+
 data class Booking (
 
-    var Email: String? = null,
+    @SerializedName("email")
+    var email: String? = null,
 
-    var CId: Int? = 0,
+    @SerializedName("roomId")
+    var roomId: Int? = 0,
 
-    var BId: Int? = 0,
+    @SerializedName("buildingId")
+    var buildingId: Int? = 0,
 
-    var FromTime: String? = null,
+    @SerializedName("fromTime")
+    var fromTime: String? = null,
 
-    var CName: String? = null,
+    @SerializedName("roomName")
+    var roomName: String? = null,
 
-    var ToTime: String? = null,
+    @SerializedName("toTime")
+    var toTime: String? = null,
 
-    var Purpose: String? = null,
+    @SerializedName("purpose")
+    var purpose: String? = null,
 
-    var CCMail: String? = null
-) {
-    override fun toString(): String {
-        return "Booking(Email=$Email, CId=$CId, BId=$BId, FromTime=$FromTime, ToTime=$ToTime, Purpose=$Purpose, CName=$CName, CCMail=$CCMail)"
-    }
-}
+    @SerializedName("cCMail")
+    var cCMail: String? = null
+)

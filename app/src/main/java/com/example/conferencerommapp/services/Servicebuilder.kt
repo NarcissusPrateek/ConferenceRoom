@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object Servicebuilder  {
-    private const val URL = "http://192.168.1.189/CRB/"
+    private const val URL = "http://192.168.1.188/CRB/"
 
     private val okHttp : OkHttpClient.Builder = OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS)
 

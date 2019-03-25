@@ -16,13 +16,17 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.conferencerommapp.Activity.Main2Activity
+import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Model.CancelBooking
 import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.CancelBookingViewModel
 
-class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val mContext: Context) :
+class DashBoardAdapter(
+    val dashboardItemList: ArrayList<Manager>,
+    val mContext: Context,
+    val dashBoardInterface: DashBoardInterface
+) :
 
     androidx.recyclerview.widget.RecyclerView.Adapter<DashBoardAdapter.ViewHolder>() {
 
@@ -56,15 +60,22 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val mContext: 
      */
     private fun cancelBooking(mCancel: CancelBooking, mContext: Context) {
 
-        //setting the observer for making the api call for cancelling the booking
-        var mCancelBookingViewModel = ViewModelProviders.of(mContext as Main2Activity).get(CancelBookingViewModel::class.java)
+        /**
+         * setting the observer for making the api call for cancelling the booking
+         */
+        var mCancelBookingViewModel =
+            ViewModelProviders.of(mContext as UserBookingsDashboardActivity).get(CancelBookingViewModel::class.java)
         mCancelBookingViewModel.cancelBooking(mContext, mCancel).observe(mContext, Observer {
-            if(it == 200) {
-                //mContext.mBookingDashboardViewModel.getBookingList(mContext, mCancel.Email.toString())
-                mContext.getUpdatedDataFromApi()
-            }else {
-                Toast.makeText(mContext, "Response Error", Toast.LENGTH_LONG).show()
-            }
+            Toast.makeText(mContext, "Booking Cancelled Successfully", Toast.LENGTH_SHORT).show()
+            (mContext).mBookingDashboardViewModel.mBookingDashboardRepository!!.makeApiCall(
+                mContext,
+                mCancel.email!!
+            )
+
+            //dashBoardInterface.onCancelClicked()
+//            }else {
+//                Toast.makeText(mContext, "Response Error", Toast.LENGTH_LONG).show()
+//            }
         })
     }
 
@@ -88,7 +99,9 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val mContext: 
         var dashboard: Manager? = null
     }
 
-    //function for setting Animation for RecyclerView item
+    /**
+     * function for setting Animation for RecyclerView item
+     */
     fun setAnimationToTheRecyclerViewItem(holder: ViewHolder, position: Int) {
         holder.card.setOnClickListener(View.OnClickListener {
             currentPosition = position
@@ -114,7 +127,7 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val mContext: 
     }
 
     /**
-     * set data to the field of view
+     * set data to the fields of view
      */
     fun setDataToFields(holder: ViewHolder, position: Int) {
         holder.dashboard = dashboardItemList[position]
@@ -128,7 +141,7 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val mContext: 
 
     /**
      * set data for the dialog items
-      */
+     */
     fun setMeetingMembers(position: Int) {
         var list = dashboardItemList[position].Name
         var arrayList = ArrayList<String>()
@@ -177,20 +190,19 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val mContext: 
             builder.setTitle("Dates Of Meeting.")
             builder.setItems(listItems, DialogInterface.OnClickListener { dialog, which ->
                 if (dashboardItemList[position].Status[which] == "Cancelled") {
-                    Toast.makeText(mContext, "Cancelled by HR! Please check your Email", Toast.LENGTH_LONG).show()
+                    Toast.makeText(mContext, "Cancelled by HR! Please check your email", Toast.LENGTH_LONG).show()
                 } else {
-                    //make api call here
                     var builder = AlertDialog.Builder(mContext)
                     builder.setTitle("Confirm ")
-                    builder.setMessage("Press ok to Delete the mBooking for the date '${listItems.get(which).toString()}'")
+                    builder.setMessage("Press ok to Delete the mManagerBooking for the date '${listItems.get(which).toString()}'")
                     builder.setPositiveButton("Ok") { dialog, postion ->
                         var mCancel = CancelBooking()
-                        mCancel.CId = dashboardItemList[position].CId
-                        mCancel.Email = dashboardItemList[position].Email
-                        mCancel.FromTime =
+                        mCancel.roomId = dashboardItemList[position].CId
+                        mCancel.email = dashboardItemList[position].Email
+                        mCancel.fromTime =
                             listItems.get(which).toString() + "T" + dashboardItemList[position].FromTime!!.split("T")[1]
-                        mCancel.ToTime =
-                            listItems.get(which).toString() + "T" + dashboardItemList[position].FromTime!!.split("T")[1]
+                        mCancel.toTime =
+                            listItems.get(which).toString() + "T" + dashboardItemList[position].ToTime!!.split("T")[1]
                         cancelBooking(mCancel, mContext)
                     }
                     builder.setNegativeButton("Cancel") { dialog, postion ->
@@ -223,10 +235,10 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val mContext: 
                 builder.setMessage("Are you sure you want to cancel the meeting?")
                 builder.setPositiveButton("YES") { dialog, which ->
                     var cancel = CancelBooking()
-                    cancel.CId = dashboardItemList.get(position).CId
-                    cancel.ToTime = dashboardItemList[position].ToTime
-                    cancel.FromTime = dashboardItemList[position].FromTime
-                    cancel.Email = dashboardItemList.get(position).Email
+                    cancel.roomId = dashboardItemList.get(position).CId
+                    cancel.toTime = dashboardItemList[position].ToTime
+                    cancel.fromTime = dashboardItemList[position].FromTime
+                    cancel.email = dashboardItemList.get(position).Email
                     cancelBooking(cancel, mContext)
                 }
                 builder.setNegativeButton("No") { dialog, which ->
@@ -238,4 +250,9 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>, val mContext: 
             }
         }
     }
+
+    interface DashBoardInterface {
+        fun onCancelClicked()
+    }
+
 }

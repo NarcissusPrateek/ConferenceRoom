@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -42,10 +41,13 @@ class UserInputActivity : AppCompatActivity() {
         setPickerToEdittextx()
 
         buildingActivityButton.setOnClickListener {
-            goToBuildingActivity()
+            validationOnDataEnteredByUser()
         }
     }
 
+    /**
+     * function will Initialize all input fields
+     */
     fun initializeInputFields() {
         dateEditText = findViewById(R.id.date)
         fromTimeEditText = findViewById(R.id.fromTime)
@@ -53,24 +55,38 @@ class UserInputActivity : AppCompatActivity() {
         buildingActivityButton = findViewById(R.id.next)
     }
 
+    /**
+     * function will attach date and time picker to the input fields
+     */
     fun setPickerToEdittextx() {
 
-        // array of Integers for setting values into the spinner
+        /**
+         * array of Integers for setting values into the spinner
+         */
         var options = arrayOf(2, 4, 6, 8, 10, 12, 14, 16)
 
-        // set Time picker for the edittext fromtime
+        /**
+         * set Time picker for the edittext fromtime
+         */
         fromTimeEditText.setOnClickListener {
             DateAndTimePicker.getTimePickerDialog(this, fromTimeEditText)
         }
-        // set Time picker for the edittext totime
+
+        /**
+         * set Time picker for the edittext totime
+         */
         toTimeEditText.setOnClickListener {
             DateAndTimePicker.getTimePickerDialog(this, toTimeEditText)
         }
-        // set Date picker for the edittext dateEditText
+        /**
+         * set Date picker for the edittext dateEditText
+         */
         dateEditText.setOnClickListener {
             DateAndTimePicker.getDatePickerDialog(this, dateEditText)
         }
-        // a spinner for selecting room capacity
+        /**
+         * a spinner for selecting room capacity
+         */
         spinner2.adapter = ArrayAdapter<Int>(this, android.R.layout.simple_list_item_1, options)
         spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -83,6 +99,9 @@ class UserInputActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * check validation for all input fields
+     */
     fun validate(): Boolean {
         if (TextUtils.isEmpty(fromTimeEditText.text.trim())) {
             Toast.makeText(applicationContext, "Invalid From Time", Toast.LENGTH_SHORT).show()
@@ -93,42 +112,55 @@ class UserInputActivity : AppCompatActivity() {
         } else if (TextUtils.isEmpty(dateEditText.text.trim())) {
             Toast.makeText(applicationContext, "Invalid Date", Toast.LENGTH_SHORT).show()
             return false
-        } else if (capacity.equals("Select Capacity")) {
-            Toast.makeText(applicationContext, "Invalid Capacity", Toast.LENGTH_SHORT).show()
+        } else if (capacity.equals("Select capacity")) {
+            Toast.makeText(applicationContext, "Invalid capacity", Toast.LENGTH_SHORT).show()
             return false
         } else {
             return true
         }
     }
 
-    fun goToBuildingActivity() {
+    /**
+     * function will apply some validation on data entered by user
+     */
+    fun validationOnDataEnteredByUser() {
 
-        /*Validate each input field whether they are empty or not
-            * If the field contains no values we show a toast to user saying that the value is invalid for particular field*/
+        /**
+         * Validate each input field whether they are empty or not
+         * If the field contains no values we show a toast to user saying that the value is invalid for particular field
+         */
         if (!validate()) {
 
         } else {
             val min_milliseconds: Long = 900000
             val max_milliseconds: Long = 14400000
 
-            //Get the start and end time of meeting from the input fields
+            /**
+             * Get the start and end time of meeting from the input fields
+             */
             val startTime = fromTimeEditText.text.toString()
             val endTime = toTimeEditText.text.toString()
 
-            //setting a aalert dialog instance for the current context
+            /**
+             * setting a aalert dialog instance for the current context
+             */
 
             val builder = AlertDialog.Builder(this@UserInputActivity)
             builder.setTitle("Check...")
             try {
 
-                // getting the values for time validation variables from method calculateTimeInMillis
+                /**
+                 * getting the values for time validation variables from method calculateTimeInMillis
+                 */
                 val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMiliis(
                     startTime,
                     endTime,
                     date.text.toString()
                 )
-                /*if the elapsed2 < 0 that means the from time is less than the current time. In that case
-                   we restrict the user to move forword and show some message in alert that the time is not valid*/
+                /**
+                 * if the elapsed2 < 0 that means the from time is less than the current time. In that case
+                 * we restrict the user to move forword and show some message in alert that the time is not valid
+                 */
 
                 if (elapsed2 < 0) {
                     builder.setMessage("From-Time must be greater than the current time...")
@@ -138,13 +170,13 @@ class UserInputActivity : AppCompatActivity() {
                     dialog.setCanceledOnTouchOutside(false)
                     dialog.show()
                 }
-                /*
-                * if MIN_MILIISECONDS <= elapsed that means the meeting duration is more than 15 min
-                * if the above condition is not true than we show a message in alert that the meeting duration must be greater than 15 min
-                * if MAX_MILLISECONDS >= elapsed that means the meeting duration is less than 4hours
-                * if the above condition is not true than we show show a message in alert that the meeting duration must be less than 4hours
-                * if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
-                */
+                /**
+                 * if MIN_MILIISECONDS <= elapsed that means the meeting duration is more than 15 min
+                 * if the above condition is not true than we show a message in alert that the meeting duration must be greater than 15 min
+                 * if MAX_MILLISECONDS >= elapsed that means the meeting duration is less than 4hours
+                 * if the above condition is not true than we show show a message in alert that the meeting duration must be less than 4hours
+                 * if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
+                 */
                 else if ((min_milliseconds <= elapsed) && (max_milliseconds >= elapsed)) {
                     goToBuildingsActivity()
                 } else {
@@ -164,9 +196,13 @@ class UserInputActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * function will pass the intent with data to the next activity
+     */
     fun goToBuildingsActivity() {
         var mGetIntentDataFromActvity = GetIntentDataFromActvity()
-        mGetIntentDataFromActvity.fromtime = (dateEditText.text.toString() + " " + fromTimeEditText.text.toString()).trim()
+        mGetIntentDataFromActvity.fromtime =
+            (dateEditText.text.toString() + " " + fromTimeEditText.text.toString()).trim()
         mGetIntentDataFromActvity.totime = (dateEditText.text.toString() + " " + toTimeEditText.text.toString()).trim()
         mGetIntentDataFromActvity.date = dateEditText.text.toString()
         mGetIntentDataFromActvity.capacity = capacity

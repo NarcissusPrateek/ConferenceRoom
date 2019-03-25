@@ -9,7 +9,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DateAndTimePicker {
+
+    /**
+     * this companion object will provide a static function
+     */
     companion object {
+
+        /**
+         * this function will attach a time picker to the edittext field setTime
+         */
         fun getTimePickerDialog(context: Context, setTime: EditText) {
             var timeFormat = SimpleDateFormat("HH:mm ", Locale.US)
             val now = Calendar.getInstance()
@@ -24,6 +32,10 @@ class DateAndTimePicker {
                 }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true)
             timePickerDialog.show()
         }
+
+        /**
+         * this function will attach a date picker to the edittext field setDate
+         */
         fun getDatePickerDialog(context: Context, setDate: EditText) {
             var dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
             val now = Calendar.getInstance()

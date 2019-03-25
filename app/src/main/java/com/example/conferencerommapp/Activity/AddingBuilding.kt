@@ -48,17 +48,17 @@ class AddingBuilding : AppCompatActivity() {
 
     //Add the Data to the Objects
     private fun addDataToObject(mAddBuilding: AddBuilding) {
-        mAddBuilding.BName = buildingnameEditText.text.toString().trim()
-        mAddBuilding.Place = buildingplaceEditText.text.toString().trim()
+        mAddBuilding.buildingName = buildingnameEditText.text.toString().trim()
+        mAddBuilding.place = buildingplaceEditText.text.toString().trim()
     }
 
     //Validate the Inputs
     fun validateInputs(): Boolean {
         if (buildingnameEditText.text.toString().trim().isEmpty()) {
-            Toast.makeText(this, "Enter the Building Name", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Enter the Building name", Toast.LENGTH_SHORT).show()
             return false
         } else if (buildingplaceEditText.text.trim().isEmpty()) {
-            Toast.makeText(this, "Enter the Building Place", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Enter the Building place", Toast.LENGTH_SHORT).show()
             return false
         }
         return true

@@ -3,7 +3,14 @@ package com.example.conferencerommapp.Helper
 import java.text.SimpleDateFormat
 
 class ConvertTimeInMillis {
+    /**
+     * it will provide a static function
+     */
     companion object {
+
+        /**
+         * convert the time into milliseconds and return the difference between two time
+         */
         fun calculateTimeInMiliis(startTime: String, endTime: String, date: String): Pair<Long, Long> {
             val simpleDateFormatForTime = SimpleDateFormat("HH:mm")
             val simpleDateFormatForDate = SimpleDateFormat("yyyy-M-dd HH:mm")

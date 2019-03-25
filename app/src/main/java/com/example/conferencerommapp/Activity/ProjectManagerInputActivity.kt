@@ -1,31 +1,31 @@
 package com.example.conferencerommapp.Activity
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
 import android.text.Html
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.conferencerommapp.Helper.ColorOfDialogButton
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.ConvertTimeInMillis
+import com.example.conferencerommapp.Helper.DateAndTimePicker
+import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
-import kotlinx.android.synthetic.main.activity_project_manager_input.*
-import kotlinx.android.synthetic.main.activity_user_inputs.*
-import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class ProjectManagerInputActivity : AppCompatActivity() {
 
-    var datalist = ArrayList<String>()
+    lateinit var fromTimeEditText: EditText
+    lateinit var toTimeEditText: EditText
+    lateinit var dateToEditText: EditText
+    lateinit var dateFromEditText: EditText
+    lateinit var buildingsActivityButton: Button
+    lateinit var selectDaysButton: Button
     var listOfDays = ArrayList<Int>()
     var mUserItems = ArrayList<Int>()
     var listItems = arrayOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thusday", "Friday", "Saturday")
@@ -37,146 +37,57 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + "Booking Details" + "</font>"))
 
-        var timeFormat = SimpleDateFormat("HH:mm ", Locale.US)
-        var dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-        fromTime_manager.setOnClickListener {
-            val now = Calendar.getInstance()
-            val timePickerDialog =
-                TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                    val selectedTime = Calendar.getInstance()
-                    selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                    selectedTime.set(Calendar.MINUTE, minute)
+        initializeInputFields()
+        setPickerToEdittextx()
 
-                    var nowtime = timeFormat.format(selectedTime.time).toString()
-                    fromTime_manager.text = Editable.Factory.getInstance().newEditable(nowtime)
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true)
-            timePickerDialog.show()
-        }
-
-
-
-        toTime_manager.setOnClickListener {
-            val now = Calendar.getInstance()
-            val timePickerDialog =
-                TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-                    val selectedTime = Calendar.getInstance()
-                    selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                    selectedTime.set(Calendar.MINUTE, minute)
-
-                    var nowtime = timeFormat.format(selectedTime.time).toString()
-                    toTime_manager.text = Editable.Factory.getInstance().newEditable(nowtime)
-                }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true)
-            timePickerDialog.show()
-        }
-
-
-        date_manager.setOnClickListener {
-            val now = Calendar.getInstance()
-            val datePicker =
-                DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                    //
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.set(Calendar.YEAR, year)
-                    selectedDate.set(Calendar.MONTH, month)
-                    selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                    var nowDate: String = dateFormat.format(selectedDate.time).toString()
-                    date_manager.text = Editable.Factory.getInstance().newEditable(nowDate)
-                }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH))
-            datePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            datePicker.show()
-
-        }
-        to_date_manager.setOnClickListener {
-            val now = Calendar.getInstance()
-            val datePicker =
-                DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                    //
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.set(Calendar.YEAR, year)
-                    selectedDate.set(Calendar.MONTH, month)
-                    selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                    var nowDate: String = dateFormat.format(selectedDate.time).toString()
-                    to_date_manager.text = Editable.Factory.getInstance().newEditable(nowDate)
-                    Log.i("--------",Editable.Factory.getInstance().newEditable(nowDate).toString())
-                }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH))
-            datePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            datePicker.show()
-        }
-
-        select_days.setOnClickListener(View.OnClickListener {
-            getDays()
-
-        })
-
-
-        next_manager.setOnClickListener {
-            if (TextUtils.isEmpty(fromTime_manager.text.trim())) {
-                Toast.makeText(applicationContext, "Invalid From Time", Toast.LENGTH_SHORT).show()
-            } else if (TextUtils.isEmpty(toTime_manager.text.trim())) {
-                Toast.makeText(applicationContext, "Invalid To Time", Toast.LENGTH_SHORT).show()
-            } else if (TextUtils.isEmpty(date_manager.text.trim())) {
-                Toast.makeText(applicationContext, "Invalid From-Date", Toast.LENGTH_SHORT).show()
+        buildingsActivityButton.setOnClickListener {
+            if (validate()) {
+                applyValidationOnDateAndTime()
             }
-            else if (TextUtils.isEmpty(to_date_manager.text.trim())) {
-                Toast.makeText(applicationContext, "Invalid To-Date", Toast.LENGTH_SHORT).show()
-            }else if (listOfDays.isEmpty()) {
-                Toast.makeText(applicationContext, "Please select week days", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                val startTime = fromTime_manager.text.toString()
-                val endTime = toTime_manager.text.toString()
-                try {
-                    val sdf = SimpleDateFormat("HH:mm", Locale.US)
-                    val sdf1 = SimpleDateFormat("yyyy-M-dd HH:mm", Locale.US)
-                    val d1 = sdf.parse(startTime)
-                    val d2 = sdf.parse(endTime)
-                    val d3 = sdf1.parse(date_manager.text.toString() + " " + fromTime_manager.text.toString())
-                    val elapsed = d2.time - d1.time
-                    var min: Long = 900000
-                    val currtime = System.currentTimeMillis()
-                    val elapsed2 = d3.time - currtime
-                    Log.i("-----time---",d3.time.toString() + d3.toString())
-                    Log.i("-----current---",currtime.toString())
-                    Log.i("--------diff------", " " + elapsed2 )
-                    var max: Long = 14400000
-                    if(elapsed2 < 0) {
-                        val builder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
-                        builder.setTitle("Check...")
-                        builder.setMessage("From-Time must be greater than the current time...")
-                        builder.setPositiveButton("Ok") { dialog, which ->
-                        }
-                        val dialog: android.app.AlertDialog = builder.create()
-                        dialog.setCanceledOnTouchOutside(false)
-                        dialog.show()
-                    }
-                    else if ((min <= elapsed) && (max >= elapsed)) {
-                        val buildingintent = Intent(this@ProjectManagerInputActivity, Manager_Building::class.java)
-                        buildingintent.putExtra(Constants.EXTRA_FROM_TIME, fromTime_manager.text.toString())
-                        buildingintent.putExtra(Constants.EXTRA_TO_TIME, toTime_manager.text.toString())
-                        buildingintent.putExtra(Constants.EXTRA_DATE, date_manager.text.toString())
-                        buildingintent.putExtra(Constants.EXTRA_TO_DATE, to_date_manager.text.toString())
-                        buildingintent.putExtra(Constants.EXTRA_DAY_LIST, listOfDays)
-                        startActivity(buildingintent)
-                    }
-                    else {
-                        val builder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
-                        builder.setTitle("Check...")
-                        builder.setMessage("From-Time must be greater then To-Time and the meeting time must be less then 4 Hours")
-                        builder.setPositiveButton("Ok") { dialog, which ->
-                        }
-                        val dialog: android.app.AlertDialog = builder.create()
-                        dialog.setCanceledOnTouchOutside(false)
-                        dialog.show()
-                    }
-                } catch (e: Exception) {
-                    Log.i("---------", e.message)
-                    Toast.makeText(this@ProjectManagerInputActivity, "Details are Invalid!!!", Toast.LENGTH_LONG).show()
-                }
-
-            } }
+        }
     }
+
+
+    /**
+     * initialize all input fields
+     */
+    fun initializeInputFields() {
+        dateFromEditText = findViewById(R.id.date_manager)
+        dateToEditText = findViewById(R.id.to_date_manager)
+        fromTimeEditText = findViewById(R.id.fromTime_manager)
+        toTimeEditText = findViewById(R.id.toTime_manager)
+        buildingsActivityButton = findViewById(R.id.next_manager)
+        selectDaysButton = findViewById(R.id.select_days)
+    }
+
+    /**
+     * set date and time pickers to edittext fields
+     */
+    fun setPickerToEdittextx() {
+
+        // set Time picker for the edittext fromtime
+        fromTimeEditText.setOnClickListener {
+            DateAndTimePicker.getTimePickerDialog(this, fromTimeEditText)
+        }
+        // set Time picker for the edittext totime
+        toTimeEditText.setOnClickListener {
+            DateAndTimePicker.getTimePickerDialog(this, toTimeEditText)
+        }
+        // set Date picker for the edittext dateEditText
+        dateFromEditText.setOnClickListener {
+            DateAndTimePicker.getDatePickerDialog(this, dateFromEditText)
+        }
+        dateToEditText.setOnClickListener {
+            DateAndTimePicker.getDatePickerDialog(this, dateToEditText)
+        }
+        selectDaysButton.setOnClickListener(View.OnClickListener {
+            getDays()
+        })
+    }
+
+    /**
+     * this function will select and store the days selected by user for recurring meeting
+     */
     fun getDays() {
         val mBuilder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
         mBuilder.setMultiChoiceItems(listItems, checkedItems,
@@ -191,7 +102,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
 
         mBuilder.setCancelable(false)
         mBuilder.setPositiveButton("Ok") { dialogInterface, which ->
-
             listOfDays.clear()
             for (i in mUserItems.indices) {
                 listOfDays.add(mUserItems[i] + 1)
@@ -203,7 +113,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         ) { dialogInterface, i ->
             dialogInterface.dismiss()
         }
-
         mBuilder.setNeutralButton("Clear All") { dialogInterface, which ->
             for (i in checkedItems.indices) {
                 checkedItems[i] = false
@@ -212,18 +121,110 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         }
         val mDialog = mBuilder.create()
         mDialog.show()
-        var buttonPositive = mDialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        var buttonNegative = mDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-        var buttonNutral = mDialog.getButton(AlertDialog.BUTTON_NEUTRAL)
-
-        buttonPositive.setBackgroundColor(Color.WHITE)
-        buttonPositive.setTextColor(Color.parseColor("#0072BC"))
-
-        buttonNegative.setBackgroundColor(Color.WHITE)
-        buttonNegative.setTextColor(Color.parseColor("#0072BC"))
-
-        buttonNutral.setBackgroundColor(Color.WHITE)
-        buttonNutral.setTextColor(Color.RED)
+        ColorOfDialogButton.setColorOfDialogButton(mDialog)
     }
 
+    /**
+     * this function ensures that user entered values for all editable fields
+     */
+    fun validate(): Boolean {
+        if (TextUtils.isEmpty(fromTimeEditText.text.trim())) {
+            Toast.makeText(applicationContext, "Invalid From Time", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (TextUtils.isEmpty(toTimeEditText.text.trim())) {
+            Toast.makeText(applicationContext, "Invalid To Time", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (TextUtils.isEmpty(dateFromEditText.text.trim())) {
+            Toast.makeText(applicationContext, "Invalid From Date", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (TextUtils.isEmpty(dateToEditText.text.trim())) {
+            Toast.makeText(applicationContext, "Invalid To Date", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (listOfDays.isEmpty()) {
+            Toast.makeText(applicationContext, "Please select week days", Toast.LENGTH_SHORT).show()
+            return false
+        } else {
+            return true
+        }
+    }
+
+    /**
+     * if MIN_MILIISECONDS <= elapsed that means the meeting duration is more than 15 min
+     *  if the above condition is not true than we show a message in alert that the meeting duration must be greater than 15 min
+     *  if MAX_MILLISECONDS >= elapsed that means the meeting duration is less than 4hours
+     *  if the above condition is not true than we show show a message in alert that the meeting duration must be less than 4hours
+     *  if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
+     */
+    fun applyValidationOnDateAndTime() {
+        val min_milliseconds: Long = 900000
+        val max_milliseconds: Long = 14400000
+
+        /**
+         * Get the start and end time of meeting from the input fields
+         */
+
+        val startTime = fromTimeEditText.text.toString()
+        val endTime = toTimeEditText.text.toString()
+
+        /**
+         * setting a aalert dialog instance for the current context
+         */
+
+        val builder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
+        builder.setTitle("Check...")
+        try {
+
+            /**
+             *  getting the values for time validation variables from method calculateTimeInMillis
+             */
+            val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMiliis(
+                startTime,
+                endTime,
+                dateFromEditText.text.toString()
+            )
+            /**
+             * if the elapsed2 < 0 that means the from time is less than the current time. In that case
+             * we restrict the user to move forword and show some message in alert that the time is not valid
+             */
+
+            if (elapsed2 < 0) {
+                builder.setMessage("From-Time must be greater than the current time...")
+                builder.setPositiveButton("Ok") { dialog, which ->
+                }
+                val dialog: android.app.AlertDialog = builder.create()
+                dialog.setCanceledOnTouchOutside(false)
+                dialog.show()
+            } else if ((min_milliseconds <= elapsed) && (max_milliseconds >= elapsed)) {
+                goToBuildingsActivity()
+            } else {
+                val builder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
+                builder.setTitle("Check...")
+                builder.setMessage("From-Time must be greater then To-Time and the meeting time must be less then 4 Hours")
+                builder.setPositiveButton("Ok") { dialog, which ->
+                }
+                val dialog: android.app.AlertDialog = builder.create()
+                dialog.setCanceledOnTouchOutside(false)
+                dialog.show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this@ProjectManagerInputActivity, "Details are Invalid!!!", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /**
+     * set data to the object which is used to send data from this activity to another activity and pass the intent
+     */
+    fun goToBuildingsActivity() {
+        var mSetIntentData = GetIntentDataFromActvity()
+        mSetIntentData.fromtime = fromTimeEditText.text.toString().trim()
+        mSetIntentData.totime = toTimeEditText.text.toString().trim()
+        mSetIntentData.date = dateFromEditText.text.toString().trim()
+        mSetIntentData.toDate = dateToEditText.text.toString().trim()
+        mSetIntentData.listOfDays.clear()
+        mSetIntentData.listOfDays.addAll(listOfDays!!)
+
+        val buildingintent = Intent(this@ProjectManagerInputActivity, ManagerBuildingsActivity::class.java)
+        buildingintent.putExtra(Constants.EXTRA_INTENT_DATA, mSetIntentData)
+        startActivity(buildingintent)
+    }
 }

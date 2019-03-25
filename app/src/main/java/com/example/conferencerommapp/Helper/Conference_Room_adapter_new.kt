@@ -7,10 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.R
-import com.google.android.gms.common.internal.Objects
 
 class Conference_Room_adapter_new(private val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<Conference_Room_adapter_new.ViewHolder>() {
 
@@ -27,9 +25,9 @@ class Conference_Room_adapter_new(private val conferenceRoomList: List<Conferenc
         mClickListener = btnlistener
         holder.conferenceRoom = conferenceRoomList[position]
 
-        holder.txvRoom.text = conferenceRoomList[position].conf_name
+        holder.txvRoom.text = conferenceRoomList[position].roomName
 
-        holder.txvRoomCapacity.text = conferenceRoomList[position].conf_capacity
+        holder.txvRoomCapacity.text = conferenceRoomList[position].roomCapacity
 
         if(conferenceRoomList[position].Status.equals("Available"))
         {
@@ -49,8 +47,8 @@ class Conference_Room_adapter_new(private val conferenceRoomList: List<Conferenc
 
         holder.itemView.setOnClickListener { v ->
             val context = v.context
-            val roomId = conferenceRoomList[position].conf_id
-            val roomname = conferenceRoomList[position].conf_name
+            val roomId = conferenceRoomList[position].roomId
+            val roomname = conferenceRoomList[position].roomName
             mClickListener?.onBtnClick(roomId.toString(),roomname)
         }
     }

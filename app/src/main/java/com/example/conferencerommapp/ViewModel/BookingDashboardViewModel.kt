@@ -6,9 +6,22 @@ import androidx.lifecycle.ViewModel
 import com.example.conferencerommapp.Model.Dashboard
 import com.example.conferencerommapp.Repository.BookingDashboardRepository
 
-class BookingDashboardViewModel: ViewModel() {
+class BookingDashboardViewModel : ViewModel() {
+
+    /**
+     * a object which will hold the reference to the corrosponding repository class
+     */
     var mBookingDashboardRepository: BookingDashboardRepository? = null
+
+    /**
+     * a MutableLivedata variable which will hold the Value for the Livedata
+     */
     var mBookingList: MutableLiveData<List<Dashboard>>? = null
+
+    /**
+     * function will initialize the repository object and calls the method of repository which will make the api call
+     * and function will return the value for MutableLivedata
+     */
     fun getBookingList(context: Context, email: String): MutableLiveData<List<Dashboard>> {
         if (mBookingList == null) {
             mBookingDashboardRepository = BookingDashboardRepository.getInstance()

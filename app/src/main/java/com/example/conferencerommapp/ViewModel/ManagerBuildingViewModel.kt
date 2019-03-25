@@ -4,14 +4,14 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.conferencerommapp.Model.Building
-import com.example.conferencerommapp.Repository.BuildingsRepository
+import com.example.conferencerommapp.Repository.ManagerBuildingsRepository
 
-class BuildingViewModel : ViewModel() {
+class ManagerBuildingViewModel : ViewModel() {
 
     /**
      * a object which will hold the reference to the corrosponding repository class
      */
-    var mBuildingsRepository: BuildingsRepository? = null
+    var mManagerBuildingsRepository: ManagerBuildingsRepository? = null
 
     /**
      * a MutableLivedata variable which will hold the Value for the Livedata
@@ -24,9 +24,9 @@ class BuildingViewModel : ViewModel() {
      */
     fun getBuildingList(context: Context): MutableLiveData<List<Building>> {
         if (mBuildingList == null) {
-            mBuildingsRepository = BuildingsRepository.getInstance()
+            mManagerBuildingsRepository = ManagerBuildingsRepository.getInstance()
         }
-        mBuildingList = mBuildingsRepository!!.getBuildingList(context) as MutableLiveData<List<Building>>
+        mBuildingList = mManagerBuildingsRepository!!.getBuildingList(context) as MutableLiveData<List<Building>>
         return mBuildingList!!
     }
 }

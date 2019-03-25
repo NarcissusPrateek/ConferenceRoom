@@ -1,11 +1,20 @@
 package com.example.conferencerommapp.Model
 
+import com.google.gson.annotations.SerializedName
 import java.time.chrono.ChronoLocalDateTime
 
 data class FetchConferenceRoom (
-    var FromTime : String? = null,
-    var ToTime : String? = null,
-    var BId : Int? = 0,
-    var Capacity : Int? = 0
+
+    @SerializedName("fromTime")
+    var fromTime : String? = null,
+
+    @SerializedName("toTime")
+    var toTime : String? = null,
+
+    @SerializedName("buildingId")
+    var buildingId : Int? = 0,
+
+    @SerializedName("capacity")
+    var capacity : Int? = 0
 
 )

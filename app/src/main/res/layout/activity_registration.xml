@@ -112,7 +112,7 @@
                     android:layout_marginTop="200dp"
                     android:layout_marginLeft="60dp"
                     android:layout_marginRight="60dp"
-                    android:hint="Name"
+                    android:hint="name"
                     android:backgroundTint="#242B53"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/textView_name"

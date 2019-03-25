@@ -10,68 +10,98 @@ import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.R
 
 
-class ConferenceRoomAdapter(val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<ConferenceRoomAdapter.ViewHolder>() {
+class ConferenceRoomAdapter(val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) :
+    androidx.recyclerview.widget.RecyclerView.Adapter<ConferenceRoomAdapter.ViewHolder>() {
 
-	companion object {
-		var mClickListener: BtnClickListener? = null
-	}
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    /**
+     * an interface object delacration
+     */
+    companion object {
+        var mClickListener: BtnClickListener? = null
+    }
 
-		val view = LayoutInflater.from(parent.context).inflate(R.layout.room_availablity, parent, false)
-		return ViewHolder(view)
-	}
+    /**
+     * attach view to the recyclerview
+     */
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		mClickListener = btnlistener
-		holder.conferenceRoom = conferenceRoomList[position]
-		holder.txvRoom.text = conferenceRoomList[position].conf_name
-		holder.txvRoomCapacity.text = conferenceRoomList[position].conf_capacity
-		holder.txvStatus.text = conferenceRoomList[position].Status
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.room_availablity, parent, false)
+        return ViewHolder(view)
+    }
 
 
-		if(holder.txvStatus.text.equals("Available")) {
-			holder.txvStatus.setTextColor(Color.parseColor("#4C9A2A"))
-		}
-		else if(holder.txvStatus.text.equals("Booked")) {
-			holder.txvStatus.setTextColor(Color.parseColor("#A9A9A9"))
-		}else if(holder.txvStatus.text.equals("Blocked")) {
-			holder.txvStatus.setTextColor(Color.parseColor("#FE7D6A"))
-		}
+    /**
+     * bind data to the view
+     */
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        mClickListener = btnlistener
+        setDataToViewItems(holder, position)
 
-		holder.itemView.setOnClickListener { v ->
-			if(holder.txvStatus.text.equals("Available")) {
+        changeColorOfStatusField(holder)
 
-				val context = v.context
-				val roomId = conferenceRoomList[position].conf_id
-				val roomname = conferenceRoomList[position].conf_name
-				mClickListener?.onBtnClick(roomId.toString(),roomname)
-			}else if(holder.txvStatus.text.equals("Booked")) {
+        holder.itemView.setOnClickListener { v ->
+            if (holder.txvStatus.text.equals("Available")) {
+                val roomId = conferenceRoomList[position].roomId
+                val roomname = conferenceRoomList[position].roomName
+                /**
+                 * call the interface method
+                 */
+                mClickListener?.onBtnClick(roomId.toString(), roomname)
+            }
+        }
+    }
 
-			}else if(holder.txvStatus.text.equals("Blocked")) {
+    /**
+     * return the number of item present in the list
+     */
+    override fun getItemCount(): Int {
+        return conferenceRoomList.size
+    }
 
-			}
 
-		}
-	}
+    /**
+     * get all fields from view
+     */
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
-	override fun getItemCount(): Int {
-		return conferenceRoomList.size
-	}
+        val txvRoom: TextView = itemView.findViewById(R.id.txv_room)
+        val txvRoomCapacity: TextView = itemView.findViewById(R.id.txv_room_capacity)
+        val txvStatus: TextView = itemView.findViewById(R.id.status_txv)
+        var cardview: CardView = itemView.findViewById(R.id.cardview2)
+        var conferenceRoom: ConferenceRoom? = null
 
-	class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+        override fun toString(): String {
+            return """${super.toString()} '${txvRoom.text}'"""
+        }
+    }
 
-		val txvRoom: TextView = itemView.findViewById(R.id.txv_room)
-		val txvRoomCapacity: TextView = itemView.findViewById(R.id.txv_room_capacity)
-     	val txvStatus: TextView = itemView.findViewById(R.id.status_txv)
-		var cardview: CardView = itemView.findViewById(R.id.cardview2)
-		var conferenceRoom: ConferenceRoom? = null
+    /**
+     * an Interface which needs to be implemented whenever the adapter is attached to the recyclerview
+     */
+    open interface BtnClickListener {
+        fun onBtnClick(roomId: String?, roomname: String?)
+    }
 
-		override fun toString(): String {
-			return """${super.toString()} '${txvRoom.text}'"""
-		}
-	}
-	open interface BtnClickListener {
-		fun onBtnClick(roomId: String?,roomname: String?)
-	}
+    /**
+     * set data to the different view items
+     */
+    fun setDataToViewItems(holder: ViewHolder, position: Int) {
+        holder.conferenceRoom = conferenceRoomList[position]
+        holder.txvRoom.text = conferenceRoomList[position].roomName
+        holder.txvRoomCapacity.text = conferenceRoomList[position].roomCapacity
+        holder.txvStatus.text = conferenceRoomList[position].Status
+    }
 
+    /**
+     * function will change the color of status field based on status
+     */
+    fun changeColorOfStatusField(holder: ViewHolder) {
+        if (holder.txvStatus.text.equals("Available")) {
+            holder.txvStatus.setTextColor(Color.parseColor("#4C9A2A"))
+        } else if (holder.txvStatus.text.equals("Booked")) {
+            holder.txvStatus.setTextColor(Color.parseColor("#A9A9A9"))
+        } else if (holder.txvStatus.text.equals("Blocked")) {
+            holder.txvStatus.setTextColor(Color.parseColor("#FE7D6A"))
+        }
+    }
 }

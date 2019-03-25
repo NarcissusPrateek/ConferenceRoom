@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.app_bar_main2.*
 import kotlinx.android.synthetic.main.content_main2.*
 import kotlinx.android.synthetic.main.nav_header_main2.view.*
 
-class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     var mGoogleSignInClient: GoogleSignInClient? = null
     var finalList = ArrayList<Manager>()
@@ -44,12 +44,13 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         setNavigationViewItem()
         userInputActivityButton = findViewById(R.id.user_input)
         userInputActivityButton.setOnClickListener {
-            startActivity(Intent(this@Main2Activity, UserInputActivity::class.java))
+            startActivity(Intent(this@UserBookingsDashboardActivity, UserInputActivity::class.java))
         }
+        mBookingDashboardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
         loadDashboard()
     }
 
-     /**
+    /**
      * on pressing of back button this function will clear the activity stack and close the application
      */
     override fun onBackPressed() {
@@ -72,10 +73,10 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     }
             }
             R.id.HR -> {
-                startActivity(Intent(this@Main2Activity, BlockedDashboard::class.java))
+                startActivity(Intent(this@UserBookingsDashboardActivity, BlockedDashboard::class.java))
             }
             R.id.project_manager -> {
-                startActivity(Intent(this@Main2Activity, ProjectManagerInputActivity::class.java))
+                startActivity(Intent(this@UserBookingsDashboardActivity, ProjectManagerInputActivity::class.java))
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -95,7 +96,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         toggle.syncState()
         nav_view.setNavigationItemSelectedListener(this)
         var viewH = nav_view.getHeaderView(0)
-        val acct = GoogleSignIn.getLastSignedInAccount(this@Main2Activity)
+        val acct = GoogleSignIn.getLastSignedInAccount(this@UserBookingsDashboardActivity)
         viewH.nv_profile_name.setText("Hello, ${acct!!.displayName}")
         val personPhoto = acct!!.getPhotoUrl()
         viewH.nv_profile_email.text = acct.email
@@ -116,6 +117,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     fun setItemInDrawerByRole() {
         val pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         var code = pref.getInt("Code", 10)
+        Log.i("----------", " " + code)
         if (code != 11) {
             val nav_Menu = nav_view.getMenu()
             nav_Menu.findItem(R.id.HR).setVisible(false)
@@ -134,9 +136,7 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     fun loadDashboard() {
         var acct = GoogleSignIn.getLastSignedInAccount(application)
         var email = acct!!.email.toString()
-        mBookingDashboardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
         mBookingDashboardViewModel.getBookingList(this, email).observe(this, Observer {
-            Log.i("-----data from observer", it.toString())
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
                 r1_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
@@ -152,14 +152,8 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      */
     override fun onRestart() {
         super.onRestart()
-        getUpdatedDataFromApi()
-    }
-
-    /**
-     * get the updated data from backend
-     */
-    fun getUpdatedDataFromApi() {
-        mBookingDashboardViewModel.getBookingList(this, "prateek300patel@gmail.com")
+        var acct = GoogleSignIn.getLastSignedInAccount(application)
+        mBookingDashboardViewModel.mBookingDashboardRepository!!.makeApiCall(this, acct!!.email.toString())
     }
 
     /**
@@ -168,8 +162,13 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     fun setFilteredDataToAdapter(dashboardItemList: List<Dashboard>) {
         finalList.clear()
         getFilteredList(dashboardItemList)
-        Log.i("-----final List-----", finalList.toString())
-        dashbord_recyclerview1.adapter = DashBoardAdapter(finalList, this@Main2Activity)
+        dashbord_recyclerview1.adapter =
+            DashBoardAdapter(finalList, this@UserBookingsDashboardActivity, object : DashBoardAdapter.DashBoardInterface {
+                override fun onCancelClicked() {
+                    //getUpdatedDataFromApi()
+                    // loadDashboard()
+                }
+            })
     }
 
     /**
@@ -203,3 +202,20 @@ class Main2Activity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 }
+
+
+/**
+ * get the updated data from backend
+ */
+//fun getUpdatedDataFromApi() {
+//    mBookingDashboardViewModel.getBookingList(this,"prateek300patel@gmail.com")
+//        mBookingDashboardViewModel.getBookingList(this, "prateek300patel@gmail.com").observe(this, Observer {
+//            if(it.isEmpty()) {
+//                empty_view.visibility = View.VISIBLE
+//                r1_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
+//            } else {
+//                empty_view.visibility = View.GONE
+//                setFilteredDataToAdapter(it)
+//            }
+//        })
+//}

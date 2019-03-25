@@ -44,9 +44,9 @@ class AddingConference : AppCompatActivity() {
             val conferenceRoom: EditText = findViewById(R.id.conference_Name)
             var room = AddConferenceRoom()
             if (conferenceRoom.text.trim().isEmpty()) {
-                Toast.makeText(this@AddingConference, "Please Enter Room Name", Toast.LENGTH_LONG).show()
-            } else if (capacity.equals("Please Select Capacity")) {
-                Toast.makeText(this@AddingConference, "Please Select Capacity", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@AddingConference, "Please Enter Room name", Toast.LENGTH_LONG).show()
+            } else if (capacity.equals("Please Select capacity")) {
+                Toast.makeText(this@AddingConference, "Please Select capacity", Toast.LENGTH_LONG).show()
             } else {
                 room.BId = buildingId
                 room.CName = conferenceRoom.text.toString().trim()

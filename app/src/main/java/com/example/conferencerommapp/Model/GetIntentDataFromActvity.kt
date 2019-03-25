@@ -10,5 +10,9 @@ class GetIntentDataFromActvity(
     var buildingName: String? = null,
     var roomName: String? = null,
     var roomId: String? = null,
-    var buildingId: String? = null
+    var buildingId: String? = null,
+    var listOfDays: ArrayList<Int> = ArrayList(),
+    var toDate: String? = null,
+    var fromTimeList: ArrayList<String> = ArrayList(),
+    var toTimeList: ArrayList<String> = ArrayList()
 ) : Serializable

@@ -18,7 +18,7 @@
         <activity
                 android:name=".Activity.ProjectManagerInputActivity"
                 android:launchMode="singleTop"
-                android:parentActivityName=".Activity.Main2Activity">
+                android:parentActivityName=".Activity.UserBookingsDashboardActivity">
         </activity>
         <activity
                 android:launchMode="singleTop"
@@ -28,15 +28,16 @@
         <activity
                 android:launchMode="singleTop"
                 android:parentActivityName=".Activity.BuildingsActivity"
-                android:name=".Activity.Manager_Conference_Room">
+                android:name=".Activity.ManagerConferenceRoomActivity">
         </activity>
         <activity
-                android:name=".Activity.Main2Activity"
+                android:name=".Activity.UserBookingsDashboardActivity"
                 android:label="Bookings"
+                android:launchMode="singleTop"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-                android:name=".Activity.Manager_Building"
+                android:name=".Activity.ManagerBuildingsActivity"
                 android:launchMode="singleTop"
                 android:parentActivityName=".Activity.ProjectManagerInputActivity"></activity>
         <activity
@@ -52,7 +53,7 @@
                 android:name=".Activity.UserInputActivity"
                 android:label="Input"
                 android:launchMode="singleTop"
-                android:parentActivityName=".Activity.Main2Activity">
+                android:parentActivityName=".Activity.UserBookingsDashboardActivity">
         </activity>
         <activity
                 android:name=".Activity.BuildingsActivity"
@@ -88,7 +89,7 @@
                 android:label="Registration"/>
         <activity
                 android:name=".BlockedDashboard"
-                android:parentActivityName=".Activity.Main2Activity"/>
+                android:parentActivityName=".Activity.UserBookingsDashboardActivity"/>
         <activity
                 android:name=".Spinner"
                 android:launchMode="singleTop"
@@ -98,7 +99,6 @@
                 android:launchMode="singleTop"
                 android:parentActivityName=".Activity.BuildingDashboard"/>
         <activity android:name=".Activity.MultiItemChecker"/>
-        <activity android:name="com.nineleaps.buttonchecker.Buildings__Activity__new"/>
     </application>
 
 </manifest>

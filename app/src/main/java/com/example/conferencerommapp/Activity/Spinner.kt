@@ -191,7 +191,7 @@ class Spinner : AppCompatActivity() {
                                                                 }else if(Purpose.text.toString().trim().isEmpty()){
                                                                     Toast.makeText(
                                                                         applicationContext,
-                                                                        "Please enter the Purpose of Meeting",
+                                                                        "Please enter the purpose of Meeting",
                                                                         Toast.LENGTH_SHORT
                                                                     ).show()
                                                                 }

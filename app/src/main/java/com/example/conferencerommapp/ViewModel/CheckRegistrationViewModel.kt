@@ -4,28 +4,27 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.conferencerommapp.Model.Booking
-import com.example.conferencerommapp.Repository.BookingRepository
+import com.example.conferencerommapp.Repository.CheckRegistrationRepository
 
-class BookingViewModel: ViewModel() {
+class CheckRegistrationViewModel : ViewModel() {
 
     /**
      * a object which will hold the reference to the corrosponding repository class
      */
-    var mBookingRepository: BookingRepository? = null
+    var mCheckRegistrationRepository: CheckRegistrationRepository? = null
 
     /**
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
-    var mStatus: MutableLiveData<Int>? = null
+    var mCode: MutableLiveData<Int>? = null
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun addBookingDetails(context: Context, mBooking: Booking): MutableLiveData<Int> {
-        mBookingRepository = BookingRepository.getInstance()
-        mStatus = mBookingRepository!!.addBookigDetails(context, mBooking) as MutableLiveData<Int>
-        return mStatus!!
+    fun checkRegistration(mContext: Context, email: String): LiveData<Int> {
+        mCheckRegistrationRepository = CheckRegistrationRepository.getInstance()
+        mCode = mCheckRegistrationRepository!!.checkRegistration(mContext, email) as MutableLiveData<Int>
+        return mCode!!
     }
 }

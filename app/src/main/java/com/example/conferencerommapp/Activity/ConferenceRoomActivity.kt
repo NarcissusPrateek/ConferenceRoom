@@ -19,8 +19,8 @@ class ConferenceRoomActivity : AppCompatActivity() {
 
     var progressDialog: ProgressDialog? = null
     lateinit var mConfereenceRoomViewModel: ConferenceRoomViewModel
-    lateinit var customAdapter: ConferenceRoomAdapter
-    lateinit var recyclerView: RecyclerView
+    lateinit var mCustomAdapter: ConferenceRoomAdapter
+    lateinit var mRecyclerView: RecyclerView
     lateinit var mIntentDataFromActvity: GetIntentDataFromActvity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,18 +32,24 @@ class ConferenceRoomActivity : AppCompatActivity() {
 
         var mFetchRoom = setDataToObjectForApiCall(mIntentDataFromActvity)
 
-        getViewModel(mIntentDataFromActvity, mFetchRoom) //add methd
+        getViewModel(mIntentDataFromActvity, mFetchRoom)
     }
 
+    /**
+     * get intent data from previous activity
+     */
     fun getIntentData(): GetIntentDataFromActvity {
         return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
+    /**
+     * get the object of ViewModel class and by using this object we call the api and set the observer on the function
+     */
     fun getViewModel(mIntentDataFromActvity: GetIntentDataFromActvity, mFetchRoom: FetchConferenceRoom) {
-        recyclerView = findViewById(R.id.conference_recycler_view)
+        mRecyclerView = findViewById(R.id.conference_recycler_view)
         mConfereenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
         mConfereenceRoomViewModel.getConferenceRoomList(this, mFetchRoom).observe(this, Observer {
-            customAdapter = ConferenceRoomAdapter(
+            mCustomAdapter = ConferenceRoomAdapter(
                 it!!,
                 object : ConferenceRoomAdapter.BtnClickListener {
                     override fun onBtnClick(roomId: String?, roomName: String?) {
@@ -52,27 +58,38 @@ class ConferenceRoomActivity : AppCompatActivity() {
                         goToNextActivity(mIntentDataFromActvity)
                     }
                 })
-            recyclerView.adapter = customAdapter
+            mRecyclerView.adapter = mCustomAdapter
         })
     }
 
+    /**
+     * intent to the BookingActivity
+     */
     fun goToNextActivity(mIntentDataFromActvity: GetIntentDataFromActvity) {
         val intent = Intent(this@ConferenceRoomActivity, BookingActivity::class.java)
         intent.putExtra(Constants.EXTRA_INTENT_DATA, mIntentDataFromActvity)
         startActivity(intent)
     }
 
+    /**
+     * onRestart of activity function will update the data by calling the api
+     * and this updated data will be obsereved by Observer
+     */
     override fun onRestart() {
         super.onRestart()
         mConfereenceRoomViewModel.getConferenceRoomList(this, setDataToObjectForApiCall(mIntentDataFromActvity))
     }
 
+    /**
+     * function will set data for different properties of object of FetchConferenceRoom class
+     * and it will return that object which is used as a parameter for api call
+     */
     fun setDataToObjectForApiCall(mIntentDataFromActvity: GetIntentDataFromActvity): FetchConferenceRoom {
         var mFetchRoom = FetchConferenceRoom()
-        mFetchRoom.FromTime = mIntentDataFromActvity.fromtime
-        mFetchRoom.ToTime = mIntentDataFromActvity.totime
-        mFetchRoom.Capacity = mIntentDataFromActvity.capacity!!.toInt()
-        mFetchRoom.BId = mIntentDataFromActvity.buildingId!!.toInt()
+        mFetchRoom.fromTime = mIntentDataFromActvity.fromtime
+        mFetchRoom.toTime = mIntentDataFromActvity.totime
+        mFetchRoom.capacity = mIntentDataFromActvity.capacity!!.toInt()
+        mFetchRoom.buildingId = mIntentDataFromActvity.buildingId!!.toInt()
         return mFetchRoom
     }
 }

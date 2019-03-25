@@ -10,14 +10,13 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.conferencerommapp.Activity.BuildingDashboard
-import com.example.conferencerommapp.Activity.Main2Activity
+import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import kotlinx.android.synthetic.main.activity_blocked_dashboard.*
-import kotlinx.android.synthetic.main.content_main2.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,7 +53,7 @@ class BlockedDashboard : AppCompatActivity() {
 
     }
      override fun onBackPressed() {
-        startActivity(Intent(this, Main2Activity::class.java))
+        startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
         finish()
     }
 

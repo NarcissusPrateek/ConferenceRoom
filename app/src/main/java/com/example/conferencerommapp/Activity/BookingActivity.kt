@@ -3,12 +3,10 @@ package com.example.conferencerommapp.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -18,9 +16,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.conferencerommapp.Helper.CheckBoxAdapter
+import com.example.conferencerommapp.Helper.ColorOfDialogButton
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Model.Booking
-import com.example.conferencerommapp.Model.BookingDetails
 import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
@@ -55,7 +53,8 @@ class BookingActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Confirm_Details) + "</font>"))
 
-        // this method will Initialize all input fields
+
+
         initializeInputFields()
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         var mIntentDataFromActivity = getIntentData()
@@ -70,16 +69,22 @@ class BookingActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * set values to the different properties of object which is required for api call
+     */
     fun addDataToObject(mBookingDetails: GetIntentDataFromActvity) {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
-        mBooking.Email = acct!!.email
-        mBooking.CId = mBookingDetails.roomId!!.toInt()
-        mBooking.BId = mBookingDetails.buildingId!!.toInt()
-        mBooking.FromTime = mBookingDetails.fromtime!!
-        mBooking.ToTime = mBookingDetails.totime!!
-        mBooking.CName = mBookingDetails.roomName!!
+        mBooking.email = acct!!.email
+        mBooking.roomId = mBookingDetails.roomId!!.toInt()
+        mBooking.buildingId = mBookingDetails.buildingId!!.toInt()
+        mBooking.fromTime = mBookingDetails.fromtime!!
+        mBooking.toTime = mBookingDetails.totime!!
+        mBooking.roomName = mBookingDetails.roomName!!
     }
 
+    /**
+     * validate all input fields
+     */
     fun validateInput(): Boolean {
         if (purposeEdittext.text.toString().trim().isEmpty()) {
             Toast.makeText(this, "Invalid purpose!", Toast.LENGTH_SHORT).show()
@@ -91,17 +96,23 @@ class BookingActivity : AppCompatActivity() {
         return true
     }
 
+    /**
+     * this function get the filtered data and according to the data set the data into adapter
+     */
     fun filter(text: String) {
         val filterdNames = ArrayList<EmployeeList>()
         for (s in names) {
 
-            if (s.Name!!.toLowerCase().contains(text.toLowerCase())) {
+            if (s.name!!.toLowerCase().contains(text.toLowerCase())) {
                 filterdNames.add(s)
             }
         }
         customAdapter!!.filterList(filterdNames)
     }
 
+    /**
+     * this method will Initialize all input fields
+     */
     fun initializeInputFields() {
         fromTimeTextview = findViewById(R.id.textView_from_time)
         dateTextview = findViewById(R.id.textView_date)
@@ -113,10 +124,18 @@ class BookingActivity : AppCompatActivity() {
         bookButton = findViewById(R.id.book_button)
     }
 
+
+    /**
+     * get that data from intent
+     */
     fun getIntentData(): GetIntentDataFromActvity {
         return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
+
+    /**
+     * function will set the data into textview
+     */
     fun setDataToTextview(mBookingDetails: GetIntentDataFromActvity, userName: String) {
         fromTimeTextview.text =
             mBookingDetails.fromtime!!.split(" ")[1] + " - " + mBookingDetails.totime!!.split(" ")[1]
@@ -126,24 +145,29 @@ class BookingActivity : AppCompatActivity() {
         employeeNameTextview.text = userName
     }
 
+    /**
+     * function will make a api call whcih will get all the employee list from backend
+     */
     fun setDialogForSelectingMeetingMembers() {
         mEmployeeViewModel = ViewModelProviders.of(this).get(EmployeeViewModel::class.java)
-        mEmployeeViewModel.getEmployeeList().observe(this, Observer {
+        mEmployeeViewModel.getEmployeeList(this).observe(this, Observer {
             names.clear()
             for (item in it!!) {
                 item.isSelected = false
                 names.add(item)
             }
-            Log.i("-------4545-----", names.toString())
         })
     }
 
+
+    /**
+     * set alert dialog to diaplay all the employee name list and provides option to select employee for meeting
+     */
     fun setDialog(mBookingDetails: GetIntentDataFromActvity) {
         val mBuilder = AlertDialog.Builder(this@BookingActivity)
         mBuilder.setTitle("Select atmax ${mBookingDetails.capacity} members.")
         mBuilder.setCancelable(false)
         addPersonEdittext.setOnClickListener {
-            Log.i("-----------", names.toString())
             customAdapter = CheckBoxAdapter(names, checkedEmployee, this@BookingActivity)
             var view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
             view.recycler_view.adapter = customAdapter
@@ -158,8 +182,8 @@ class BookingActivity : AppCompatActivity() {
                 var size = EmployeeList.size
                 for (item in EmployeeList.indices) {
                     if (EmployeeList.get(item).isSelected!!) {
-                        name += EmployeeList[item].Name.toString()
-                        email += EmployeeList[item].Email.toString()
+                        name += EmployeeList[item].name.toString()
+                        email += EmployeeList[item].email.toString()
                         if (item != (size - 1)) {
                             name += ","
                             email += ","
@@ -167,20 +191,23 @@ class BookingActivity : AppCompatActivity() {
                     }
                 }
                 addPersonEdittext.setText(name)
-                mBooking.CCMail = email
+                mBooking.cCMail = email
 
             }
             mBuilder.setNegativeButton("Cancel") { dialog: DialogInterface?, which: Int ->
                 addPersonEdittext.setText("")
-                mBooking.CCMail = ""
+                mBooking.cCMail = ""
             }
             mBuilder.setView(view)
             var builder = mBuilder.create()
             builder.show()
-            setBuilderConfiguration(builder)
+            ColorOfDialogButton.setColorOfDialogButton(builder)
         }
     }
 
+    /**
+     * attach a addTextChangedListener which will search data into the list
+     */
     fun setClickListnerOnEditText(view: View) {
         view.editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
@@ -194,30 +221,16 @@ class BookingActivity : AppCompatActivity() {
             }
         })
     }
-    fun setBuilderConfiguration(builder: AlertDialog) {
-        var buttonPositive = builder.getButton(AlertDialog.BUTTON_POSITIVE)
-        var buttonNegative = builder.getButton(AlertDialog.BUTTON_NEGATIVE)
 
-        buttonPositive.setBackgroundColor(Color.WHITE)
-        buttonPositive.setTextColor(Color.parseColor("#0072BC"))
-
-        buttonNegative.setBackgroundColor(Color.WHITE)
-        buttonNegative.setTextColor(Color.RED)
-    }
-
+    /**
+     * function sets a observer which will observe the data from backend and add the booking details to the database
+     */
     fun addBooking(mBooking: Booking) {
-        mBooking.Purpose = purposeEdittext.text.toString()
-        Log.i("------Booking object", mBooking.toString())
+        mBooking.purpose = purposeEdittext.text.toString()
         mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
         mBookingViewModel.addBookingDetails(this, mBooking).observe(this, Observer {
-            if (it == 200) {
-                startActivity(Intent(this@BookingActivity, Main2Activity::class.java))
-                finish()
-            } else if(it == 404){
-                Toast.makeText(this, "Server not found!Please try again", Toast.LENGTH_SHORT).show()
-            }else {
-                Toast.makeText(this, "internal server error occured", Toast.LENGTH_SHORT).show()
-            }
+            startActivity(Intent(this@BookingActivity, UserBookingsDashboardActivity::class.java))
+            finish()
         })
     }
 }

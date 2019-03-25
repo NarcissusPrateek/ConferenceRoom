@@ -7,108 +7,87 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.conferencerommapp.BlockedDashboard
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.RegistrationActivity
 import com.example.conferencerommapp.SignIn
-import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import com.example.conferencerommapp.ViewModel.CheckRegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import kotlinx.android.synthetic.main.activity_splash_screen.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 
 
 class SplashScreen : AppCompatActivity() {
 
-    var prefs: SharedPreferences? = null
-    var progressDialog: ProgressDialog? = null
+    lateinit var progressDialog: ProgressDialog
+    lateinit var prefs: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
+        /**
+         * for splash screen
+         */
         val logoHandler: Handler = Handler()
-
         val logoRunnable: Runnable = Runnable {
-            progressDialog = ProgressDialog(this@SplashScreen)
-            progressDialog!!.setMessage("Loading....")
-            progressDialog!!.setCancelable(false)
-            progressDialog!!.show()
-            //logo.visibility = View.GONE
-            //login_progress.visibility = View.VISIBLE
             val account = GoogleSignIn.getLastSignedInAccount(this)
+            prefs = getSharedPreferences("myPref", Context.MODE_PRIVATE)
             if (account != null) {
-                prefs = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-                connectTOBackend(account.email)
-                //finish()
+                checkStatus(account)
             } else {
-//                val intent : Intent = Intent(applicationContext,UserInputActivity::class.java)
-//                startActivity(intent)
-//                finish()
-                prefs = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-                val intent: Intent = Intent(applicationContext, SignIn::class.java)
-                startActivity(intent)
-                finish()
+                signIn()
             }
         }
         logoHandler.postDelayed(logoRunnable, 3000)
     }
-    fun connectTOBackend(email: String?) {
-        val service = Servicebuilder.buildService(ConferenceService::class.java)
-        val requestCall: Call<Int> = service.getRequestCode(email)
-        requestCall.enqueue(object : Callback<Int> {
-            override fun onFailure(call: Call<Int>, t: Throwable) {
-                progressDialog!!.dismiss()
-                Toast.makeText(
-                    this@SplashScreen,
-                    "Server not found!! Please check your connection!",
-                    Toast.LENGTH_SHORT
-                ).show()
-                finish()
-            }
-            override fun onResponse(call: Call<Int>, response: Response<Int>) {
-                Log.i("---------", response.toString())
-                progressDialog!!.dismiss()
-                if (response.isSuccessful) {
-                    var code = response.body()
-                    val editor = prefs!!.edit()
-                    editor.putInt("Code", code!!)
-                    editor.apply()
-                    goAction(code)
-                } else {
-                    Toast.makeText(this@SplashScreen, "Something went wrong. Please try again!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
 
+    /**
+     * function make a request to backend for checking whether the user is registered or not
+     */
+    fun checkRegistration(email: String) {
+        var mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
+        mCheckRegistrationViewModel.checkRegistration(this, email).observe(this, Observer {
+            setValueForSharedPreference(it)
+        })
     }
-    fun goAction(code: Int?) {
+
+    /**
+     * pass the intent for the SignIn Activity
+     */
+    fun signIn() {
+        startActivity(Intent(applicationContext, SignIn::class.java))
+        finish()
+    }
+
+    /**
+     * get data from shared preference and if the user is already registered than redirect the control to UserBookingsDashboardActivity
+     */
+    fun checkStatus(account: GoogleSignInAccount) {
+
+        var status = prefs!!.getInt(Constants.EXTRA_REGISTERED, 0)
+        if (status == 1) {
+            startActivity(Intent(this@SplashScreen, UserBookingsDashboardActivity::class.java))
+            finish()
+        } else {
+            checkRegistration(account.email.toString())
+        }
+    }
+
+    /**
+     * according to the backend status function will redirect control to some other activity
+     */
+    fun goToNextActivity(code: Int?) {
         when (code) {
-            11,10,2,12 -> {
-                startActivity(Intent(this@SplashScreen, Main2Activity::class.java))
+            11, 10, 2, 12 -> {
+                startActivity(Intent(this@SplashScreen, UserBookingsDashboardActivity::class.java))
                 finish()
             }
-//            10 -> {
-//                startActivity(Intent(this@SplashScreen, Main2Activity::class.java))
-//                finish()
-//            }
-//            2 -> {
-//                startActivity(Intent(this@SplashScreen, Main2Activity::class.java))
-//                finish()
-//            }
             0 -> {
                 startActivity(Intent(this@SplashScreen, RegistrationActivity::class.java))
                 finish()
             }
-//            12 -> {
-//                startActivity(Intent(this@SplashScreen, Main2Activity::class.java))
-//                finish()
-//            }
             else -> {
                 val builder = AlertDialog.Builder(this@SplashScreen)
                 builder.setTitle("Error!")
@@ -123,5 +102,21 @@ class SplashScreen : AppCompatActivity() {
         }
     }
 
+    /**
+     * set value in shared preference
+     */
+    fun setValueForSharedPreference(status: Int) {
+        var code = status
+        if (code != 0) {
+            val editRegistrationStatus = prefs!!.edit()
+            editRegistrationStatus.putInt(Constants.EXTRA_REGISTERED, 1)
+            editRegistrationStatus.apply()
+        }
+        val editor = prefs!!.edit()
+        editor.putInt("Code", code!!)
+        editor.apply()
+        goToNextActivity(code)
+    }
 }
+
 

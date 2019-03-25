@@ -11,89 +11,64 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
-interface ConferenceService  {
+interface ConferenceService {
 
     @GET("api/Building")
-    fun getBuildingList() : Call<List<Building>>
-
+    fun getBuildingList(): Call<List<Building>>
 
     @POST("api/RoomsWithStatus")
-    fun getConferenceRoomList(@Body availableRoom: FetchConferenceRoom) : Call<List<ConferenceRoom>>
+    fun getConferenceRoomList(@Body availableRoom: FetchConferenceRoom): Call<List<ConferenceRoom>>
 
     @GET("api/UserLogin")
-    fun getRequestCode(@Query( "email") email : String?) : Call<Int>
+    fun getRequestCode(@Query("email") email: String?): Call<Int>
 
     @GET("api/Dashboard")
-    fun getDashboard(@Query( "email") email : String?) : Call<List<Dashboard>>
+    fun getDashboard(@Query("email") email: String?): Call<List<Dashboard>>
 
     @POST("api/UserLogin")
-    fun addEmployee(@Body newEmoployee: Employee) : Call<ResponseBody>
+    fun addEmployee(@Body newEmoployee: Employee): Call<ResponseBody>
 
     @POST("api/Booking")
-    fun addBookingDetails(@Body booking: Booking) : Call<ResponseBody>
+    fun addBookingDetails(@Body booking: Booking): Call<ResponseBody>
 
     @POST("api/CancelBooking")
-    fun cancelBooking(@Body cancel: CancelBooking) : Call<ResponseBody>
+    fun cancelBooking(@Body cancel: CancelBooking): Call<ResponseBody>
 
     @GET("api/Employee")
-    fun getEmployees() : Call<List<EmployeeList>>
+    fun getEmployees(): Call<List<EmployeeList>>
 
     @POST("api/RecurringMeeting")
-    fun addManagerBookingDetails(@Body managerBooking: ManagerBooking) : Call<ResponseBody>
+    fun addManagerBookingDetails(@Body managerBooking: ManagerBooking): Call<ResponseBody>
 
-    @POST("api/ListOfAvailableRoomsForRecurring")
-    fun getMangerConferenceRoomList(@Body availableRoom: ManagerConference) : Call<List<ConferenceRoom>>
+    @POST("api/ListOfAvailableRooms")
+    fun getMangerConferenceRoomList(@Body availableRoom: ManagerConference): Call<List<ConferenceRoom>>
 //    // Pratheek's.....
 
     @POST("api/Building")
-    fun addBuilding(@Body newBuilding:AddBuilding):Call<ResponseBody>
+    fun addBuilding(@Body newBuilding: AddBuilding): Call<ResponseBody>
 
     @POST("api/conference")
-    fun addConference(@Body newConferenceRoom: AddConferenceRoom):Call<ResponseBody>
+    fun addConference(@Body newConferenceRoom: AddConferenceRoom): Call<ResponseBody>
 
     @POST("api/BlockConfirmation")
-    fun blockConfirmation(@Body room: BlockRoom) :Call<BlockingConfirmation>
+    fun blockConfirmation(@Body room: BlockRoom): Call<BlockingConfirmation>
 
     @POST("api/blocking")
-    fun blockconference(@Body room: BlockRoom) :Call<ResponseBody>
+    fun blockconference(@Body room: BlockRoom): Call<ResponseBody>
 
     @GET("api/Building")
-    fun getBuildings() :Call<List<BuildingT>>
+    fun getBuildings(): Call<List<BuildingT>>
 
     @GET("api/Building/{id}")
-    fun getBuildingsConference(@Path("id")id: Int) : Call<List<BuildingConference>>
+    fun getBuildingsConference(@Path("id") id: Int): Call<List<BuildingConference>>
 
     @GET("api/blocking")
-    fun getBlockedConference() : Call<List<Blocked>>
+    fun getBlockedConference(): Call<List<Blocked>>
 
     @POST("api/unblocking")
-    fun unBlockingConferenceRoom(@Body room: Unblock) : Call<ResponseBody>
+    fun unBlockingConferenceRoom(@Body room: Unblock): Call<ResponseBody>
 
     @GET("api/Conference/{id}")
-    fun conferencelist(@Query("buildingid") id : Int) : Call<List<ConferenceList>>
+    fun conferencelist(@Query("buildingid") id: Int): Call<List<ConferenceList>>
 
-    //@GET("destination")
-    //fun getDestinationList(@Query( "country") country : String?, @Query("counnt") count: Int) : Call<List<Destination>>
-
-    /*@GET("destination")
-    fun getDestinationList(@QueryMap filter: HashMap<String, String>) : Call<List<Destination>>
-
-    @GET("destination/{id}")
-    fun getDestination(@Path("id") id: Int) : Call<Destination>
-
-    @POST("destination")
-    fun addDestination(@Body newDestination: Destination) : Call<Destination>
-
-    @FormUrlEncoded
-    @PUT("destination/{id}")
-    fun updateDestination(
-        @Path("id") id: Int,
-        @Field("city") city: String,
-        @Field("description") desc: String,
-        @Field("country") country: String
-    ) : Call<Destination>
-
-    @DELETE("destination/{id}")
-    fun deleteDestination(@Path("id") id: Int) : Call<Unit>
-*/
 }

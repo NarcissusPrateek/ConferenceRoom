@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.conferencerommapp.Model.ConferenceRoom
-import com.example.conferencerommapp.Model.FetchConferenceRoom
-import com.example.conferencerommapp.Repository.ConferenceRoomRepository
+import com.example.conferencerommapp.Model.ManagerConference
+import com.example.conferencerommapp.Repository.ManagerConferenceRoomRepository
 
-class ConferenceRoomViewModel : ViewModel() {
+class ManagerConferenceRoomViewModel : ViewModel() {
 
     /**
      * a object which will hold the reference to the corrosponding repository class
      */
-    var mConferenceRoomRepository: ConferenceRoomRepository? = null
+    var mManagerConferenceRoomRepository: ManagerConferenceRoomRepository? = null
 
     /**
      * a MutableLivedata variable which will hold the Value for the Livedata
@@ -23,10 +23,10 @@ class ConferenceRoomViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun getConferenceRoomList(context: Context, room: FetchConferenceRoom): MutableLiveData<List<ConferenceRoom>> {
+    fun getConferenceRoomList(context: Context, room: ManagerConference): MutableLiveData<List<ConferenceRoom>> {
         if (mConferenceRoomList == null) {
-            mConferenceRoomRepository = ConferenceRoomRepository.getInstance()
-            mConferenceRoomList = mConferenceRoomRepository!!.getConferenceRoomList(
+            mManagerConferenceRoomRepository = ManagerConferenceRoomRepository.getInstance()
+            mConferenceRoomList = mManagerConferenceRoomRepository!!.getConferenceRoomList(
                 context,
                 room
             ) as MutableLiveData<List<ConferenceRoom>>

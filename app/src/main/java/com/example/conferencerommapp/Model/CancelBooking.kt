@@ -1,8 +1,18 @@
 package com.example.conferencerommapp.Model
 
+import com.google.gson.annotations.SerializedName
+
 data class CancelBooking (
-    var Email: String? = null,
-    var CId: Int? = 0,
-    var FromTime: String? = null,
-    var ToTime: String? = null
+
+    @SerializedName("email")
+    var email: String? = null,
+
+    @SerializedName("roomId")
+    var roomId: Int? = 0,
+
+    @SerializedName("fromTime")
+    var fromTime: String? = null,
+
+    @SerializedName("toTime")
+    var toTime: String? = null
 )

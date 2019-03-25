@@ -12,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BuildingsRepository {
+class ManagerBuildingsRepository {
     var mBuildinglist: MutableLiveData<List<Building>>? = null
 
     /**
@@ -21,10 +21,10 @@ class BuildingsRepository {
      * or else it will return a new object
      */
     companion object {
-        var mBuildingsRepository: BuildingsRepository? = null
-        fun getInstance(): BuildingsRepository {
+        var mBuildingsRepository: ManagerBuildingsRepository? = null
+        fun getInstance(): ManagerBuildingsRepository {
             if (mBuildingsRepository == null) {
-                mBuildingsRepository = BuildingsRepository()
+                mBuildingsRepository = ManagerBuildingsRepository()
             }
             return mBuildingsRepository!!
         }
@@ -46,7 +46,7 @@ class BuildingsRepository {
     fun makeApiCall(mContext: Context) {
 
         /**
-         * getting Progress Dialog
+         * get Progress Dialog
          */
         var progressDialog = GetProgress.getProgressDialog("Loading...", mContext)
         progressDialog.show()
@@ -60,7 +60,7 @@ class BuildingsRepository {
         requestCall.enqueue(object : Callback<List<Building>> {
             override fun onFailure(call: Call<List<Building>>, t: Throwable) {
                 progressDialog.dismiss()
-                Toast.makeText(mContext,"Server not Found!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "Server Not Found!", Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<List<Building>>, response: Response<List<Building>>) {
@@ -68,7 +68,7 @@ class BuildingsRepository {
                 if (response.code() == 200) {
                     mBuildinglist!!.value = response.body()!!
                 } else {
-                    Toast.makeText(mContext,"Some Internal Server Error Occured!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mContext, "Some Internal Error Occured!", Toast.LENGTH_SHORT).show()
                 }
             }
 
