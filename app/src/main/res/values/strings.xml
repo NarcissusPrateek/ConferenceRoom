@@ -36,4 +36,15 @@
     <string name="title_activity_check_box_recycler">CheckBoxRecycler</string>
     <string name="Registration">Registration</string>
     <string name="Block">Block Room</string>
+    <string name="details_invalid">Details are Invalid!!!</string>
+    <string name="preference">myPref</string>
+    <string name="ok">Ok</string>
+    <string name="server_error">Some Internal server Error!</string>
+    <string name="server_not_found">Server not found!! Please try again after some time</string>
+    <string name="error">Error!</string>
+    <string name="restart_app">Plese Restart the application..</string>
+    <string name="progress_message">Processing...</string>
+    <string name="progress_message_processing">Processing...</string>
+    <string name="cancel">Cancel</string>
+    <string name="sign_out">Successfully signed out</string>
 </resources>

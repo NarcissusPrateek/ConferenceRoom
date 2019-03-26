@@ -16,7 +16,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import androidx.core.content.ContextCompat.startActivity
 import android.content.Intent
+import android.widget.Toast
 import com.example.conferencerommapp.Activity.BuildingDashboard
+import com.example.conferencerommapp.R
 
 
 class AddBuildingRepository {
@@ -61,7 +63,7 @@ class AddBuildingRepository {
         /**
          * ProgreesDialog
          */
-        var progressDialog = GetProgress.getProgressDialog("Loading...", mContext)
+        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
 
         /**
@@ -73,11 +75,9 @@ class AddBuildingRepository {
         addBuildingrequestCall.enqueue(object :Callback<ResponseBody>{
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 progressDialog.dismiss()
-                mStatus!!.value = 420
+                Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
             }
-
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
                 /**
                  * Alert Dialog for Success or Failure of Adding Buildings
                  */

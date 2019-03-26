@@ -4,8 +4,10 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.ManagerBooking
+import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
@@ -49,26 +51,26 @@ class ManagerBookingRepository {
         /**
          * get Progress Dialog
          */
-        var progressDialog = GetProgress.getProgressDialog("Processing...", mContext)
+        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
 
         /**
          * api call using retorfit
          */
-        val service = Servicebuilder.buildService(ConferenceService::class.java)
+        val service = Servicebuilder.getObject()
         val requestCall: Call<ResponseBody> = service.addManagerBookingDetails(mBoooking)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 progressDialog.dismiss()
-                Toast.makeText(mContext, "Server not found!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 progressDialog.dismiss()
-                if (response.code() == 200) {
+                if (response.code() == Constants.OK_RESPONSE) {
                     mStatus!!.value = response.code()
                 } else {
-                    Toast.makeText(mContext, "Some Internal server Error Occured!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show()
                 }
             }
         })

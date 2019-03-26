@@ -88,7 +88,6 @@ class ManagerBuildingsActivity : AppCompatActivity() {
                 c1.add(Calendar.DATE, 1)
             }
             getLists(start, end)
-            Toast.makeText(this@ManagerBuildingsActivity, sundays.toString(), Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
             Toast.makeText(this@ManagerBuildingsActivity, e.message, Toast.LENGTH_LONG).show()
         }

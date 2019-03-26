@@ -1,14 +1,14 @@
 package com.example.conferencerommapp.Repository
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.ConferenceRoom
-import com.example.conferencerommapp.Model.FetchConferenceRoom
 import com.example.conferencerommapp.Model.ManagerConference
+import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import retrofit2.Call
@@ -47,30 +47,30 @@ class ManagerConferenceRoomRepository {
     /**
      * function will call the api which will return some data and we store the data in MutableLivedata Object
      */
-    fun makeApiCall(context: Context, room: ManagerConference) {
+    fun makeApiCall(mContext: Context, room: ManagerConference) {
 
         /**
          * get Progress Dialog
          */
-        var progressDialog = GetProgress.getProgressDialog("Loading...", context)
+        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message), mContext)
         progressDialog.show()
 
         /**
          * api call using retorfit
          */
-        val conferenceService = Servicebuilder.buildService(ConferenceService::class.java)
-        val requestCall: Call<List<ConferenceRoom>> = conferenceService.getMangerConferenceRoomList(room)
+        val service = Servicebuilder.getObject()
+        val requestCall: Call<List<ConferenceRoom>> = service.getMangerConferenceRoomList(room)
         requestCall.enqueue(object : Callback<List<ConferenceRoom>> {
             override fun onFailure(call: Call<List<ConferenceRoom>>, t: Throwable) {
                 progressDialog.dismiss()
-                Toast.makeText(context,"server not found!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<List<ConferenceRoom>>, response: Response<List<ConferenceRoom>>) {
                 progressDialog.dismiss()
-                if (response.code() == 200) {
+                if (response.code() == Constants.OK_RESPONSE) {
                     mConferenceRoomList!!.value = response.body()
                 } else {
-                    Toast.makeText(context,"Some Internal Server Error Occured!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
                 }
             }
         })

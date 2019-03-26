@@ -15,5 +15,7 @@ class Constants {
          * for set and get intent data
          */
         const val EXTRA_INTENT_DATA = "com.example.conferencerommapp.Activity.EXTRA_INTENT_DATA"
+
+        const val OK_RESPONSE = 200
     }
 }

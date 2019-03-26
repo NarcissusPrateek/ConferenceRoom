@@ -1,12 +1,13 @@
 package com.example.conferencerommapp.Repository
 
-import android.app.AlertDialog
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.Employee
-import com.example.conferencerommapp.services.ConferenceService
+import com.example.conferencerommapp.R
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -42,60 +43,30 @@ class RegistrationRepository {
 
 
     /**
-     * Retrofit Call of AddBuilding API
+     * Retrofit Call
      */
     private fun makeCallToApi(mContext: Context, mEmployee: Employee) {
 
 
-        var progressDialog = GetProgress.getProgressDialog("Loading...", mContext)
+        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
 
-        val addBuildingService: ConferenceService = Servicebuilder.buildService(ConferenceService::class.java)
-        val addBuildingrequestCall: Call<ResponseBody> = addBuildingService.addEmployee(mEmployee)
+        val service = Servicebuilder.getObject()
+        val requestCall: Call<ResponseBody> = service.addEmployee(mEmployee)
 
-        addBuildingrequestCall.enqueue(object : Callback<ResponseBody> {
+        requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 progressDialog.dismiss()
-                mStatus!!.value = 420
+                Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
-                /**
-                 * Alert Dialog for Success or Failure of Adding Buildings
-                 */
-                val addBuildingAlertDialog = AlertDialog.Builder(mContext)
-                addBuildingAlertDialog.setTitle("Added Building")
                 progressDialog.dismiss()
-                mStatus!!.value = response.code()
-
-                /**
-                 * mStatus return 400 if the Employee is already present in the Database
-                 */
-                if(mStatus!!.value == 400){
-                    addBuildingAlertDialog.setMessage("Already Registered")
-                    addBuildingAlertDialog.setPositiveButton("Ok") { dialog, which ->
-                    }
-                    val dialog: AlertDialog = addBuildingAlertDialog.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
+                if(response.code() == Constants.OK_RESPONSE) {
+                    mStatus!!.value = response.code()
+                }else {
+                    Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show()
                 }
-
-                /**
-                 * mStatus return 500 if the Server Error occurs
-                 */
-                else if (mStatus!!.value == 500){
-                    addBuildingAlertDialog.setMessage("Server Error")
-                    addBuildingAlertDialog.setPositiveButton("Ok") { dialog, which ->
-                    }
-                    val dialog: AlertDialog = addBuildingAlertDialog.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
-                }
-
-                /**
-                 * mStatus return 200 if the Employee is Added Succesfully
-                 */
             }
         })
     }

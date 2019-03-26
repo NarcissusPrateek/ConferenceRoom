@@ -54,7 +54,6 @@ class BookingActivity : AppCompatActivity() {
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Confirm_Details) + "</font>"))
 
 
-
         initializeInputFields()
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         var mIntentDataFromActivity = getIntentData()
@@ -175,7 +174,7 @@ class BookingActivity : AppCompatActivity() {
                 view.editTextSearch.setText("")
             }
             setClickListnerOnEditText(view)
-            mBuilder.setPositiveButton("Ok") { dialogInterface, which ->
+            mBuilder.setPositiveButton(getString(R.string.ok)) { dialogInterface, which ->
                 var email = ""
                 var name = ""
                 var EmployeeList = customAdapter!!.getList()
@@ -194,7 +193,7 @@ class BookingActivity : AppCompatActivity() {
                 mBooking.cCMail = email
 
             }
-            mBuilder.setNegativeButton("Cancel") { dialog: DialogInterface?, which: Int ->
+            mBuilder.setNegativeButton(getString(R.string.cancel)) { dialog: DialogInterface?, which: Int ->
                 addPersonEdittext.setText("")
                 mBooking.cCMail = ""
             }

@@ -33,9 +33,9 @@ class SplashScreen : AppCompatActivity() {
         val logoHandler: Handler = Handler()
         val logoRunnable: Runnable = Runnable {
             val account = GoogleSignIn.getLastSignedInAccount(this)
-            prefs = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+            prefs = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
             if (account != null) {
-                checkStatus(account)
+                checkRegistration(account.email.toString())
             } else {
                 signIn()
             }
@@ -74,7 +74,6 @@ class SplashScreen : AppCompatActivity() {
             checkRegistration(account.email.toString())
         }
     }
-
     /**
      * according to the backend status function will redirect control to some other activity
      */
@@ -92,7 +91,7 @@ class SplashScreen : AppCompatActivity() {
                 val builder = AlertDialog.Builder(this@SplashScreen)
                 builder.setTitle("Error!")
                 builder.setMessage("Plese Restart the application..")
-                builder.setPositiveButton("Ok") { dialog, which ->
+                builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                     finish()
                 }
                 val dialog: AlertDialog = builder.create()
@@ -107,11 +106,6 @@ class SplashScreen : AppCompatActivity() {
      */
     fun setValueForSharedPreference(status: Int) {
         var code = status
-        if (code != 0) {
-            val editRegistrationStatus = prefs!!.edit()
-            editRegistrationStatus.putInt(Constants.EXTRA_REGISTERED, 1)
-            editRegistrationStatus.apply()
-        }
         val editor = prefs!!.edit()
         editor.putInt("Code", code!!)
         editor.apply()

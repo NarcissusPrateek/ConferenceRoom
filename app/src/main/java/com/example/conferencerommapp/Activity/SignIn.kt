@@ -17,6 +17,8 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import butterknife.BindView
+import butterknife.ButterKnife
 
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Helper.Constants
@@ -27,16 +29,19 @@ import com.google.android.gms.common.SignInButton
 class SignIn : AppCompatActivity() {
 
     var RC_SIGN_IN = 0
+    @BindView(R.id.sign_in_button)
     lateinit var signInButton: SignInButton
-    lateinit var linearLayoutUp: LinearLayout
-    lateinit var linearLayoutDown: LinearLayout
+
+    @BindView(R.id.l1) lateinit var linearLayoutUp: LinearLayout
+
+    @BindView(R.id.l2) lateinit var linearLayoutDown: LinearLayout
     var mGoogleSignInClient: GoogleSignInClient? = null
-    var prefs: SharedPreferences? = null
+    lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in_activity)
-
+        ButterKnife.bind(this)
         initialize()
         signInButton!!.setOnClickListener(View.OnClickListener {
             startintentToGoogle()
@@ -50,7 +55,7 @@ class SignIn : AppCompatActivity() {
         linearLayoutUp = findViewById(R.id.l1)
         linearLayoutDown = findViewById(R.id.l2)
         signInButton = findViewById(R.id.sign_in_button)
-        prefs = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        prefs = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
         initializeGoogleSignIn()
         setAnimationToLayout()
     }
@@ -101,7 +106,7 @@ class SignIn : AppCompatActivity() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            checkStatus(account!!)
+            checkRegistration(account!!.email.toString())
         } catch (e: ApiException) {
             Log.w("Google Sign In Error", "signInResult:failed code=" + e.statusCode)
         }
@@ -150,15 +155,14 @@ class SignIn : AppCompatActivity() {
             }
             else -> {
                 val builder = AlertDialog.Builder(this@SignIn)
-                builder.setTitle("Error!")
-                builder.setMessage("Plese Restart the application..")
-                builder.setPositiveButton("Ok") { dialog, which ->
+                builder.setTitle(getString(R.string.error))
+                builder.setMessage(getString(R.string.restart_app))
+                builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                     finish()
                 }
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
             }
-
         }
     }
 
@@ -167,11 +171,11 @@ class SignIn : AppCompatActivity() {
      */
     fun setValueForSharedPreference(status: Int) {
         var code = status
-        if(code != 0) {
-            val editRegistrationStatus = prefs!!.edit()
-            editRegistrationStatus.putInt(Constants.EXTRA_REGISTERED, 1)
-            editRegistrationStatus.apply()
-        }
+//        if(code != 0) {
+//            val editRegistrationStatus = prefs!!.edit()
+//            editRegistrationStatus.putInt(Constants.EXTRA_REGISTERED, 1)
+//            editRegistrationStatus.apply()
+//        }
         val editor = prefs!!.edit()
         editor.putInt("Code", code!!)
         editor.apply()

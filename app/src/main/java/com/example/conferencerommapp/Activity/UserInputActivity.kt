@@ -8,6 +8,8 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import butterknife.BindView
+import butterknife.ButterKnife
 
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ConvertTimeInMillis
@@ -21,7 +23,7 @@ class UserInputActivity : AppCompatActivity() {
 
 
     lateinit var capacity: String
-    //@BindView(R.id.date)
+    @BindView(R.id.date)
     lateinit var dateEditText: EditText
     //@BindView(R.id.fromTime)
     lateinit var fromTimeEditText: EditText
@@ -32,7 +34,7 @@ class UserInputActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_inputs)
-        //  ButterKnife.bind(this)
+          ButterKnife.bind(this)
 
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>"))
@@ -190,7 +192,7 @@ class UserInputActivity : AppCompatActivity() {
                     dialog.show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@UserInputActivity, "Details are Invalid!!!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@UserInputActivity, getString(R.string.details_invalid), Toast.LENGTH_LONG).show()
             }
         }
 

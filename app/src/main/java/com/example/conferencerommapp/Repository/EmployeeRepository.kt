@@ -4,8 +4,10 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.EmployeeList
+import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import retrofit2.Call
@@ -48,25 +50,25 @@ class EmployeeRepository {
         /**
          * getting Progress Dialog
          */
-        var progressDialog = GetProgress.getProgressDialog("Loading...", mContext)
+        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message), mContext)
         progressDialog.show()
 
         /**
          * api call using retorfit
          */
-        val conferenceService = Servicebuilder.buildService(ConferenceService::class.java)
-        val requestCall: Call<List<EmployeeList>> = conferenceService.getEmployees()
+        val service = Servicebuilder.getObject()
+        val requestCall: Call<List<EmployeeList>> = service.getEmployees()
         requestCall.enqueue(object : Callback<List<EmployeeList>> {
             override fun onFailure(call: Call<List<EmployeeList>>, t: Throwable) {
                 progressDialog.dismiss()
-                Toast.makeText(mContext, "Server not found!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
             }
             override fun onResponse(call: Call<List<EmployeeList>>, response: Response<List<EmployeeList>>) {
                 progressDialog.dismiss()
-                if (response.code() == 200) {
+                if (response.code() == Constants.OK_RESPONSE) {
                     mEmployeelist!!.value = response.body()!!
                 } else {
-                    Toast.makeText(mContext, "Some Internal Error Occured!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show()
                 }
             }
 

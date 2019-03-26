@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.example.conferencerommapp.BlockedDashboard
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.DashBoardAdapter
 import com.example.conferencerommapp.Helper.GoogleGSO
 import com.example.conferencerommapp.Model.Dashboard
@@ -64,13 +65,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout -> {
-                mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-                mGoogleSignInClient!!.signOut()
-                    .addOnCompleteListener(this) {
-                        Toast.makeText(applicationContext, "Successfully signed out", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(applicationContext, SignIn::class.java))
-                        finish()
-                    }
+                signOut()
             }
             R.id.HR -> {
                 startActivity(Intent(this@UserBookingsDashboardActivity, BlockedDashboard::class.java))
@@ -115,9 +110,8 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      * else the role is normal user
      */
     fun setItemInDrawerByRole() {
-        val pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
         var code = pref.getInt("Code", 10)
-        Log.i("----------", " " + code)
         if (code != 11) {
             val nav_Menu = nav_view.getMenu()
             nav_Menu.findItem(R.id.HR).setVisible(false)
@@ -163,12 +157,15 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         finalList.clear()
         getFilteredList(dashboardItemList)
         dashbord_recyclerview1.adapter =
-            DashBoardAdapter(finalList, this@UserBookingsDashboardActivity, object : DashBoardAdapter.DashBoardInterface {
-                override fun onCancelClicked() {
-                    //getUpdatedDataFromApi()
-                    // loadDashboard()
-                }
-            })
+            DashBoardAdapter(
+                finalList,
+                this@UserBookingsDashboardActivity,
+                object : DashBoardAdapter.DashBoardInterface {
+                    override fun onCancelClicked() {
+                        //getUpdatedDataFromApi()
+                        // loadDashboard()
+                    }
+                })
     }
 
     /**
@@ -200,6 +197,19 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 finalList.add(final)
             }
         }
+    }
+
+    fun signOut() {
+        mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient!!.signOut()
+            .addOnCompleteListener(this) {
+                Toast.makeText(applicationContext, getString(R.string.sign_out), Toast.LENGTH_SHORT).show()
+                startActivity(Intent(applicationContext, SignIn::class.java))
+                finish()
+            }
+//        val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
+//        pref.edit().putInt(Constants.EXTRA_REGISTERED, 0)
+//        pref.edit().apply()
     }
 }
 
