@@ -15,7 +15,7 @@
             app:stackFromEnd="true"
             android:layout_marginTop="5dp"
             app:reverseLayout="true"
-            android:id="@+id/conference_blocked_list"
+            android:id="@+id/block_recyclerView"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/blocked_list"/>
 
