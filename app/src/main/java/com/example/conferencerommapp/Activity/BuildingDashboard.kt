@@ -1,78 +1,68 @@
 package com.example.conferencerommapp.Activity
 
-import android.app.ProgressDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
-import android.widget.Toast
-import com.example.conferencerommapp.BuildingT
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import com.example.conferencerommapp.ConferenceDashBoard
-import com.example.conferencerommapp.Helper.BuildingRecyclerAdapter
+import com.example.conferencerommapp.Helper.BuildingAdapter
+import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import com.example.conferencerommapp.ViewModel.BuildingViewModel
 import com.github.clans.fab.FloatingActionButton
-import kotlinx.android.synthetic.main.activity_building_dashboard.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class BuildingDashboard : AppCompatActivity() {
 
-    var progressDialog: ProgressDialog? = null
+    lateinit var mBuildingsViewModel: BuildingViewModel
+    lateinit var addBuilding : FloatingActionButton
+    lateinit var buildingAdapter: BuildingAdapter
+    lateinit var recyclerView: RecyclerView
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_building_dashboard)
         val actionBar = supportActionBar
+
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Building_Dashboard) + "</font>"))
-        val addBuilding: FloatingActionButton = findViewById(R.id.add_building)
+
+        addBuilding = findViewById(R.id.add_building)
         addBuilding.setOnClickListener {
             startActivity(Intent(this, AddingBuilding::class.java))
         }
+
+        recyclerView = findViewById(R.id.buidingRecyclerView)
+        mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
+        getViewModel()
     }
+    override fun onRestart() {
+        super.onRestart()
+        mBuildingsViewModel.mBuildingsRepository!!.makeApiCall(this)
 
-    override fun onResume() {
-        super.onResume()
-        loadBuildings()
     }
+    private fun getViewModel() {
+        mBuildingsViewModel.getBuildingList(this).observe(this, Observer {
 
-    fun loadBuildings() {
-
-        progressDialog = ProgressDialog(this@BuildingDashboard)
-        progressDialog!!.setMessage("Loading....")
-        progressDialog!!.setCancelable(false)
-        progressDialog!!.show()
-
-
-        val conferenceService = Servicebuilder.buildService(ConferenceService::class.java)
-        val requestCall: Call<List<BuildingT>> = conferenceService.getBuildings()
-        requestCall.enqueue(object : Callback<List<BuildingT>> {
-            override fun onFailure(call: Call<List<BuildingT>>, t: Throwable) {
-                progressDialog!!.dismiss()
-                Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
-            }
-
-            override fun onResponse(call: Call<List<BuildingT>>, response: Response<List<BuildingT>>) {
-                progressDialog!!.dismiss()
-                if (response.isSuccessful) {
-                    val buildingList: List<BuildingT>? = response.body()
-                    buidingRecyclerView.adapter = BuildingRecyclerAdapter(buildingList!!,
-                        object : BuildingRecyclerAdapter.BtnClickListener {
-                            override fun onBtnClick(buildingId: Int?, buildingname: String?) {
-                                var intent = Intent(this@BuildingDashboard, ConferenceDashBoard::class.java)
-                                intent.putExtra("BuildingId", buildingId)
-                                startActivity(intent)
-                            }
-
-                        })
-                } else {
-                    Toast.makeText(applicationContext, "Unable to Load Buildings", Toast.LENGTH_LONG).show()
+            /**
+             * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
+             */
+            buildingAdapter = BuildingAdapter(this,
+                it!!,
+                object : BuildingAdapter.BtnClickListener {
+                    override fun onBtnClick(buildingId: String?, buildingName: String?) {
+                        var intent = Intent(this@BuildingDashboard, ConferenceDashBoard::class.java)
+                        intent.putExtra("BuildingId", buildingId)
+                        startActivity(intent)
+                    }
                 }
-
-            }
-
+            )
+            recyclerView.adapter = buildingAdapter
         })
     }
+
+
 }

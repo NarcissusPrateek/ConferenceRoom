@@ -68,7 +68,7 @@ interface ConferenceService {
     @POST("api/unblocking")
     fun unBlockingConferenceRoom(@Body room: Unblock): Call<ResponseBody>
 
-    @GET("api/Conference/{id}")
-    fun conferencelist(@Query("buildingid") id: Int): Call<List<ConferenceList>>
+    @GET("api/conference/{id}")
+    fun conferencelist(@Query("buildingId") id: Int): Call<List<ConferenceList>>
 
 }
