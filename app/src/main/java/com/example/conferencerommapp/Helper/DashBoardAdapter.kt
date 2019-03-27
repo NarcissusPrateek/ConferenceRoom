@@ -187,10 +187,8 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>,val mContext: C
                 if (dashboardItemList[position].Status[which] == "Cancelled") {
                     Toast.makeText(mContext, "Cancelled by HR! Please check your email", Toast.LENGTH_LONG).show()
                 } else {
-                    var builder = AlertDialog.Builder(mContext)
-                    builder.setTitle("Confirm ")
-                    builder.setMessage("Press ok to Delete the mManagerBooking for the date '${listItems.get(which).toString()}'")
-                    builder.setPositiveButton("Ok") { dialog, postion ->
+                    var builder = GetAleretDialog.getDialog(mContext, "Confirm", "Press ok to Cancel the booking for the date '${listItems.get(which).toString()}'")
+                    builder.setPositiveButton(mContext.getString(R.string.ok)) { dialog, postion ->
                         var mCancel = CancelBooking()
                         mCancel.roomId = dashboardItemList[position].CId
                         mCancel.email = dashboardItemList[position].Email
@@ -200,9 +198,10 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>,val mContext: C
                             listItems.get(which).toString() + "T" + dashboardItemList[position].ToTime!!.split("T")[1]
                         cancelBooking(mCancel, mContext)
                     }
-                    builder.setNegativeButton("Cancel") { dialog, postion ->
+                    builder.setNegativeButton(mContext.getString(R.string.cancel)) { dialog, postion ->
                     }
                     val dialog: AlertDialog = builder.create()
+                    dialog.setCancelable(false)
                     dialog.show()
                     ColorOfDialogButton.setColorOfDialogButton(dialog)
                 }
@@ -225,10 +224,8 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>,val mContext: C
             holder.cancelButton.text = "Cancel"
             holder.cancelButton.isEnabled = true
             holder.cancelButton.setOnClickListener {
-                var builder = AlertDialog.Builder(mContext)
-                builder.setTitle("Confirm ")
-                builder.setMessage("Are you sure you want to cancel the meeting?")
-                builder.setPositiveButton("YES") { dialog, which ->
+                var mBuilder = GetAleretDialog.getDialog(mContext, "Confirm", "Are you sure you want to cancel the meeting?")
+                mBuilder.setPositiveButton(mContext.getString(R.string.yes)) { dialog, which ->
                     var cancel = CancelBooking()
                     cancel.roomId = dashboardItemList.get(position).CId
                     cancel.toTime = dashboardItemList[position].ToTime
@@ -236,11 +233,9 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>,val mContext: C
                     cancel.email = dashboardItemList.get(position).Email
                     cancelBooking(cancel, mContext)
                 }
-                builder.setNegativeButton("No") { dialog, which ->
+                mBuilder.setNegativeButton(mContext.getString(R.string.no)) { dialog, which ->
                 }
-                val dialog: AlertDialog = builder.create()
-                dialog.setCancelable(false)
-                dialog.show()
+                val dialog = GetAleretDialog.showDialog(mBuilder)
                 ColorOfDialogButton.setColorOfDialogButton(dialog)
             }
         }

@@ -12,10 +12,11 @@ class GetAleretDialog {
             mDialog.setMessage(message)
             return mDialog
         }
-        fun showDialog(mDialog: AlertDialog.Builder) {
+        fun showDialog(mDialog: AlertDialog.Builder): AlertDialog {
             val dialog: AlertDialog = mDialog.create()
-            dialog.setCanceledOnTouchOutside(false)
             dialog.show()
+            dialog.setCanceledOnTouchOutside(false)
+            return dialog
         }
     }
 }

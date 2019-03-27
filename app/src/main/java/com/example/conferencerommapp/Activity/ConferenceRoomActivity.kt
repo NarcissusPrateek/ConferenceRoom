@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.FetchConferenceRoom
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
@@ -49,16 +50,21 @@ class ConferenceRoomActivity : AppCompatActivity() {
         mRecyclerView = findViewById(R.id.conference_recycler_view)
         mConfereenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
         mConfereenceRoomViewModel.getConferenceRoomList(this, mFetchRoom).observe(this, Observer {
-            mCustomAdapter = ConferenceRoomAdapter(
-                it!!,
-                object : ConferenceRoomAdapter.BtnClickListener {
-                    override fun onBtnClick(roomId: String?, roomName: String?) {
-                        mIntentDataFromActvity.roomId = roomId
-                        mIntentDataFromActvity.roomName = roomName
-                        goToNextActivity(mIntentDataFromActvity)
-                    }
-                })
-            mRecyclerView.adapter = mCustomAdapter
+            if(it.isEmpty()) {
+                showDialog()
+            }else {
+                mCustomAdapter = ConferenceRoomAdapter(
+                    it!!,
+                    object : ConferenceRoomAdapter.BtnClickListener {
+                        override fun onBtnClick(roomId: String?, roomName: String?) {
+                            mIntentDataFromActvity.roomId = roomId
+                            mIntentDataFromActvity.roomName = roomName
+                            goToNextActivity(mIntentDataFromActvity)
+                        }
+                    })
+                mRecyclerView.adapter = mCustomAdapter
+            }
+
         })
     }
 
@@ -91,5 +97,13 @@ class ConferenceRoomActivity : AppCompatActivity() {
         mFetchRoom.capacity = mIntentDataFromActvity.capacity!!.toInt()
         mFetchRoom.buildingId = mIntentDataFromActvity.buildingId!!.toInt()
         return mFetchRoom
+    }
+
+    fun showDialog() {
+        val mDialog = GetAleretDialog.getDialog(this, "Status", "No Room Available")
+        mDialog.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+            finish()
+        }
+        GetAleretDialog.showDialog(mDialog)
     }
 }

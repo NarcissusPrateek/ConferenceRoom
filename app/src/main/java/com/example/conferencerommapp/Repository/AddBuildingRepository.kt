@@ -16,9 +16,11 @@ import retrofit2.Callback
 import retrofit2.Response
 import androidx.core.content.ContextCompat.startActivity
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import com.example.conferencerommapp.Activity.BuildingDashboard
 import com.example.conferencerommapp.R
+import org.json.JSONObject
 
 
 class AddBuildingRepository {
@@ -81,6 +83,7 @@ class AddBuildingRepository {
                 /**
                  * Alert Dialog for Success or Failure of Adding Buildings
                  */
+
                 val addBuildingAlertDialog = AlertDialog.Builder(mContext)
                 addBuildingAlertDialog.setTitle("Added Building")
                 progressDialog.dismiss()

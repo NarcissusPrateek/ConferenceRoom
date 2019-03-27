@@ -50,4 +50,6 @@
     <string name="select_capacity">Please Select Capacity</string>
     <string name="enter_room_name">Please Enter Room name</string>
     <string name="room_add_success">Room added Successfully</string>
+    <string name="yes">YES</string>
+    <string name="no">No</string>
 </resources>

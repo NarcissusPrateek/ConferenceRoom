@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.conferencerommapp.ConferenceApplication
 import com.example.conferencerommapp.Helper.BuildingAdapter
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.Repository.BuildingsRepository
@@ -58,7 +59,6 @@ class BuildingsActivity : AppCompatActivity() {
     fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity) {
 
         mBuildingsViewModel.getBuildingList(this).observe(this, Observer {
-
             /**
              * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
              */

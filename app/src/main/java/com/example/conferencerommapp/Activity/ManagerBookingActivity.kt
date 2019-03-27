@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.conferencerommapp.Helper.CheckBoxAdapter
 import com.example.conferencerommapp.Helper.ColorOfDialogButton
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.ManagerBooking
@@ -231,9 +232,16 @@ class ManagerBookingActivity : AppCompatActivity() {
     fun addBooking() {
         mManagerBookingViewModel = ViewModelProviders.of(this).get(ManagerBookingViewModel::class.java)
         mManagerBookingViewModel.addBookingDetails(this, mManagerBooking).observe(this, Observer {
-            startActivity(Intent(this@ManagerBookingActivity, UserBookingsDashboardActivity::class.java))
-            finish()
+            goToBookingDashboard()
         })
+    }
+    fun goToBookingDashboard() {
+        val mDialog = GetAleretDialog.getDialog(this, "Status", "Successfully Booked.")
+        mDialog.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+            startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
+            finish()
+        }
+        GetAleretDialog.showDialog(mDialog)
     }
 }
 
