@@ -1,24 +1,35 @@
 package com.example.conferencerommapp.Activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.example.conferencerommapp.ConferenceApplication
 import com.example.conferencerommapp.Helper.BuildingAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.Repository.BuildingsRepository
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
+import javax.inject.Inject
 
 class BuildingsActivity : AppCompatActivity() {
 
     /**
      * Some late initilizer variable for storing the instances of different classes
      */
+
+//    @Inject
+//    lateinit var mContext: Context
+
+//    @Inject
+//    lateinit var mBuildingsRepository: BuildingsRepository
     lateinit var mBuildingsViewModel: BuildingViewModel
     lateinit var customAdapter: BuildingAdapter
     lateinit var recyclerView: RecyclerView
@@ -26,7 +37,8 @@ class BuildingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_building_list)
-
+        //(application as ConferenceApplication).component.inject(this)
+//        Toast.makeText(mContext, "hello hsfjhkfhf", Toast.LENGTH_SHORT).show()
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>"))
 

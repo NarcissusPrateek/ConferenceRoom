@@ -114,7 +114,7 @@ class UserInputActivity : AppCompatActivity() {
         } else if (TextUtils.isEmpty(dateEditText.text.trim())) {
             Toast.makeText(applicationContext, "Invalid Date", Toast.LENGTH_SHORT).show()
             return false
-        } else if (capacity.equals("Select capacity")) {
+        } else if (capacity.equals("Select Capacity")) {
             Toast.makeText(applicationContext, "Invalid capacity", Toast.LENGTH_SHORT).show()
             return false
         } else {

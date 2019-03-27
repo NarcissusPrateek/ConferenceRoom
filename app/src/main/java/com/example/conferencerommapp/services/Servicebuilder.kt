@@ -12,7 +12,7 @@ object Servicebuilder  {
 
     private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
-    private val okHttp : OkHttpClient.Builder = OkHttpClient.Builder().addInterceptor(logger).connectTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS)
+    private val okHttp : OkHttpClient.Builder = OkHttpClient.Builder().addInterceptor(logger)//.connectTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS)
 
 
     private val builder: Retrofit.Builder = Retrofit.Builder()

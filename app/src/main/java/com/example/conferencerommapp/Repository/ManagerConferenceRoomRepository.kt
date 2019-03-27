@@ -70,7 +70,7 @@ class ManagerConferenceRoomRepository {
                 if (response.code() == Constants.OK_RESPONSE) {
                     mConferenceRoomList!!.value = response.body()
                 } else {
-                    Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show()
                 }
             }
         })
