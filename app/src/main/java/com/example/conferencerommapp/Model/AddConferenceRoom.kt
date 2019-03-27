@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 //Model Class Of the AddConference
 data class AddConferenceRoom(
-   @SerializedName("buildingName")
+   @SerializedName("buildingId")
    var  BId:Int?= 0,
 
    @SerializedName("roomName")

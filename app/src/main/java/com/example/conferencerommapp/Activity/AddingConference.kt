@@ -1,35 +1,38 @@
 package com.example.conferencerommapp
 
-import android.app.AlertDialog
 import android.app.ProgressDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
 import android.view.View
 import android.widget.*
-import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.example.conferencerommapp.ViewModel.AddConferenceRoomViewModel
 import kotlinx.android.synthetic.main.activity_adding_conference.*
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class AddingConference : AppCompatActivity() {
 
-    var options1 = arrayOf(2, 4, 6, 8, 10, 12, 14)
+    //Initializing the variable
+    var capacitySpinnerOptions = arrayOf(2, 4, 6, 8, 10, 12, 14)
+    var capacity = ""
     var progressDialog: ProgressDialog? = null
+    lateinit var conferenceRoomEditText : EditText
+    lateinit var addConferenceRoomButton : Button
+    lateinit var mAddConferenceRoomViewModel : AddConferenceRoomViewModel
+    var mConferenceRoom = AddConferenceRoom()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding_conference)
+
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Add_Room) + "</font>"))
-        var capacity = ""
-        conference_Capacity.adapter =
-            ArrayAdapter<Int>(this@AddingConference, android.R.layout.simple_list_item_1, options1)
+        addConferenceRoomButton = findViewById(R.id.add_conference_room)
+        conference_Capacity.adapter = ArrayAdapter<Int>(this@AddingConference, android.R.layout.simple_list_item_1, capacitySpinnerOptions)
         conference_Capacity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                capacity = "3"
+                capacity = "2"
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -37,63 +40,46 @@ class AddingConference : AppCompatActivity() {
             }
 
         }
-        val bundle: Bundle = intent.extras
-        val buildingId = bundle.get("BuildingId").toString().toInt()
-
-        add_conference_room.setOnClickListener {
-            val conferenceRoom: EditText = findViewById(R.id.conference_Name)
-            var room = AddConferenceRoom()
-            if (conferenceRoom.text.trim().isEmpty()) {
-                Toast.makeText(this@AddingConference, "Please Enter Room name", Toast.LENGTH_LONG).show()
-            } else if (capacity.equals("Please Select capacity")) {
-                Toast.makeText(this@AddingConference, "Please Select capacity", Toast.LENGTH_LONG).show()
-            } else {
-                room.BId = buildingId
-                room.CName = conferenceRoom.text.toString().trim()
-                room.Capacity = capacity.toInt()
-                progressDialog = ProgressDialog(this)
-                progressDialog!!.setMessage("Adding...")
-                progressDialog!!.setCancelable(false)
-                progressDialog!!.show()
-                addingRoom(room)
+        addConferenceRoomButton.setOnClickListener {
+            initializeInputFields()
+            if (validateInputs()){
+                addDataToObject(mConferenceRoom)
+                addRoom(mConferenceRoom)
             }
         }
-
     }
 
-    private fun addingRoom(room: AddConferenceRoom) {
-        val conferenceRoomapi = Servicebuilder.buildService(ConferenceService::class.java)
-        val addconferencerequestCall: Call<ResponseBody> = conferenceRoomapi.addConference(room)
-        addconferencerequestCall.enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                progressDialog!!.dismiss()
-                Toast.makeText(applicationContext, "onFailure", Toast.LENGTH_SHORT).show()
-            }
 
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                progressDialog!!.dismiss()
-                val builder = AlertDialog.Builder(this@AddingConference)
-                builder.setTitle("Status")
-                if (response.isSuccessful) {
-                    builder.setMessage("Room added Successfully.")
-                    builder.setPositiveButton("Ok") { dialog, which ->
-                        finish()
-                    }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
-                } else {
-                    builder.setMessage("Unable to Add! Please try again.")
-                    builder.setPositiveButton("Ok") { dialog, which ->
-                    }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
-                    //Toast.makeText(applicationContext, "Unable to post", Toast.LENGTH_SHORT).show()
-                }
-            }
+    private fun initializeInputFields() {
+        conferenceRoomEditText = findViewById(R.id.conference_Name)
+    }
+
+    private fun addDataToObject(mConferenceRoom : AddConferenceRoom) {
+        val bundle: Bundle?= intent.extras
+        val buildingId = bundle!!.get("BuildingId").toString().toInt()
+        mConferenceRoom.BId = buildingId
+        mConferenceRoom.CName = conferenceRoomEditText.text.toString().trim()
+        mConferenceRoom.Capacity = capacity.toInt()
+    }
+
+    fun validateInputs(): Boolean {
+        if(conferenceRoomEditText.text.toString().trim().isEmpty()){
+            Toast.makeText(this@AddingConference, "Please Enter Room name", Toast.LENGTH_LONG).show()
+            return false
+        }
+        else if(capacity.equals("Please Select Capacity")){
+            Toast.makeText(this@AddingConference, "Please Select Capacity", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
+    }
+
+    private fun addRoom(mConferenceRoom: AddConferenceRoom) {
+        mAddConferenceRoomViewModel = ViewModelProviders.of(this).get(AddConferenceRoomViewModel::class.java)
+        mAddConferenceRoomViewModel.addConferenceDetails(this,mConferenceRoom).observe(this, Observer{
 
         })
-
     }
+
 }
+

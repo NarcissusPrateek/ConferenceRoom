@@ -17,7 +17,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.example.conferencerommapp.Helper.ColorOfDialogButton
 import com.example.conferencerommapp.Helper.Unblock
+import com.example.conferencerommapp.ViewModel.UnBlockRoomViewModel
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 
@@ -28,7 +32,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class BlockedDashboardNew(private val blockedList: List<Blocked>, val contex: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<BlockedDashboardNew.ViewHolder>() {
+class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<BlockedDashboardNew.ViewHolder>() {
 
     var progressDialog: ProgressDialog? = null
     var currentPosition = 0
@@ -39,67 +43,18 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val contex: Co
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.card.setOnClickListener(View.OnClickListener {
-            currentPosition = position
-            notifyDataSetChanged()
+        setAnimationToTheRecyclerViewItem(holder, position)
+        setDataToFields(holder, position)
+        setFunctionOnButton(holder, position)
 
-        })
-        if(currentPosition == position) {
-            if(holder.linearLayout.visibility==View.GONE) {
-                var animmation: Animation = AnimationUtils.loadAnimation(contex, R.anim.animation)
-                holder.linearLayout.visibility = View.VISIBLE
-                holder.linearLayout.startAnimation(animmation)
-            }
-            else{
-                var animation: Animation = AnimationUtils.loadAnimation(contex, R.anim.close)
-                holder.linearLayout.visibility=View.GONE
-                holder.linearLayout.startAnimation(animation)
-            }
 
-        }
-        else{
-            var animation: Animation = AnimationUtils.loadAnimation(contex, R.anim.close)
-            holder.linearLayout.visibility=View.GONE
-            holder.linearLayout.startAnimation(animation)
-        }
-//        holder.card.setOnClickListener(View.OnClickListener {
-//            currentPosition = position
-//            notifyDataSetChanged()
-//
-//        })
-//        if(currentPosition == position) {
-//            if(holder.linearLayout.visibility==View.GONE) {
-//                var animmation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.animation)
-//                holder.linearLayout.visibility = View.VISIBLE
-//                holder.linearLayout.startAnimation(animmation)
-//            }
-//            else{
-//                var animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
-//                holder.linearLayout.visibility=View.GONE
-//                holder.linearLayout.startAnimation(animation)
-//            }
-//        }
-        holder.blocked = blockedList[position]
-        val date1 = blockedList[position].FromTime!!.split("T")[0]
-        holder.date.text = date1
-        holder.conferenceName.text = blockedList[position].CName
-        holder.buildingName.text = blockedList[position].BName
-        holder.purpose.text = blockedList[position].Purpose
-        holder.fromtime.text = blockedList[position].FromTime!!.split("T")[1] + " - " + blockedList[position].ToTime!!.split("T")[1]
-
-        var id = blockedList[position].CId
-        holder.unblock.setOnClickListener {
-            var block = Unblock()
-            block.CId = blockedList[position].CId
-            block.FromTime = blockedList[position].FromTime
-            block.ToTime = blockedList[position].ToTime
-            unBlock(block, contex)
-        }
         holder.itemView.setOnClickListener { v ->
             var id = blockedList[position].CId
 
         }
     }
+
+
 
     private fun unBlock(room: Unblock, contex: Context) {
         progressDialog = ProgressDialog(contex)
@@ -109,12 +64,12 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val contex: Co
         val builder = AlertDialog.Builder(contex)
         builder.setTitle("Status...")
         builder.setCancelable(false)
+        Log.i("@@@@@@@",room.toString())
         val unBlockApi = Servicebuilder.buildService(ConferenceService::class.java)
         val requestCall : Call<ResponseBody> = unBlockApi.unBlockingConferenceRoom(room)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 progressDialog!!.dismiss()
-                Log.i("---------unblock failed", t.message)
                 builder.setMessage("Unblocking Failed! Try again.")
                 builder.setPositiveButton("Ok") { dialog, which ->
 
@@ -145,6 +100,7 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val contex: Co
 
         })
     }
+
     override fun getItemCount(): Int {
         return blockedList.size
     }
@@ -159,5 +115,70 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val contex: Co
         val linearLayout:LinearLayout = itemView.findViewById(R.id.linearlayout_block)
         val unblock :Button = itemView.findViewById(R.id.unblock)
         var blocked: Blocked? = null
+    }
+
+    fun setDataToFields(holder: ViewHolder, position: Int) {
+        holder.blocked = blockedList[position]
+        holder.conferenceName.text = blockedList[position].CName
+        holder.buildingName.text = blockedList[position].BName
+        holder.purpose.text = blockedList[position].Purpose
+        holder.date.text = blockedList[position].FromTime!!.split("T")[0]
+        holder.fromtime.text = blockedList[position].FromTime!!.split("T")[1] + " - " + blockedList[position].ToTime!!.split("T")[1]
+
+    }
+
+    fun setAnimationToTheRecyclerViewItem(holder: ViewHolder, position: Int) {
+        holder.card.setOnClickListener(View.OnClickListener {
+            currentPosition = position
+            notifyDataSetChanged()
+
+        })
+        if (currentPosition == position) {
+            if (holder.linearLayout.visibility == View.GONE) {
+                var animmation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.animation)
+                holder.linearLayout.visibility = View.VISIBLE
+                holder.linearLayout.startAnimation(animmation)
+            } else {
+                var animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
+                holder.linearLayout.visibility = View.GONE
+                holder.linearLayout.startAnimation(animation)
+            }
+
+        } else {
+            var animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
+            holder.linearLayout.visibility = View.GONE
+            holder.linearLayout.startAnimation(animation)
+        }
+    }
+
+    fun unBlockRoom(mContext: Context,room: Unblock){
+        var mUnBlockRoomViewModel= ViewModelProviders.of(mContext as BlockedDashboard).get(UnBlockRoomViewModel::class.java)
+
+        mUnBlockRoomViewModel.unBlockRoom(mContext,room).observe(mContext, Observer {
+            Toast.makeText(mContext, "UnBlock Room Successfully", Toast.LENGTH_SHORT).show()
+            (mContext).mBlockedDashboardViewModel.mBlockDashboardRepository!!.makeApiCall(mContext)
+        })
+    }
+
+    fun setFunctionOnButton(holder: ViewHolder,position: Int){
+        holder.unblock.setOnClickListener {
+
+            var builder = AlertDialog.Builder(mContext)
+            builder.setTitle("Confirm ")
+            builder.setMessage("Are you sure you want to unblock the Room?")
+            builder.setPositiveButton("Yes"){dialog, which ->
+                var block = Unblock()
+                block.CId = blockedList[position].CId
+                block.FromTime = blockedList[position].FromTime
+                block.ToTime = blockedList[position].ToTime
+                unBlockRoom(mContext, block)
+            }
+            builder.setNegativeButton("No"){dialog, which ->
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.setCancelable(false)
+            dialog.show()
+            ColorOfDialogButton.setColorOfDialogButton(dialog)
+        }
     }
 }

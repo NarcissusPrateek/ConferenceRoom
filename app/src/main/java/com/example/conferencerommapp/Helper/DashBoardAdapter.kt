@@ -22,13 +22,8 @@ import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.CancelBookingViewModel
 
-class DashBoardAdapter(
-    val dashboardItemList: ArrayList<Manager>,
-    val mContext: Context,
-    val dashBoardInterface: DashBoardInterface
-) :
-
-    androidx.recyclerview.widget.RecyclerView.Adapter<DashBoardAdapter.ViewHolder>() {
+class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>,val mContext: Context,
+                       val dashBoardInterface: DashBoardInterface) :androidx.recyclerview.widget.RecyclerView.Adapter<DashBoardAdapter.ViewHolder>() {
 
     var currentPosition = 0
 

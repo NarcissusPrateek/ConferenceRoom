@@ -24,8 +24,6 @@ class ConferenceRecyclerAdapter(private val conferencceList:List<ConferenceList>
     }
 
     override fun getItemCount(): Int {
-       Log.i("--------Size----", conferencceList.size.toString())
-        //Toast.makeText(,conferencceList.size.toString(),Toast.LENGTH_SHORT).show()
         return  conferencceList.size
 
     }
