@@ -34,13 +34,13 @@ import retrofit2.Response
 
 class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<BlockedDashboardNew.ViewHolder>() {
 
-    var progressDialog: ProgressDialog? = null
     var currentPosition = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.block_dashboard_list, parent, false)
         return ViewHolder(view)
     }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         setAnimationToTheRecyclerViewItem(holder, position)
@@ -55,51 +55,6 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
     }
 
 
-
-    private fun unBlock(room: Unblock, contex: Context) {
-        progressDialog = ProgressDialog(contex)
-        progressDialog!!.setMessage("Processing....")
-        progressDialog!!.setCancelable(false)
-        progressDialog!!.show()
-        val builder = AlertDialog.Builder(contex)
-        builder.setTitle("Status...")
-        builder.setCancelable(false)
-        Log.i("@@@@@@@",room.toString())
-        val unBlockApi = Servicebuilder.buildService(ConferenceService::class.java)
-        val requestCall : Call<ResponseBody> = unBlockApi.unBlockingConferenceRoom(room)
-        requestCall.enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                progressDialog!!.dismiss()
-                builder.setMessage("Unblocking Failed! Try again.")
-                builder.setPositiveButton("Ok") { dialog, which ->
-
-                }
-                val dialog: AlertDialog = builder.create()
-                dialog.setCanceledOnTouchOutside(false)
-                dialog.show()
-            }
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                progressDialog!!.dismiss()
-                Log.i("-----------",response.toString())
-                if(response.isSuccessful) {
-                    var message = "Room is Unblocked Successfully."
-                    builder.setMessage(message)
-                    builder.setCancelable(false)
-                    builder.setPositiveButton("Ok") { dialog, which ->
-                        ContextCompat.startActivity(contex, Intent(contex, BlockedDashboard::class.java), null)
-                        (contex as Activity).finish()
-                    }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
-                }else {
-                    Toast.makeText(contex, "Unable to block room!", Toast.LENGTH_SHORT).show()
-                }
-
-            }
-
-        })
-    }
 
     override fun getItemCount(): Int {
         return blockedList.size
@@ -128,7 +83,7 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
     }
 
     fun setAnimationToTheRecyclerViewItem(holder: ViewHolder, position: Int) {
-        holder.card.setOnClickListener(View.OnClickListener {
+        holder.card.setOnClickListener( {
             currentPosition = position
             notifyDataSetChanged()
 

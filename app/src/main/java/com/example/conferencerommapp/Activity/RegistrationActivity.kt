@@ -73,7 +73,15 @@ class RegistrationActivity : AppCompatActivity() {
         employeeIdEdittext = findViewById(R.id.edittext_id)
         addEmployeeButton = findViewById(R.id.button_add)
         pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        setValueToUserNameField()
         getValueFromRoleSpinner()
+    }
+
+    fun setValueToUserNameField() {
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if(account != null) {
+            employeeNameEditText.setText(account.displayName.toString())
+        }
     }
 
 

@@ -7,7 +7,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
-        android:backgroundTint="#EEF1F7"
         app:cardBackgroundColor="@android:color/white"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"

@@ -17,5 +17,7 @@ class Constants {
         const val EXTRA_INTENT_DATA = "com.example.conferencerommapp.Activity.EXTRA_INTENT_DATA"
 
         const val OK_RESPONSE = 200
+
+        const val EXTRA_BUILDING_ID = "com.example.conferencerommapp.Activity.EXTRA_BUILDING_ID"
     }
 }

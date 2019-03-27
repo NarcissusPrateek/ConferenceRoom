@@ -17,7 +17,7 @@
             app:reverseLayout="true"
             android:id="@+id/block_recyclerView"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/blocked_list"/>
+            tools:listitem="@layout/block_dashboard_list"/>
 
     <ImageView
             android:id="@+id/empty_view_blocked"

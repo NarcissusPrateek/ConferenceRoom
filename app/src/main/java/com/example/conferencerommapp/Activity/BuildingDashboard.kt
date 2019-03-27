@@ -53,7 +53,7 @@ class BuildingDashboard : AppCompatActivity() {
                 object : BuildingAdapter.BtnClickListener {
                     override fun onBtnClick(buildingId: String?, buildingName: String?) {
                         var intent = Intent(this@BuildingDashboard, ConferenceDashBoard::class.java)
-                        intent.putExtra("BuildingId", buildingId)
+                        intent.putExtra(Constants.EXTRA_BUILDING_ID, buildingId)
                         startActivity(intent)
                     }
                 }

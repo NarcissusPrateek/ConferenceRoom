@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Repository
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +9,6 @@ import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.Booking
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -50,7 +50,9 @@ class BookingRepository {
         /**
          * getting Progress Dialog
          */
-        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
+        Log.i("----------------", mBoooking.toString())
+        var progressDialog =
+            GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
 
         /**

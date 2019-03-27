@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.example.conferencerommapp.Helper.Conference_Room_adapter_new
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Repository.HrConferenceRoomRepository
 import com.example.conferencerommapp.ViewModel.HrConferenceRoomViewModel
 import com.example.conferencerommapp.services.ConferenceService
@@ -49,7 +50,7 @@ class ConferenceDashBoard : AppCompatActivity() {
     }
     fun getIntentData(): Int {
         val bundle: Bundle = intent.extras
-        val buildingId = bundle.get("BuildingId").toString().toInt()
+        val buildingId = bundle.get(Constants.EXTRA_BUILDING_ID).toString().toInt()
         return buildingId
     }
     private fun goToNextActivity(buildingId: Int) {
@@ -58,11 +59,11 @@ class ConferenceDashBoard : AppCompatActivity() {
 
         var pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         val editor = pref.edit()
-        editor.putInt("BuildingId", buildingId)
+        editor.putInt(Constants.EXTRA_BUILDING_ID, buildingId)
         editor.apply()
 
         val intent = Intent(this, AddingConference::class.java)
-        intent.putExtra("BuildingId", buildingId)
+        intent.putExtra(Constants.EXTRA_BUILDING_ID, buildingId)
         startActivity(intent)
     }
     override fun onRestart() {
