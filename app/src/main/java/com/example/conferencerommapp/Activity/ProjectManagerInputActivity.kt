@@ -195,7 +195,12 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                 dialog.setCanceledOnTouchOutside(false)
                 dialog.show()
             } else if ((min_milliseconds <= elapsed) && (max_milliseconds >= elapsed)) {
-                goToBuildingsActivity()
+                if(ConvertTimeInMillis.calculateDateinMillis(dateFromEditText.text.toString(), dateToEditText.text.toString())) {
+                    goToBuildingsActivity()
+                }else {
+                    Toast.makeText(this, "To-Date must be greator than From-Date", Toast.LENGTH_SHORT).show()
+                }
+
             } else {
                 val builder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
                 builder.setTitle("Check...")

@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Repository
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -57,6 +58,7 @@ class ManagerBookingRepository {
         /**
          * api call using retorfit
          */
+        Log.i("-------------------", mBoooking.toString())
         val service = Servicebuilder.getObject()
         val requestCall: Call<ResponseBody> = service.addManagerBookingDetails(mBoooking)
         requestCall.enqueue(object : Callback<ResponseBody> {
@@ -67,6 +69,7 @@ class ManagerBookingRepository {
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 progressDialog.dismiss()
+                Log.i("-------------------", response.body().toString())
                 if (response.code() == Constants.OK_RESPONSE) {
                     mStatus!!.value = response.code()
                 } else {

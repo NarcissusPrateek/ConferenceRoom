@@ -136,8 +136,8 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 r1_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
             } else {
                 empty_view.visibility = View.GONE
-                setFilteredDataToAdapter(it)
             }
+            setFilteredDataToAdapter(it)
         })
     }
 

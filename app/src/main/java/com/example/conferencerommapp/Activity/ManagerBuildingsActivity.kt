@@ -3,6 +3,7 @@ package com.example.conferencerommapp.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
@@ -79,8 +80,6 @@ class ManagerBuildingsActivity : AppCompatActivity() {
             val c2 = Calendar.getInstance()
             c1.setTime(d1)
             c2.setTime(d2)
-            var sundays = 0
-
             while (c2.after(c1)) {
                 if (listOfDays.contains(c1.get(Calendar.DAY_OF_WEEK))) {
                     datalist.add(simpleDateFormat.format(c1.time).toString())

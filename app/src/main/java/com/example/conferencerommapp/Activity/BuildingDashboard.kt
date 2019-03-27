@@ -34,7 +34,6 @@ class BuildingDashboard : AppCompatActivity() {
         addBuilding.setOnClickListener {
             startActivity(Intent(this, AddingBuilding::class.java))
         }
-
         recyclerView = findViewById(R.id.buidingRecyclerView)
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
         getViewModel()
@@ -42,7 +41,6 @@ class BuildingDashboard : AppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         mBuildingsViewModel.mBuildingsRepository!!.makeApiCall(this)
-
     }
     private fun getViewModel() {
         mBuildingsViewModel.getBuildingList(this).observe(this, Observer {
@@ -63,6 +61,4 @@ class BuildingDashboard : AppCompatActivity() {
             recyclerView.adapter = buildingAdapter
         })
     }
-
-
 }
