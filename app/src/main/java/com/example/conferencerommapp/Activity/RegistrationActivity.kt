@@ -6,10 +6,16 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.OnClick
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Model.Employee
@@ -17,41 +23,47 @@ import com.example.conferencerommapp.ViewModel.RegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import fr.ganfra.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_registration.*
 
 
 class RegistrationActivity : AppCompatActivity() {
 
-    var mGoogleSignInClient: GoogleSignInClient? = null
-    lateinit var mRegistrationViewModel: RegistrationViewModel
-    lateinit var employeeIdEdittext: EditText
-    lateinit var employeeNameEditText: EditText
-    lateinit var addEmployeeButton: Button
+    private var mGoogleSignInClient: GoogleSignInClient? = null
+    private lateinit var mRegistrationViewModel: RegistrationViewModel
+    @BindView(R.id.edittext_id) private lateinit var employeeIdEditText: EditText
+    @BindView(R.id.textView_name) private lateinit var employeeNameEditText: EditText
+    @BindView(R.id.spinner) private lateinit var employeeRoleSpinner: MaterialSpinner
     val mEmployee = Employee()
     lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
+        ButterKnife.bind(this)
 
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Registration) + "</font>"))
 
         initializeFields()
+    }
 
-        addEmployeeButton.setOnClickListener(View.OnClickListener {
-                if(validateInput()) {
-                        setDataToEmployeeObjct()
-                        addEmployee()
-                }
-        })
+    /**
+     * function will invoked when user hit the reigister button
+     */
+    @OnClick(R.id.button_add)
+    fun register() {
+        if(validateInput()) {
+            setDataToEmployeeObjct()
+            addEmployee()
+        }
     }
 
     /**
      * validate all data of input fields entered by user
      */
     fun validateInput(): Boolean {
-        if (employeeIdEdittext.text.trim().isEmpty()) {
+        if (employeeIdEditText.text.trim().isEmpty()) {
             Toast.makeText(this@RegistrationActivity, "Invalid name", Toast.LENGTH_SHORT).show()
             return false
         } else if (employeeNameEditText.text.trim().isEmpty()) {
@@ -69,9 +81,6 @@ class RegistrationActivity : AppCompatActivity() {
      * get the view according to the id from layout file
      */
     fun initializeFields() {
-        employeeNameEditText = findViewById(R.id.textView_name)
-        employeeIdEdittext = findViewById(R.id.edittext_id)
-        addEmployeeButton = findViewById(R.id.button_add)
         pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         setValueToUserNameField()
         getValueFromRoleSpinner()
@@ -84,26 +93,14 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
 
-
     /**
      * function will set the spinner for selecting role in the company
      */
     fun getValueFromRoleSpinner() {
-        var options = arrayOf(
-            "Intern",
-            "SDE-1",
-            "SDE-2",
-            "SDE-3",
-            "Principal Engineer",
-            "Project Manager",
-            "HR",
-            "CEO",
-            "CTO",
-            "COO"
-        )
 
-        spinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, options)
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        var employeeRole = resources.getStringArray(R.array.role)
+        employeeRoleSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, employeeRole)
+        employeeRoleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 mEmployee.Role = "Intern"
             }

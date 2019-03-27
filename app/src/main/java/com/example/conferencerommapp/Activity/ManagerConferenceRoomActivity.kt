@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
@@ -17,39 +19,40 @@ import com.example.conferencerommapp.ViewModel.ManagerConferenceRoomViewModel
 class ManagerConferenceRoomActivity : AppCompatActivity() {
 
 
-    lateinit var mManagerConferenceRoomViewModel: ManagerConferenceRoomViewModel
-    lateinit var mCustomAdapter: ConferenceRoomAdapter
-    lateinit var mRecyclerview: RecyclerView
-    lateinit var mGetIntentDataFromActvity: GetIntentDataFromActvity
+    private lateinit var mManagerConferenceRoomViewModel: ManagerConferenceRoomViewModel
+    private lateinit var mCustomAdapter: ConferenceRoomAdapter
+    private lateinit var mGetIntentDataFromActivity: GetIntentDataFromActvity
+    @BindView(R.id.conference_recycler_view)
+    private lateinit var mRecyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manager__conference__room)
+        ButterKnife.bind(this)
 
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Select_Room) + "</font>"))
-        mManagerConferenceRoomViewModel = ViewModelProviders.of(this).get(ManagerConferenceRoomViewModel::class.java)
-        mRecyclerview = findViewById(R.id.conference_recycler_view)
         loadConferenceRoom()
     }
 
-    fun loadConferenceRoom() {
+    private fun loadConferenceRoom() {
 
-        mGetIntentDataFromActvity = getIntentData()
-        getViewModel(mGetIntentDataFromActvity)
+        mGetIntentDataFromActivity = getIntentData()
+        getViewModel(mGetIntentDataFromActivity)
     }
 
     /**
      * get intent data from previous activity
      */
-    fun getIntentData(): GetIntentDataFromActvity {
+    private fun getIntentData(): GetIntentDataFromActvity {
         return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
     /**
      * get the object of ViewModel class and by using this object we call the api and set the observer on the function
      */
-    fun getViewModel(mGetIntentDataFromActvity: GetIntentDataFromActvity) {
-
+    private fun getViewModel(mGetIntentDataFromActvity: GetIntentDataFromActvity) {
+        mManagerConferenceRoomViewModel = ViewModelProviders.of(this).get(ManagerConferenceRoomViewModel::class.java)
         mManagerConferenceRoomViewModel.getConferenceRoomList(
             this,
             setDataToObjectForApiCall(mGetIntentDataFromActvity)
@@ -63,7 +66,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
                         goToNextActivity(mGetIntentDataFromActvity)
                     }
                 })
-            mRecyclerview.adapter = mCustomAdapter
+            mRecyclerView.adapter = mCustomAdapter
         })
     }
 
@@ -86,7 +89,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
         super.onRestart()
         mManagerConferenceRoomViewModel.getConferenceRoomList(
             this,
-            setDataToObjectForApiCall(mGetIntentDataFromActvity)
+            setDataToObjectForApiCall(mGetIntentDataFromActivity)
         )
     }
 
@@ -94,7 +97,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      * function will set data for different properties of object of FetchConferenceRoom class
      * and it will return that object which is used as a parameter for api call
      */
-    fun setDataToObjectForApiCall(mGetIntentDataFromActvity: GetIntentDataFromActvity): ManagerConference {
+    private fun setDataToObjectForApiCall(mGetIntentDataFromActvity: GetIntentDataFromActvity): ManagerConference {
         var input = ManagerConference()
         input.FromTime = mGetIntentDataFromActvity.fromTimeList
         input.ToTime = mGetIntentDataFromActvity.toTimeList

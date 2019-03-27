@@ -3,11 +3,12 @@ package com.example.conferencerommapp.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.BuildingAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
@@ -19,21 +20,21 @@ import kotlin.collections.ArrayList
 
 class ManagerBuildingsActivity : AppCompatActivity() {
 
-    var datalist = ArrayList<String>()
-    var fromTimeList = ArrayList<String>()
-    var toTimeList = ArrayList<String>()
-    lateinit var mManagerBuildingViewModel: ManagerBuildingViewModel
-    lateinit var mCustomAdapter: BuildingAdapter
-    lateinit var mRecyclerView: RecyclerView
+    private var dataList = ArrayList<String>()
+    private var fromTimeList = ArrayList<String>()
+    private var toTimeList = ArrayList<String>()
+    private lateinit var mManagerBuildingViewModel: ManagerBuildingViewModel
+    private lateinit var mCustomAdapter: BuildingAdapter
+    @BindView(R.id.building_recycler_view)
+    private lateinit var mRecyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manager__building)
+        ButterKnife.bind(this)
 
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>"))
-
-        mManagerBuildingViewModel = ViewModelProviders.of(this).get(ManagerBuildingViewModel::class.java)
-        mRecyclerView = findViewById(R.id.building_recycler_view)
         loadBuildings()
     }
 
@@ -71,7 +72,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
         toDate: String,
         listOfDays: ArrayList<Int>
     ) {
-        datalist.clear()
+        dataList.clear()
         try {
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
             val d1 = simpleDateFormat.parse(fromDate)
@@ -82,7 +83,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
             c2.setTime(d2)
             while (c2.after(c1)) {
                 if (listOfDays.contains(c1.get(Calendar.DAY_OF_WEEK))) {
-                    datalist.add(simpleDateFormat.format(c1.time).toString())
+                    dataList.add(simpleDateFormat.format(c1.time).toString())
                 }
                 c1.add(Calendar.DATE, 1)
             }
@@ -96,7 +97,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
      * this function returns all fromdate list and todate list
      */
     fun getLists(start: String, end: String) {
-        for (item in datalist) {
+        for (item in dataList) {
             fromTimeList.add(item + " ${start}")
             toTimeList.add(item + " ${end}")
         }
@@ -107,6 +108,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
      * after that whenever data changes it will set a adapter to recyclerview
      */
     fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity) {
+        mManagerBuildingViewModel = ViewModelProviders.of(this).get(ManagerBuildingViewModel::class.java)
         mManagerBuildingViewModel.getBuildingList(this).observe(this, androidx.lifecycle.Observer {
             mCustomAdapter = BuildingAdapter(this,
                 it!!,

@@ -19,9 +19,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnClick
 
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.ViewModel.CheckRegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.SignInButton
@@ -29,12 +31,10 @@ import com.google.android.gms.common.SignInButton
 class SignIn : AppCompatActivity() {
 
     var RC_SIGN_IN = 0
-    @BindView(R.id.sign_in_button)
-    lateinit var signInButton: SignInButton
-
-    @BindView(R.id.l1) lateinit var linearLayoutUp: LinearLayout
-
-    @BindView(R.id.l2) lateinit var linearLayoutDown: LinearLayout
+    @BindView(R.id.l1)
+    lateinit var linearLayoutUp: LinearLayout
+    @BindView(R.id.l2)
+    lateinit var linearLayoutDown: LinearLayout
     var mGoogleSignInClient: GoogleSignInClient? = null
     lateinit var prefs: SharedPreferences
 
@@ -43,18 +43,17 @@ class SignIn : AppCompatActivity() {
         setContentView(R.layout.sign_in_activity)
         ButterKnife.bind(this)
         initialize()
-        signInButton!!.setOnClickListener(View.OnClickListener {
-            startintentToGoogle()
-        })
+    }
+
+    @OnClick(R.id.sign_in_button)
+    fun SignIn() {
+        startintentToGoogle()
     }
 
     /**
      * function intialize all items of UI, sharedPreference and calls the setAnimationToLayout function to set the animation to the layouts
      */
     fun initialize() {
-        linearLayoutUp = findViewById(R.id.l1)
-        linearLayoutDown = findViewById(R.id.l2)
-        signInButton = findViewById(R.id.sign_in_button)
         prefs = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
         initializeGoogleSignIn()
         setAnimationToLayout()
@@ -121,16 +120,6 @@ class SignIn : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    fun checkStatus(account: GoogleSignInAccount) {
-        var status = prefs!!.getInt(Constants.EXTRA_REGISTERED, 0)
-        if(status == 1) {
-            startActivity(Intent(this@SignIn, UserBookingsDashboardActivity::class.java))
-            finish()
-        } else {
-            checkRegistration(account.email.toString())
-        }
-    }
-
     /**
      * this function will check whether the user is registered or not
      * if not registered than make an intent to registration activity
@@ -154,14 +143,12 @@ class SignIn : AppCompatActivity() {
                 startActivity(Intent(this@SignIn, RegistrationActivity::class.java))
             }
             else -> {
-                val builder = AlertDialog.Builder(this@SignIn)
-                builder.setTitle(getString(R.string.error))
-                builder.setMessage(getString(R.string.restart_app))
+                val builder =
+                    GetAleretDialog.getDialog(this, getString(R.string.error), getString(R.string.restart_app))
                 builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                     finish()
                 }
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
+                GetAleretDialog.showDialog(builder)
             }
         }
     }
@@ -171,11 +158,6 @@ class SignIn : AppCompatActivity() {
      */
     fun setValueForSharedPreference(status: Int) {
         var code = status
-//        if(code != 0) {
-//            val editRegistrationStatus = prefs!!.edit()
-//            editRegistrationStatus.putInt(Constants.EXTRA_REGISTERED, 1)
-//            editRegistrationStatus.apply()
-//        }
         val editor = prefs!!.edit()
         editor.putInt("Code", code!!)
         editor.apply()

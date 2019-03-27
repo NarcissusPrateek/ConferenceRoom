@@ -1,6 +1,5 @@
 package com.example.conferencerommapp.Activity
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -8,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetAleretDialog
@@ -18,22 +19,22 @@ import com.example.conferencerommapp.ViewModel.ConferenceRoomViewModel
 
 class ConferenceRoomActivity : AppCompatActivity() {
 
-    var progressDialog: ProgressDialog? = null
-    lateinit var mConfereenceRoomViewModel: ConferenceRoomViewModel
+    private lateinit var mConferenceRoomViewModel: ConferenceRoomViewModel
     lateinit var mCustomAdapter: ConferenceRoomAdapter
-    lateinit var mRecyclerView: RecyclerView
-    lateinit var mIntentDataFromActvity: GetIntentDataFromActvity
+    @BindView(R.id.conference_recycler_view) lateinit var mRecyclerView: RecyclerView
+    private lateinit var mIntentDataFromActivity: GetIntentDataFromActvity
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conference_room)
+        ButterKnife.bind(this)
+
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Select_Room) + "</font>"))
 
-        mIntentDataFromActvity = getIntentData()
-
-        var mFetchRoom = setDataToObjectForApiCall(mIntentDataFromActvity)
-
-        getViewModel(mIntentDataFromActvity, mFetchRoom)
+        mIntentDataFromActivity = getIntentData()
+        var mFetchRoom = setDataToObjectForApiCall(mIntentDataFromActivity)
+        getViewModel(mIntentDataFromActivity, mFetchRoom)
     }
 
     /**
@@ -47,9 +48,8 @@ class ConferenceRoomActivity : AppCompatActivity() {
      * get the object of ViewModel class and by using this object we call the api and set the observer on the function
      */
     fun getViewModel(mIntentDataFromActvity: GetIntentDataFromActvity, mFetchRoom: FetchConferenceRoom) {
-        mRecyclerView = findViewById(R.id.conference_recycler_view)
-        mConfereenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
-        mConfereenceRoomViewModel.getConferenceRoomList(this, mFetchRoom).observe(this, Observer {
+        mConferenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
+        mConferenceRoomViewModel.getConferenceRoomList(this, mFetchRoom).observe(this, Observer {
             if(it.isEmpty()) {
                 showDialog()
             }else {
@@ -83,7 +83,7 @@ class ConferenceRoomActivity : AppCompatActivity() {
      */
     override fun onRestart() {
         super.onRestart()
-        mConfereenceRoomViewModel.getConferenceRoomList(this, setDataToObjectForApiCall(mIntentDataFromActvity))
+        mConferenceRoomViewModel.getConferenceRoomList(this, setDataToObjectForApiCall(mIntentDataFromActivity))
     }
 
     /**
@@ -99,8 +99,11 @@ class ConferenceRoomActivity : AppCompatActivity() {
         return mFetchRoom
     }
 
+    /**
+     * show alert dialog when rooms are not available
+     */
     fun showDialog() {
-        val mDialog = GetAleretDialog.getDialog(this, "Status", "No Room Available")
+        val mDialog = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_not_available))
         mDialog.setPositiveButton(getString(R.string.ok)) { dialog, which ->
             finish()
         }

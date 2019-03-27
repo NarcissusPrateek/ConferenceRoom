@@ -1,60 +1,54 @@
 package com.example.conferencerommapp.Activity
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.text.TextUtils
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
-
+import butterknife.OnClick
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ConvertTimeInMillis
 import com.example.conferencerommapp.Helper.DateAndTimePicker
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
+import fr.ganfra.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_user_inputs.*
 
 
 class UserInputActivity : AppCompatActivity() {
 
 
-    lateinit var capacity: String
-    @BindView(R.id.date)
-    lateinit var dateEditText: EditText
-    //@BindView(R.id.fromTime)
-    lateinit var fromTimeEditText: EditText
-    //@BindView(R.id.toTime)
-    lateinit var toTimeEditText: EditText
-    lateinit var buildingActivityButton: Button
+    @BindView(R.id.date) private lateinit var dateEditText: EditText
+    @BindView(R.id.fromTime) private lateinit var fromTimeEditText: EditText
+    @BindView(R.id.toTime) private lateinit var toTimeEditText: EditText
+    @BindView(R.id.spinner2) private lateinit var capacitySpinner: MaterialSpinner
+    private lateinit var capacity: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_inputs)
-          ButterKnife.bind(this)
+        ButterKnife.bind(this)
 
         val actionBar = supportActionBar
         actionBar!!.setTitle(Html.fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>"))
 
-        initializeInputFields()
         setPickerToEdittextx()
-
-        buildingActivityButton.setOnClickListener {
-            validationOnDataEnteredByUser()
-        }
     }
 
     /**
-     * function will Initialize all input fields
+     * function will invoke whenever the button is hit
      */
-    fun initializeInputFields() {
-        dateEditText = findViewById(R.id.date)
-        fromTimeEditText = findViewById(R.id.fromTime)
-        toTimeEditText = findViewById(R.id.toTime)
-        buildingActivityButton = findViewById(R.id.next)
+    @OnClick(R.id.next)
+    fun submit(view: View) {
+        validationOnDataEnteredByUser()
     }
 
     /**
@@ -89,8 +83,8 @@ class UserInputActivity : AppCompatActivity() {
         /**
          * a spinner for selecting room capacity
          */
-        spinner2.adapter = ArrayAdapter<Int>(this, android.R.layout.simple_list_item_1, options)
-        spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        capacitySpinner.adapter = ArrayAdapter<Int>(this, android.R.layout.simple_list_item_1, options)
+        capacitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 capacity = "2"
             }
@@ -106,16 +100,16 @@ class UserInputActivity : AppCompatActivity() {
      */
     fun validate(): Boolean {
         if (TextUtils.isEmpty(fromTimeEditText.text.trim())) {
-            Toast.makeText(applicationContext, "Invalid From Time", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
             return false
         } else if (TextUtils.isEmpty(toTimeEditText.text.trim())) {
-            Toast.makeText(applicationContext, "Invalid To Time", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, getString(R.string.invalid_to_time), Toast.LENGTH_SHORT).show()
             return false
         } else if (TextUtils.isEmpty(dateEditText.text.trim())) {
-            Toast.makeText(applicationContext, "Invalid Date", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, getString(R.string.invaild_date), Toast.LENGTH_SHORT).show()
             return false
         } else if (capacity.equals("Select Capacity")) {
-            Toast.makeText(applicationContext, "Invalid capacity", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, getString(R.string.invalid_capacity), Toast.LENGTH_SHORT).show()
             return false
         } else {
             return true
@@ -134,8 +128,8 @@ class UserInputActivity : AppCompatActivity() {
         if (!validate()) {
 
         } else {
-            val min_milliseconds: Long = 900000
-            val max_milliseconds: Long = 14400000
+            val minMilliseconds: Long = 900000
+            val maxMilliseconds: Long = 14400000
 
             /**
              * Get the start and end time of meeting from the input fields
@@ -146,9 +140,6 @@ class UserInputActivity : AppCompatActivity() {
             /**
              * setting a aalert dialog instance for the current context
              */
-
-            val builder = AlertDialog.Builder(this@UserInputActivity)
-            builder.setTitle("Check...")
             try {
 
                 /**
@@ -165,12 +156,10 @@ class UserInputActivity : AppCompatActivity() {
                  */
 
                 if (elapsed2 < 0) {
-                    builder.setMessage("From-Time must be greater than the current time...")
-                    builder.setPositiveButton("Ok") { dialog, which ->
+                    var builder = GetAleretDialog.getDialog(this, getString(R.string.invalid),getString(R.string.invalid_fromtime))
+                    builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                     }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
+                    GetAleretDialog.showDialog(builder)
                 }
                 /**
                  * if MIN_MILIISECONDS <= elapsed that means the meeting duration is more than 15 min
@@ -179,17 +168,14 @@ class UserInputActivity : AppCompatActivity() {
                  * if the above condition is not true than we show show a message in alert that the meeting duration must be less than 4hours
                  * if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
                  */
-                else if ((min_milliseconds <= elapsed) && (max_milliseconds >= elapsed)) {
+                else if ((minMilliseconds <= elapsed) && (maxMilliseconds >= elapsed)) {
                     goToBuildingsActivity()
                 } else {
-                    val builder = AlertDialog.Builder(this@UserInputActivity)
-                    builder.setTitle("Check...")
-                    builder.setMessage("From-Time must be greater than To-Time and the meeting time must be less than 4 Hours")
-                    builder.setPositiveButton("Ok") { dialog, which ->
+                    val builder = GetAleretDialog.getDialog(this, getString(R.string.invalid), getString(R.string.time_validation_message))
+
+                    builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                     }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
+                    GetAleretDialog.showDialog(builder)
                 }
             } catch (e: Exception) {
                 Toast.makeText(this@UserInputActivity, getString(R.string.details_invalid), Toast.LENGTH_LONG).show()
@@ -209,9 +195,9 @@ class UserInputActivity : AppCompatActivity() {
         mGetIntentDataFromActvity.date = dateEditText.text.toString()
         mGetIntentDataFromActvity.capacity = capacity
 
-        val buildingintent = Intent(this@UserInputActivity, BuildingsActivity::class.java)
-        buildingintent.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
-        startActivity(buildingintent)
+        val mBuildingIntent = Intent(this@UserInputActivity, BuildingsActivity::class.java)
+        mBuildingIntent.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
+        startActivity(mBuildingIntent)
     }
 }
 

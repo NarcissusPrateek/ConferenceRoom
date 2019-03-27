@@ -30,6 +30,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kapt {
+        generateStubs = true
+    }
 }
 
 dependencies {
@@ -65,13 +68,13 @@ dependencies {
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
 
     implementation 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    kapt 'com.jakewharton:butterknife-compiler:10.1.0'
 
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     kapt "android.arch.lifecycle:compiler: $rootProject.archLifecycleVersion"
 
     // Logging
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
     //dagger
     implementation 'com.google.dagger:dagger:2.11'
