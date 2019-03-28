@@ -26,7 +26,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
     private lateinit var mManagerBuildingViewModel: ManagerBuildingViewModel
     private lateinit var mCustomAdapter: BuildingAdapter
     @BindView(R.id.building_recycler_view)
-    private lateinit var mRecyclerView: RecyclerView
+    lateinit var mRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

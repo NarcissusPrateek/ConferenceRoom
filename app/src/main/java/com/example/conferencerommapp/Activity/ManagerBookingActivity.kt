@@ -35,13 +35,20 @@ class ManagerBookingActivity : AppCompatActivity() {
 
     private var names = ArrayList<EmployeeList>()
     private var customAdapter: CheckBoxAdapter? = null
-    @BindView(R.id.textView_from_time)private lateinit var fromTimeTextView: TextView
-    @BindView(R.id.textView_date)private lateinit var dateTextView: TextView
-    @BindView(R.id.textView_conf_name)private lateinit var roomNameTextView: TextView
-    @BindView(R.id.textView_name)private lateinit var employeeNameTextView: TextView
-    @BindView(R.id.editText_purpose)private lateinit var purposeEditText: EditText
-    @BindView(R.id.textView_buildingname)private lateinit var buildingNameTextView: TextView
-    @BindView(R.id.editText_person) private lateinit var addPersonEditText: EditText
+    @BindView(R.id.textView_from_time)
+    lateinit var fromTimeTextView: TextView
+    @BindView(R.id.textView_date)
+    lateinit var dateTextView: TextView
+    @BindView(R.id.textView_conf_name)
+    lateinit var roomNameTextView: TextView
+    @BindView(R.id.textView_name)
+    lateinit var employeeNameTextView: TextView
+    @BindView(R.id.editText_purpose)
+    lateinit var purposeEditText: EditText
+    @BindView(R.id.textView_buildingname)
+    lateinit var buildingNameTextView: TextView
+    @BindView(R.id.editText_person)
+    lateinit var addPersonEditText: EditText
     private lateinit var mEmployeeViewModel: EmployeeViewModel
     private lateinit var mManagerBookingViewModel: ManagerBookingViewModel
 
@@ -66,6 +73,7 @@ class ManagerBookingActivity : AppCompatActivity() {
         setDialog()
         addDataToObject(mGetIntentDataFromActvity)
     }
+
     @OnClick(R.id.book_button)
     fun bookMeeting() {
         if (validateInput()) {
@@ -225,7 +233,8 @@ class ManagerBookingActivity : AppCompatActivity() {
      * go to UserBookingDashboardActivity
      */
     private fun goToBookingDashboard() {
-        val mDialog = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booked_successfully))
+        val mDialog =
+            GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booked_successfully))
         mDialog.setPositiveButton(getString(R.string.ok)) { dialog, which ->
             startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
             finish()

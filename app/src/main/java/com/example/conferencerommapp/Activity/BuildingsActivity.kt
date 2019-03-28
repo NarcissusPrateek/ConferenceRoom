@@ -21,8 +21,9 @@ class BuildingsActivity : AppCompatActivity() {
      * Some late initializer variables for storing the instances of different classes
      */
     private lateinit var customAdapter: BuildingAdapter
-    private lateinit  var mBuildingsViewModel: BuildingViewModel
-    @BindView(R.id.building_recycler_view) lateinit var mRecyclerView: RecyclerView
+    private lateinit var mBuildingsViewModel: BuildingViewModel
+    @BindView(R.id.building_recycler_view)
+    lateinit var mRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

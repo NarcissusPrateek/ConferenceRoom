@@ -26,10 +26,14 @@ import kotlinx.android.synthetic.main.activity_user_inputs.*
 class UserInputActivity : AppCompatActivity() {
 
 
-    @BindView(R.id.date) private lateinit var dateEditText: EditText
-    @BindView(R.id.fromTime) private lateinit var fromTimeEditText: EditText
-    @BindView(R.id.toTime) private lateinit var toTimeEditText: EditText
-    @BindView(R.id.spinner2) private lateinit var capacitySpinner: MaterialSpinner
+    @BindView(R.id.date)
+    lateinit var dateEditText: EditText
+    @BindView(R.id.fromTime)
+    lateinit var fromTimeEditText: EditText
+    @BindView(R.id.toTime)
+    lateinit var toTimeEditText: EditText
+    @BindView(R.id.spinner2)
+    lateinit var capacitySpinner: MaterialSpinner
     private lateinit var capacity: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,7 +160,11 @@ class UserInputActivity : AppCompatActivity() {
                  */
 
                 if (elapsed2 < 0) {
-                    var builder = GetAleretDialog.getDialog(this, getString(R.string.invalid),getString(R.string.invalid_fromtime))
+                    var builder = GetAleretDialog.getDialog(
+                        this,
+                        getString(R.string.invalid),
+                        getString(R.string.invalid_fromtime)
+                    )
                     builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                     }
                     GetAleretDialog.showDialog(builder)
@@ -171,7 +179,11 @@ class UserInputActivity : AppCompatActivity() {
                 else if ((minMilliseconds <= elapsed) && (maxMilliseconds >= elapsed)) {
                     goToBuildingsActivity()
                 } else {
-                    val builder = GetAleretDialog.getDialog(this, getString(R.string.invalid), getString(R.string.time_validation_message))
+                    val builder = GetAleretDialog.getDialog(
+                        this,
+                        getString(R.string.invalid),
+                        getString(R.string.time_validation_message)
+                    )
 
                     builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                     }
