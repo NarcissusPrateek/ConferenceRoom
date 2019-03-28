@@ -87,10 +87,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      */
     override fun onRestart() {
         super.onRestart()
-        mManagerConferenceRoomViewModel.getConferenceRoomList(
-            this,
-            setDataToObjectForApiCall(mGetIntentDataFromActivity)
-        )
+        mManagerConferenceRoomViewModel.mManagerConferenceRoomRepository!!.makeApiCall(this, setDataToObjectForApiCall(mGetIntentDataFromActivity))
     }
 
     /**

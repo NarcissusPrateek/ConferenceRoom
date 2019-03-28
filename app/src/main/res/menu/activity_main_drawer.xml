@@ -7,16 +7,14 @@
         <item
                 android:id="@+id/HR"
                 android:icon="@drawable/hr_manager"
-                android:title="HR"/>
+                android:title="Block Room"/>
         <item
                 android:id="@+id/project_manager"
                 android:icon="@drawable/manager"
-                android:title="Project Manager"/>
+                android:title="Recurring Meeting"/>
         <item
                 android:id="@+id/logout"
                 android:icon="@drawable/exit1"
                 android:title="Logout"/>
-
-
     </group>
 </menu>
