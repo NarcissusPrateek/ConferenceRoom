@@ -41,13 +41,13 @@ class BlockedDashboard : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blocked_dashboard)
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Blocked_Rooms) + "</font>"))
+        actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Blocked_Rooms) + "</font>")
 
         addConferenceRoom = findViewById(R.id.add_conference)
         maintenance= findViewById(R.id.maintenance)
         menu = findViewById(R.id.menu)
         recyclerView = findViewById(R.id.block_recyclerView)
-        menu.setClosedOnTouchOutside(true);
+        menu.setClosedOnTouchOutside(true)
 
         mBlockedDashboardViewModel = ViewModelProviders.of(this).get(BlockedDashboardViewModel::class.java)
         maintenance.setOnClickListener {
