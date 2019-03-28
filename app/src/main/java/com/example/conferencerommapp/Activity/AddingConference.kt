@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.ViewModel.AddConferenceRoomViewModel
 import kotlinx.android.synthetic.main.activity_adding_conference.*
 
@@ -81,9 +82,15 @@ class AddingConference : AppCompatActivity() {
     private fun addRoom(mConferenceRoom: AddConferenceRoom) {
         mAddConferenceRoomViewModel = ViewModelProviders.of(this).get(AddConferenceRoomViewModel::class.java)
         mAddConferenceRoomViewModel.addConferenceDetails(this,mConferenceRoom).observe(this, Observer{
-            Toast.makeText(this,getString(R.string.room_add_success),Toast.LENGTH_SHORT).show()
+            if(it == Constants.OK_RESPONSE) {
+                var dialog = GetAleretDialog.getDialog(this,getString(R.string.status), getString(R.string.room_added))
+                dialog.setPositiveButton(getString(R.string.ok)) {dialog, which ->
+                    finish()
+                }
+                GetAleretDialog.showDialog(dialog)
+
+            }
         })
     }
-
 }
 

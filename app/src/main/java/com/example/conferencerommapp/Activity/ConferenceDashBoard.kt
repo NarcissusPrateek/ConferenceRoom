@@ -69,7 +69,7 @@ class ConferenceDashBoard : AppCompatActivity() {
     override fun onRestart() {
         super.onRestart()
         val pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-        var buildingId = pref.getInt("BuildingId", 0)
+        var buildingId = pref.getInt(Constants.EXTRA_BUILDING_ID, 0)
         mHrConferenceRoomViewModel.mHrConferenceRoomRepository!!.makeApiCall(this,buildingId)
     }
 

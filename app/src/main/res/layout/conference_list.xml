@@ -28,13 +28,13 @@
                 android:ems="10"
                 android:textColor="#000"
                 android:maxLines="1"
-                android:paddingRight="150dp"
+                android:paddingRight="30dp"
                 android:ellipsize="end"
                 android:drawableStart="@drawable/ic_room_black_24dp"
                 android:drawableLeft="@drawable/ic_room_black_24dp"
                 android:textSize="20dp"
                 android:drawablePadding="15dp"
-                android:maxLength="50"
+                android:maxLength="30"
                 android:hint="Room Name"/>
         <TextView
                 android:id="@+id/conference_room_capacity_show"

@@ -36,8 +36,8 @@
                     android:drawableStart="@drawable/ic_room_black_24dp"
                     android:drawableLeft="@drawable/ic_room_black_24dp"
                     android:drawablePadding="5dp"
-                    android:maxLength="20"
-                    android:hint="Room Name"/>
+                    android:maxLength="30"
+                    android:hint="Room Name (1st Floor)"/>
         </com.google.android.material.textfield.TextInputLayout>
         <fr.ganfra.materialspinner.MaterialSpinner
                 android:layout_width="match_parent"
