@@ -2,7 +2,7 @@ package com.example.conferencerommapp.Activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
+import android.text.Html.fromHtml
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+@Suppress("DEPRECATION")
 class ManagerBuildingsActivity : AppCompatActivity() {
 
     private var dataList = ArrayList<String>()
@@ -34,7 +35,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>"))
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>")
         loadBuildings()
     }
 
@@ -47,7 +48,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
     }
 
     private fun loadBuildings() {
-        var mGetIntentDataFromActvity = getIntentData()
+        val mGetIntentDataFromActvity = getIntentData()
         getDateAccordingToDay(
             mGetIntentDataFromActvity.fromtime!!,
             mGetIntentDataFromActvity.totime!!,
@@ -58,14 +59,14 @@ class ManagerBuildingsActivity : AppCompatActivity() {
         getViewModel(mGetIntentDataFromActvity)
     }
 
-    fun getIntentData(): GetIntentDataFromActvity {
-        return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
+    private fun getIntentData(): GetIntentDataFromActvity {
+        return intent.extras!!.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
     /**
      * get all date for each day selected by user in between from date and To date
      */
-    fun getDateAccordingToDay(
+    private fun getDateAccordingToDay(
         start: String,
         end: String,
         fromDate: String,
@@ -79,8 +80,8 @@ class ManagerBuildingsActivity : AppCompatActivity() {
             val d2 = simpleDateFormat.parse(toDate)
             val c1 = Calendar.getInstance()
             val c2 = Calendar.getInstance()
-            c1.setTime(d1)
-            c2.setTime(d2)
+            c1.time = d1
+            c2.time = d2
             while (c2.after(c1)) {
                 if (listOfDays.contains(c1.get(Calendar.DAY_OF_WEEK))) {
                     dataList.add(simpleDateFormat.format(c1.time).toString())
@@ -96,10 +97,10 @@ class ManagerBuildingsActivity : AppCompatActivity() {
     /**
      * this function returns all fromdate list and todate list
      */
-    fun getLists(start: String, end: String) {
+    private fun getLists(start: String, end: String) {
         for (item in dataList) {
-            fromTimeList.add(item + " ${start}")
-            toTimeList.add(item + " ${end}")
+            fromTimeList.add("$item $start")
+            toTimeList.add("$item $end")
         }
     }
 
@@ -107,15 +108,15 @@ class ManagerBuildingsActivity : AppCompatActivity() {
      * set the observer on a method of viewmodel getBuildingList which will observe the data from the api
      * after that whenever data changes it will set a adapter to recyclerview
      */
-    fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity) {
+    private fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity) {
         mManagerBuildingViewModel = ViewModelProviders.of(this).get(ManagerBuildingViewModel::class.java)
         mManagerBuildingViewModel.getBuildingList(this).observe(this, androidx.lifecycle.Observer {
             mCustomAdapter = BuildingAdapter(this,
                 it!!,
                 object : BuildingAdapter.BtnClickListener {
-                    override fun onBtnClick(buildingId: String?, buildingName: String?) {
+                    override fun onBtnClick(buildingId: String?, buildingname: String?) {
                         mIntentDataFromActivity.buildingId = buildingId
-                        mIntentDataFromActivity.buildingName = buildingName
+                        mIntentDataFromActivity.buildingName = buildingname
                         mIntentDataFromActivity.fromTimeList.clear()
                         mIntentDataFromActivity.toTimeList.clear()
                         mIntentDataFromActivity.fromTimeList.addAll(fromTimeList)

@@ -1,90 +1,119 @@
-package com.example.conferencerommapp
+package com.example.conferencerommapp.Activity
 
 import android.os.Bundle
 import android.text.Html
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.OnClick
+import com.example.conferencerommapp.AddConferenceRoom
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetAleretDialog
+import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.AddConferenceRoomViewModel
-import kotlinx.android.synthetic.main.activity_adding_conference.*
+import fr.ganfra.materialspinner.MaterialSpinner
 
+@Suppress("DEPRECATION")
 class AddingConference : AppCompatActivity() {
 
     /**
-     * Declaring Global variables
+     * Declaring Global variables and butterknife
      */
     var capacity = ""
-    lateinit var conferenceRoomEditText : EditText
-    lateinit var addConferenceRoomButton : Button
-    lateinit var mAddConferenceRoomViewModel : AddConferenceRoomViewModel
-    var mConferenceRoom = AddConferenceRoom()
+    @BindView(R.id.conference_Name)
+    lateinit var conferenceRoomEditText: EditText
+
+    @BindView(R.id.conference_Capacity)
+    lateinit var capacitySpinner: MaterialSpinner
+
+    private lateinit var mAddConferenceRoomViewModel: AddConferenceRoomViewModel
+    private var mConferenceRoom = AddConferenceRoom()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding_conference)
-
+        ButterKnife.bind(this)
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Add_Room) + "</font>"))
-        addConferenceRoomButton = findViewById(R.id.add_conference_room)
+        actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Add_Room) + "</font>")
         setSpinnerForCapacity()
-        addConferenceRoomButton.setOnClickListener {
-            initializeInputFields()
-            if (validateInputs()){
-                addDataToObject(mConferenceRoom)
-                addRoom(mConferenceRoom)
-            }
+
+    }
+
+
+    /**
+     * function will invoke whenever the add button is clicked
+     */
+    @OnClick(R.id.add_conference_room)
+    fun addRoomButton() {
+        if (validateInputs()) {
+            addDataToObject(mConferenceRoom)
+            addRoom(mConferenceRoom)
         }
     }
 
-    fun setSpinnerForCapacity(){
-        var capacitySpinnerOptions = arrayOf(2, 4, 6, 8, 10, 12, 14)
-        conference_Capacity.adapter = ArrayAdapter<Int>(this@AddingConference, android.R.layout.simple_list_item_1, capacitySpinnerOptions)
-        conference_Capacity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+    /**
+     * fuction will set the BlockConferenceRoomActivity Value for the Capacity
+     */
+    fun setSpinnerForCapacity() {
+        val capacitySpinnerOptions = arrayOf(2, 4, 6, 8, 10, 12, 14)
+        capacitySpinner.adapter =
+            ArrayAdapter<Int>(this@AddingConference, android.R.layout.simple_list_item_1, capacitySpinnerOptions)
+        capacitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 capacity = "2"
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                capacity = conference_Capacity.getItemAtPosition(position).toString()
+                capacity = capacitySpinner.getItemAtPosition(position).toString()
             }
 
         }
     }
 
-    private fun initializeInputFields() {
-        conferenceRoomEditText = findViewById(R.id.conference_Name)
-    }
-
-    private fun addDataToObject(mConferenceRoom : AddConferenceRoom) {
-        val bundle: Bundle?= intent.extras
-        val buildingId = bundle!!.get(Constants.EXTRA_BUILDING_ID).toString().toInt()
+    /**
+     *  set values to the different properties of object which is required for api call
+     */
+    private fun addDataToObject(mConferenceRoom: AddConferenceRoom) {
+        val bundle: Bundle? = intent.extras
+        val buildingId = bundle!!.get(Constants.EXTRA_BUILDING_ID)!!.toString().toInt()
         mConferenceRoom.BId = buildingId
         mConferenceRoom.CName = conferenceRoomEditText.text.toString().trim()
         mConferenceRoom.Capacity = capacity.toInt()
+
+
     }
 
-    fun validateInputs(): Boolean {
-        if(conferenceRoomEditText.text.toString().trim().isEmpty()){
+    /**
+     * validate all input fields
+     */
+    private fun validateInputs(): Boolean {
+        if (conferenceRoomEditText.text.toString().trim().isEmpty()) {
             Toast.makeText(this@AddingConference, getString(R.string.enter_room_name), Toast.LENGTH_LONG).show()
             return false
-        }
-        else if(capacity.equals(getString(R.string.select_capacity))){
+        } else if (capacity == getString(R.string.select_capacity)) {
             Toast.makeText(this@AddingConference, getString(R.string.select_capacity), Toast.LENGTH_LONG).show()
             return false
         }
         return true
     }
 
+    /**
+     * function calls the ViewModel of addingConference and data into the database
+     */
     private fun addRoom(mConferenceRoom: AddConferenceRoom) {
         mAddConferenceRoomViewModel = ViewModelProviders.of(this).get(AddConferenceRoomViewModel::class.java)
-        mAddConferenceRoomViewModel.addConferenceDetails(this,mConferenceRoom).observe(this, Observer{
-            if(it == Constants.OK_RESPONSE) {
-                var dialog = GetAleretDialog.getDialog(this,getString(R.string.status), getString(R.string.room_added))
-                dialog.setPositiveButton(getString(R.string.ok)) {dialog, which ->
+        mAddConferenceRoomViewModel.addConferenceDetails(this, mConferenceRoom).observe(this, Observer {
+            if (it == Constants.OK_RESPONSE) {
+                val dialog = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_added))
+                dialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
                     finish()
                 }
                 GetAleretDialog.showDialog(dialog)
@@ -93,4 +122,3 @@ class AddingConference : AppCompatActivity() {
         })
     }
 }
-

@@ -3,7 +3,6 @@ package com.example.conferencerommapp.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -51,7 +50,6 @@ class ConferenceRoomActivity : AppCompatActivity() {
     fun getViewModel(mIntentDataFromActvity: GetIntentDataFromActvity, mFetchRoom: FetchConferenceRoom) {
         mConferenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
         mConferenceRoomViewModel.getConferenceRoomList(this, mFetchRoom).observe(this, Observer {
-            Log.i("------", "Observed")
             if(it.isEmpty()) {
                 showDialog()
             }else {
@@ -85,20 +83,19 @@ class ConferenceRoomActivity : AppCompatActivity() {
      */
     override fun onRestart() {
         super.onRestart()
-        mConferenceRoomViewModel.mConferenceRoomRepository!!.makeApiCall(this, setDataToObjectForApiCall(mIntentDataFromActivity))
+        mConferenceRoomViewModel.getConferenceRoomList(this, setDataToObjectForApiCall(mIntentDataFromActivity))
     }
 
     /**
      * function will set data for different properties of object of FetchConferenceRoom class
      * and it will return that object which is used as a parameter for api call
      */
-    fun setDataToObjectForApiCall(mIntentDataFromActivity: GetIntentDataFromActvity): FetchConferenceRoom {
+    fun setDataToObjectForApiCall(mIntentDataFromActvity: GetIntentDataFromActvity): FetchConferenceRoom {
         var mFetchRoom = FetchConferenceRoom()
-        mFetchRoom.fromTime = mIntentDataFromActivity.fromtime
-        mFetchRoom.toTime = mIntentDataFromActivity.totime
-        mFetchRoom.capacity = mIntentDataFromActivity.capacity!!.toInt()
-        mFetchRoom.buildingId = mIntentDataFromActivity.buildingId!!.toInt()
-        Log.i("-------", mFetchRoom.toString())
+        mFetchRoom.fromTime = mIntentDataFromActvity.fromtime
+        mFetchRoom.toTime = mIntentDataFromActvity.totime
+        mFetchRoom.capacity = mIntentDataFromActvity.capacity!!.toInt()
+        mFetchRoom.buildingId = mIntentDataFromActvity.buildingId!!.toInt()
         return mFetchRoom
     }
 

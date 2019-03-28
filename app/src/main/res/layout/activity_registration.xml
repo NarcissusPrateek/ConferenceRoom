@@ -131,7 +131,7 @@
                     android:layout_below="@+id/textView_name"
                     android:id="@+id/edittext_id"
                     android:singleLine="true"/>
-            <Spinner
+            <BlockConferenceRoomActivity
                     android:popupBackground="#D2D2DA"
                     android:layout_marginStart="60dp"
                     android:backgroundTint="#9596A0"
@@ -146,7 +146,7 @@
                     android:layout_height="40dp"
                     android:layout_marginTop="26dp">
 
-            </Spinner>
+            </BlockConferenceRoomActivity>
             <Button
 
                     android:layout_width="wrap_content"

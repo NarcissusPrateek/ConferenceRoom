@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.example.conferencerommapp.Activity.BlockConferenceRoomActivity
 import com.example.conferencerommapp.Activity.BuildingDashboard
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.ViewModel.BlockedDashboardViewModel
@@ -29,7 +29,6 @@ import retrofit2.Response
 
 class BlockedDashboard : AppCompatActivity() {
 
-    var progressDialog: ProgressDialog? = null
     lateinit var addConferenceRoom: FloatingActionButton
     lateinit var maintenance: FloatingActionButton
     lateinit var menu : FloatingActionMenu
@@ -51,7 +50,7 @@ class BlockedDashboard : AppCompatActivity() {
 
         mBlockedDashboardViewModel = ViewModelProviders.of(this).get(BlockedDashboardViewModel::class.java)
         maintenance.setOnClickListener {
-            val maintenanceintent = Intent(applicationContext, Spinner::class.java)
+            val maintenanceintent = Intent(applicationContext, BlockConferenceRoomActivity::class.java)
             startActivity(maintenanceintent)
         }
 

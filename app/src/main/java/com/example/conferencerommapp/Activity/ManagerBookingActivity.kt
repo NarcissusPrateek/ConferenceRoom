@@ -1,10 +1,11 @@
 package com.example.conferencerommapp.Activity
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.text.Html
+import android.text.Html.fromHtml
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
@@ -31,6 +32,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import kotlinx.android.synthetic.main.activity_alertdialog_members.view.*
 import java.util.*
 
+@Suppress("DEPRECATION")
 class ManagerBookingActivity : AppCompatActivity() {
 
     private var names = ArrayList<EmployeeList>()
@@ -62,13 +64,13 @@ class ManagerBookingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_booking)
         ButterKnife.bind(this)
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Confirm_Details) + "</font>"))
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Confirm_Details) + "</font>")
         acct = GoogleSignIn.getLastSignedInAccount(applicationContext)!!
 
 
-        var mGetIntentDataFromActvity = getIntentData()
+        val mGetIntentDataFromActvity = getIntentData()
 
-        setDataToTextview(mGetIntentDataFromActvity, acct!!.displayName.toString())
+        setDataToTextview(mGetIntentDataFromActvity, acct.displayName.toString())
         setDialogForSelectingMeetingMembers()
         setDialog()
         addDataToObject(mGetIntentDataFromActvity)
@@ -87,7 +89,7 @@ class ManagerBookingActivity : AppCompatActivity() {
      * set values to the different properties of object which is required for api call
      */
     private fun addDataToObject(mGetIntentDataFromActvity: GetIntentDataFromActvity) {
-        mManagerBooking.Email = acct!!.email
+        mManagerBooking.Email = acct.email
         mManagerBooking.CId = mGetIntentDataFromActvity.roomId!!.toInt()
         mManagerBooking.BId = mGetIntentDataFromActvity.buildingId!!.toInt()
         mManagerBooking.FromTime = mGetIntentDataFromActvity.fromTimeList
@@ -114,12 +116,13 @@ class ManagerBookingActivity : AppCompatActivity() {
      * get data from intent
      */
     private fun getIntentData(): GetIntentDataFromActvity {
-        return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
+        return intent.extras!!.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
     /**
      * attach a addTextChangedListener which will search data into the list
      */
+    @SuppressLint("SetTextI18n")
     private fun setDataToTextview(mGetIntentDataFromActvity: GetIntentDataFromActvity, userName: String) {
         fromTimeTextView.text = mGetIntentDataFromActvity.fromtime + " - " + mGetIntentDataFromActvity.totime
         dateTextView.text = mGetIntentDataFromActvity.date + " - " + mGetIntentDataFromActvity.toDate
@@ -146,27 +149,28 @@ class ManagerBookingActivity : AppCompatActivity() {
     /**
      * set alert dialog to diaplay all the employee name list and provides option to select employee for meeting
      */
+    @SuppressLint("InflateParams")
     private fun setDialog() {
         val mBuilder = android.app.AlertDialog.Builder(this@ManagerBookingActivity)
         mBuilder.setTitle(getString(R.string.select_members))
         mBuilder.setCancelable(false)
         addPersonEditText.setOnClickListener {
             customAdapter = CheckBoxAdapter(names, checkedEmployee, this@ManagerBookingActivity)
-            var view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
+            val view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
             view.recycler_view.adapter = customAdapter
             view.clear_Text.setOnClickListener {
                 view.editTextSearch.setText("")
             }
             setClickListnerOnEditText(view)
-            mBuilder.setPositiveButton(getString(R.string.ok)) { dialogInterface, which ->
+            mBuilder.setPositiveButton(getString(R.string.ok)) { _,_ ->
                 var email = ""
                 var name = ""
-                var EmployeeList = customAdapter!!.getList()
-                var size = EmployeeList.size
-                for (item in EmployeeList.indices) {
-                    if (EmployeeList.get(item).isSelected!!) {
-                        name += EmployeeList[item].name.toString()
-                        email += EmployeeList[item].email.toString()
+                val employeeList = customAdapter!!.getList()
+                val size = employeeList.size
+                for (item in employeeList.indices) {
+                    if (employeeList[item].isSelected!!) {
+                        name += employeeList[item].name.toString()
+                        email += employeeList[item].email.toString()
                         if (item != (size - 1)) {
                             name += ","
                             email += ","
@@ -177,12 +181,12 @@ class ManagerBookingActivity : AppCompatActivity() {
                 mManagerBooking.CCMail = email
 
             }
-            mBuilder.setNegativeButton(getString(R.string.cancel)) { dialog: DialogInterface?, which: Int ->
+            mBuilder.setNegativeButton(getString(R.string.cancel)) { _: DialogInterface?, _: Int ->
                 addPersonEditText.setText("")
                 mManagerBooking.CCMail = ""
             }
             mBuilder.setView(view)
-            var builder = mBuilder.create()
+            val builder = mBuilder.create()
             builder.show()
             ColorOfDialogButton.setColorOfDialogButton(builder)
         }
@@ -235,7 +239,7 @@ class ManagerBookingActivity : AppCompatActivity() {
     private fun goToBookingDashboard() {
         val mDialog =
             GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booked_successfully))
-        mDialog.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+        mDialog.setPositiveButton(getString(R.string.ok)) { _,_ ->
             startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
             finish()
         }

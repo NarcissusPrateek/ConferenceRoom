@@ -1,9 +1,8 @@
 package com.example.conferencerommapp.Activity
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
+import android.text.Html.fromHtml
 import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
@@ -16,6 +15,7 @@ import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 
+@Suppress("NAME_SHADOWING", "DEPRECATION")
 class ProjectManagerInputActivity : AppCompatActivity() {
 
     @BindView(R.id.fromTime_manager)
@@ -37,7 +37,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + "Booking Details" + "</font>")
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + "Booking Details" + "</font>")
 
         initializeListForDays()
         setPickerToEditTexts()
@@ -48,7 +48,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      */
     private fun initializeListForDays() {
         listItems = resources.getStringArray(R.array.days)
-        checkedItems = BooleanArray(listItems.size)
+        checkedItems = BooleanArray(size = listItems.size)
     }
 
 
@@ -106,18 +106,18 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      */
     private fun getDays() {
         val mBuilder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
-        mBuilder.setMultiChoiceItems(listItems, checkedItems,
-            DialogInterface.OnMultiChoiceClickListener { dialogInterface, position, isChecked ->
-                if (isChecked) {
-                    mUserItems.add(position)
+        mBuilder.setMultiChoiceItems(listItems, checkedItems
+        ) { _, position, isChecked ->
+            if (isChecked) {
+                mUserItems.add(position)
 
-                } else {
-                    mUserItems.remove(Integer.valueOf(position))
-                }
-            })
+            } else {
+                mUserItems.remove(Integer.valueOf(position))
+            }
+        }
 
         mBuilder.setCancelable(false)
-        mBuilder.setPositiveButton(getString(R.string.ok)) { dialogInterface, which ->
+        mBuilder.setPositiveButton(getString(R.string.ok)) { _,_ ->
             listOfDays.clear()
             for (i in mUserItems.indices) {
                 listOfDays.add(mUserItems[i] + 1)
@@ -125,10 +125,10 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         }
         mBuilder.setNegativeButton(
             getString(R.string.dismiss_label)
-        ) { dialogInterface, i ->
+        ) { dialogInterface, _ ->
             dialogInterface.dismiss()
         }
-        mBuilder.setNeutralButton(getString(R.string.clear_all)) { dialogInterface, which ->
+        mBuilder.setNeutralButton(getString(R.string.clear_all)) { _, _ ->
             for (i in checkedItems.indices) {
                 checkedItems[i] = false
                 mUserItems.clear()
@@ -143,23 +143,28 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * this function ensures that user entered values for all editable fields
      */
     private fun validate(): Boolean {
-        if (TextUtils.isEmpty(fromTimeEditText.text.trim())) {
-            Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
-            return false
-        } else if (TextUtils.isEmpty(toTimeEditText.text.trim())) {
-            Toast.makeText(applicationContext, getString(R.string.invalid_to_time), Toast.LENGTH_SHORT).show()
-            return false
-        } else if (TextUtils.isEmpty(dateFromEditText.text.trim())) {
-            Toast.makeText(applicationContext, getString(R.string.invalid_from_date), Toast.LENGTH_SHORT).show()
-            return false
-        } else if (TextUtils.isEmpty(dateToEditText.text.trim())) {
-            Toast.makeText(applicationContext, getString(R.string.invalid_to_date), Toast.LENGTH_SHORT).show()
-            return false
-        } else if (listOfDays.isEmpty()) {
-            Toast.makeText(applicationContext, getString(R.string.select_days), Toast.LENGTH_SHORT).show()
-            return false
-        } else {
-            return true
+        when {
+            TextUtils.isEmpty(fromTimeEditText.text.trim()) -> {
+                Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
+                return false
+            }
+            TextUtils.isEmpty(toTimeEditText.text.trim()) -> {
+                Toast.makeText(applicationContext, getString(R.string.invalid_to_time), Toast.LENGTH_SHORT).show()
+                return false
+            }
+            TextUtils.isEmpty(dateFromEditText.text.trim()) -> {
+                Toast.makeText(applicationContext, getString(R.string.invalid_from_date), Toast.LENGTH_SHORT).show()
+                return false
+            }
+            TextUtils.isEmpty(dateToEditText.text.trim()) -> {
+                Toast.makeText(applicationContext, getString(R.string.invalid_to_date), Toast.LENGTH_SHORT).show()
+                return false
+            }
+            listOfDays.isEmpty() -> {
+                Toast.makeText(applicationContext, getString(R.string.select_days), Toast.LENGTH_SHORT).show()
+                return false
+            }
+            else -> return true
         }
     }
 
@@ -171,8 +176,8 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      *  if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
      */
     private fun applyValidationOnDateAndTime() {
-        val min_milliseconds: Long = 900000
-        val max_milliseconds: Long = 14400000
+        val minmilliseconds: Long = 900000
+        val maxmilliseconds: Long = 14400000
 
         /**
          * Get the start and end time of meeting from the input fields
@@ -203,12 +208,12 @@ class ProjectManagerInputActivity : AppCompatActivity() {
              */
 
             if (elapsed2 < 0) {
-                var builder =
+                val builder =
                     GetAleretDialog.getDialog(this, getString(R.string.invalid), getString(R.string.invalid_fromtime))
-                builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
                 }
                 GetAleretDialog.showDialog(builder)
-            } else if ((min_milliseconds <= elapsed) && (max_milliseconds >= elapsed)) {
+            } else if ((minmilliseconds <= elapsed) && (maxmilliseconds >= elapsed)) {
                 if (ConvertTimeInMillis.calculateDateinMillis(
                         dateFromEditText.text.toString(),
                         dateToEditText.text.toString()
@@ -226,7 +231,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                     getString(R.string.time_validation_message)
                 )
 
-                builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                builder.setPositiveButton(getString(R.string.ok)) {_,_ ->
                 }
                 GetAleretDialog.showDialog(builder)
             }
@@ -239,13 +244,13 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * set data to the object which is used to send data from this activity to another activity and pass the intent
      */
     private fun goToBuildingsActivity() {
-        var mSetIntentData = GetIntentDataFromActvity()
+        val mSetIntentData = GetIntentDataFromActvity()
         mSetIntentData.fromtime = fromTimeEditText.text.toString().trim()
         mSetIntentData.totime = toTimeEditText.text.toString().trim()
         mSetIntentData.date = dateFromEditText.text.toString().trim()
         mSetIntentData.toDate = dateToEditText.text.toString().trim()
         mSetIntentData.listOfDays.clear()
-        mSetIntentData.listOfDays.addAll(listOfDays!!)
+        mSetIntentData.listOfDays.addAll(listOfDays)
 
         val buildingintent = Intent(this@ProjectManagerInputActivity, ManagerBuildingsActivity::class.java)
         buildingintent.putExtra(Constants.EXTRA_INTENT_DATA, mSetIntentData)
