@@ -10,7 +10,7 @@ import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.R
 
 
-class ConferenceRoomAdapter(val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) :
+class ConferenceRoomAdapter(private val mConferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) :
     androidx.recyclerview.widget.RecyclerView.Adapter<ConferenceRoomAdapter.ViewHolder>() {
 
     /**
@@ -41,12 +41,13 @@ class ConferenceRoomAdapter(val conferenceRoomList: List<ConferenceRoom>, val bt
 
         holder.itemView.setOnClickListener { v ->
             if (holder.txvStatus.text.equals("Available")) {
-                val roomId = conferenceRoomList[position].roomId
-                val roomname = conferenceRoomList[position].roomName
+                val roomId = mConferenceRoomList[position].roomId
+                val roomName = mConferenceRoomList[position].roomName
+
                 /**
                  * call the interface method
                  */
-                mClickListener?.onBtnClick(roomId.toString(), roomname)
+                mClickListener?.onBtnClick(roomId.toString(), roomName)
             }
         }
     }
@@ -55,7 +56,7 @@ class ConferenceRoomAdapter(val conferenceRoomList: List<ConferenceRoom>, val bt
      * return the number of item present in the list
      */
     override fun getItemCount(): Int {
-        return conferenceRoomList.size
+        return mConferenceRoomList.size
     }
 
 
@@ -69,10 +70,6 @@ class ConferenceRoomAdapter(val conferenceRoomList: List<ConferenceRoom>, val bt
         val txvStatus: TextView = itemView.findViewById(R.id.status_txv)
         var cardview: CardView = itemView.findViewById(R.id.cardview2)
         var conferenceRoom: ConferenceRoom? = null
-
-        override fun toString(): String {
-            return """${super.toString()} '${txvRoom.text}'"""
-        }
     }
 
     /**
@@ -86,10 +83,10 @@ class ConferenceRoomAdapter(val conferenceRoomList: List<ConferenceRoom>, val bt
      * set data to the different view items
      */
     fun setDataToViewItems(holder: ViewHolder, position: Int) {
-        holder.conferenceRoom = conferenceRoomList[position]
-        holder.txvRoom.text = conferenceRoomList[position].roomName
-        holder.txvRoomCapacity.text = conferenceRoomList[position].roomCapacity
-        holder.txvStatus.text = conferenceRoomList[position].Status
+        holder.conferenceRoom = mConferenceRoomList[position]
+        holder.txvRoom.text = mConferenceRoomList[position].roomName
+        holder.txvRoomCapacity.text = mConferenceRoomList[position].roomCapacity
+        holder.txvStatus.text = mConferenceRoomList[position].Status
     }
 
     /**

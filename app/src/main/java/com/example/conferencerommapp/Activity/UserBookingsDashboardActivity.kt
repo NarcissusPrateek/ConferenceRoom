@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -15,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.example.conferencerommapp.BlockedDashboard
-import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.DashBoardAdapter
 import com.example.conferencerommapp.Helper.GoogleGSO
 import com.example.conferencerommapp.Model.Dashboard
@@ -133,8 +131,11 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         mBookingDashboardViewModel.getBookingList(this, email).observe(this, Observer {
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
-                r1_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
+                textView_no_events.visibility = View.VISIBLE
+                Glide.with(this).load(R.drawable.yoga_lady_croped).into(empty_view)
+                r1_dashboard.setBackgroundColor(Color.parseColor("#FFFFF7"))
             } else {
+                textView_no_events.visibility = View.GONE
                 empty_view.visibility = View.GONE
             }
             setFilteredDataToAdapter(it)
@@ -156,7 +157,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     fun setFilteredDataToAdapter(dashboardItemList: List<Dashboard>) {
         finalList.clear()
         getFilteredList(dashboardItemList)
-        dashbord_recyclerview1.adapter =
+        dashBord_recyclerView1.adapter =
             DashBoardAdapter(
                 finalList,
                 this@UserBookingsDashboardActivity,
@@ -171,7 +172,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     /**
      * perform filter task on List of all booking whether they are of recurring type of not
      */
-    fun getFilteredList(dashboardItemList: List<Dashboard>) {
+    private fun getFilteredList(dashboardItemList: List<Dashboard>) {
         for (item in dashboardItemList) {
             var flag = 0
             for (i in finalList) {

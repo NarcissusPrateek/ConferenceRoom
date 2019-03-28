@@ -6,16 +6,20 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.Booking
 import com.example.conferencerommapp.R
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 
 class BookingRepository {
+
     var mStatus: MutableLiveData<Int>? = null
 
     /**
@@ -24,6 +28,7 @@ class BookingRepository {
      * or else it will return a new object
      */
     companion object {
+        private val TAG = BookingRepository::class.simpleName
         var mBookingRepository: BookingRepository? = null
         fun getInstance(): BookingRepository {
             if (mBookingRepository == null) {
@@ -37,9 +42,9 @@ class BookingRepository {
      * function will initialize the MutableLivedata Object and than call a function for api call
      * Passing the Context and model and call API, In return sends the status of LiveData
      */
-    fun addBookigDetails(mContext: Context, mBoooking: Booking): LiveData<Int> {
+    fun addBookingDetails(mContext: Context, mBooking: Booking): LiveData<Int> {
         mStatus = MutableLiveData()
-        makeCallToApi(mContext, mBoooking)
+        makeCallToApi(mContext, mBooking)
         return mStatus!!
     }
 
@@ -50,7 +55,6 @@ class BookingRepository {
         /**
          * getting Progress Dialog
          */
-        Log.i("----------------", mBoooking.toString())
         var progressDialog =
             GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
@@ -67,14 +71,19 @@ class BookingRepository {
                 Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT)
                     .show()
             }
-
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 progressDialog.dismiss()
                 if (response.code() == Constants.OK_RESPONSE) {
                     mStatus!!.value = response.code()
                 } else {
-                    Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT)
-                        .show()
+                    try {
+                        var dialog = GetAleretDialog.getDialog(mContext, mContext.getString(R.string.status), "${JSONObject(response.errorBody()!!.string()).getString("Message")} for same date and time")
+                        dialog.setPositiveButton(mContext.getString(R.string.ok)) { dialog, which ->
+                        }
+                        GetAleretDialog.showDialog(dialog)
+                    }catch (e: Exception) {
+                        Log.e(TAG,e.message)
+                    }
                 }
             }
         })

@@ -6,17 +6,19 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.ManagerBooking
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class ManagerBookingRepository {
+
     var mStatus: MutableLiveData<Int>? = null
 
     /**
@@ -25,6 +27,7 @@ class ManagerBookingRepository {
      * or else it will return a new object
      */
     companion object {
+        private val TAG = ManagerBookingRepository::class.simpleName
         var mManagerBookingRepository: ManagerBookingRepository? = null
         fun getInstance(): ManagerBookingRepository {
             if (mManagerBookingRepository == null) {
@@ -58,7 +61,6 @@ class ManagerBookingRepository {
         /**
          * api call using retorfit
          */
-        Log.i("-------------------", mBoooking.toString())
         val service = Servicebuilder.getObject()
         val requestCall: Call<ResponseBody> = service.addManagerBookingDetails(mBoooking)
         requestCall.enqueue(object : Callback<ResponseBody> {
@@ -69,11 +71,17 @@ class ManagerBookingRepository {
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 progressDialog.dismiss()
-                Log.i("-------------------", response.body().toString())
                 if (response.code() == Constants.OK_RESPONSE) {
                     mStatus!!.value = response.code()
                 } else {
-                    Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show()
+                    try {
+                        var dialog = GetAleretDialog.getDialog(mContext, mContext.getString(R.string.status), "${JSONObject(response.errorBody()!!.string()).getString("Message")} for same date and time")
+                        dialog.setPositiveButton(mContext.getString(R.string.ok)) { dialog, which ->
+                        }
+                        GetAleretDialog.showDialog(dialog)
+                    }catch (e: Exception) {
+                        Log.e(TAG,e.message)
+                    }
                 }
             }
         })
