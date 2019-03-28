@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.example.conferencerommapp.Model.Building
 import com.example.conferencerommapp.R
 
@@ -27,7 +25,7 @@ class BuildingAdapter(var mContext: Context, private val mBuildingList: List<Bui
      */
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
-        return ViewHolder(view, mContext)
+        return ViewHolder(view)
     }
 
     /**
@@ -60,10 +58,7 @@ class BuildingAdapter(var mContext: Context, private val mBuildingList: List<Bui
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-       constructor(itemView: View, mContext: Context): this(itemView){
-           ButterKnife.bind(mContext, itemView)
-       }
-        @BindView(R.id.txv_building) lateinit var txvBuilding: TextView
+        var txvBuilding: TextView = itemView.findViewById(R.id.txv_building)
         var building: Building? = null
     }
 

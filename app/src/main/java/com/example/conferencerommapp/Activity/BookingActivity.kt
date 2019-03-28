@@ -35,19 +35,19 @@ import java.util.*
 class BookingActivity : AppCompatActivity() {
 
     @BindView(R.id.textView_from_time)
-    private lateinit var fromTimeTextView: TextView
+    lateinit var fromTimeTextView: TextView
     @BindView(R.id.textView_date)
-    private lateinit var dateTextView: TextView
+    lateinit var dateTextView: TextView
     @BindView(R.id.textView_conf_name)
-    private lateinit var roomNameTextView: TextView
+    lateinit var roomNameTextView: TextView
     @BindView(R.id.textView_name)
-    private lateinit var employeeNameTextView: TextView
+    lateinit var employeeNameTextView: TextView
     @BindView(R.id.editText_purpose)
-    private lateinit var purposeEditText: EditText
+    lateinit var purposeEditText: EditText
     @BindView(R.id.textView_buildingname)
-    private lateinit var buildingNameTextView: TextView
+    lateinit var buildingNameTextView: TextView
     @BindView(R.id.editText_person)
-    private lateinit var addPersonEditText: EditText
+    lateinit var addPersonEditText: EditText
     private lateinit var mEmployeeViewModel: EmployeeViewModel
     private lateinit var mBookingViewModel: BookingViewModel
     private var names = ArrayList<EmployeeList>()

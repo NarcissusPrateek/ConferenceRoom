@@ -31,9 +31,12 @@ class RegistrationActivity : AppCompatActivity() {
 
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private lateinit var mRegistrationViewModel: RegistrationViewModel
-    @BindView(R.id.edittext_id) private lateinit var employeeIdEditText: EditText
-    @BindView(R.id.textView_name) private lateinit var employeeNameEditText: EditText
-    @BindView(R.id.spinner) private lateinit var employeeRoleSpinner: MaterialSpinner
+    @BindView(R.id.edittext_id)
+    lateinit var employeeIdEditText: EditText
+    @BindView(R.id.textView_name)
+    lateinit var employeeNameEditText: EditText
+    @BindView(R.id.spinner)
+    lateinit var employeeRoleSpinner: MaterialSpinner
     val mEmployee = Employee()
     lateinit var pref: SharedPreferences
 
@@ -53,7 +56,7 @@ class RegistrationActivity : AppCompatActivity() {
      */
     @OnClick(R.id.button_add)
     fun register() {
-        if(validateInput()) {
+        if (validateInput()) {
             setDataToEmployeeObjct()
             addEmployee()
         }
@@ -72,7 +75,7 @@ class RegistrationActivity : AppCompatActivity() {
         } else if (mEmployee.Role.toString().equals("Select Role")) {
             Toast.makeText(this@RegistrationActivity, "Invalid Role", Toast.LENGTH_SHORT).show()
             return false
-        }else {
+        } else {
             return true
         }
     }
@@ -88,7 +91,7 @@ class RegistrationActivity : AppCompatActivity() {
 
     fun setValueToUserNameField() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
-        if(account != null) {
+        if (account != null) {
             employeeNameEditText.setText(account.displayName.toString())
         }
     }
@@ -117,13 +120,13 @@ class RegistrationActivity : AppCompatActivity() {
      */
     fun setDataToEmployeeObjct() {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
-        if(acct != null) {
+        if (acct != null) {
             mEmployee.EmpId = edittext_id.text.toString().trim()
             mEmployee.Name = textView_name.text.toString().trim()
             mEmployee.ActivationCode = "abc"
             mEmployee.Email = acct!!.email.toString().trim()
             mEmployee.Verified = false
-        }else {
+        } else {
             Toast.makeText(this, "unable to get the data fro server", Toast.LENGTH_SHORT).show()
         }
     }

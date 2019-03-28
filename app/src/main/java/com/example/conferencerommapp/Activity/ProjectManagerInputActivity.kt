@@ -18,14 +18,18 @@ import com.example.conferencerommapp.R
 
 class ProjectManagerInputActivity : AppCompatActivity() {
 
-    @BindView(R.id.fromTime_manager) private lateinit var fromTimeEditText: EditText
-    @BindView(R.id.toTime_manager) private lateinit var toTimeEditText: EditText
-    @BindView(R.id.to_date_manager) private lateinit var dateToEditText: EditText
-    @BindView(R.id.date_manager) private lateinit var dateFromEditText: EditText
+    @BindView(R.id.fromTime_manager)
+    lateinit var fromTimeEditText: EditText
+    @BindView(R.id.toTime_manager)
+    lateinit var toTimeEditText: EditText
+    @BindView(R.id.to_date_manager)
+    lateinit var dateToEditText: EditText
+    @BindView(R.id.date_manager)
+    lateinit var dateFromEditText: EditText
     private var listOfDays = ArrayList<Int>()
     private var mUserItems = ArrayList<Int>()
-    private var listItems = resources.getStringArray(R.array.days)
-    private var checkedItems: BooleanArray = BooleanArray(listItems.size)
+    private lateinit var listItems: Array<String>
+    private lateinit var checkedItems: BooleanArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +37,18 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + "Booking Details" + "</font>"))
+        actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + "Booking Details" + "</font>")
 
-        setPickerToEdittextx()
+        initializeListForDays()
+        setPickerToEditTexts()
+    }
 
+    /**
+     * set the values for Days in Array
+     */
+    private fun initializeListForDays() {
+        listItems = resources.getStringArray(R.array.days)
+        checkedItems = BooleanArray(listItems.size)
     }
 
 
@@ -45,7 +57,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      */
     @OnClick(R.id.next_manager, R.id.select_days)
     fun onViewClicked(view: View) {
-        when(view.id) {
+        when (view.id) {
             R.id.next_manager -> {
                 if (validate()) {
                     applyValidationOnDateAndTime()
@@ -58,24 +70,32 @@ class ProjectManagerInputActivity : AppCompatActivity() {
     }
 
 
-
     /**
      * set date and time pickers to edittext fields
      */
-    fun setPickerToEdittextx() {
+    private fun setPickerToEditTexts() {
 
-        // set Time picker for the edittext fromtime
+        /**
+         * set Time picker for the editText fromTimeEditText
+         */
         fromTimeEditText.setOnClickListener {
             DateAndTimePicker.getTimePickerDialog(this, fromTimeEditText)
         }
-        // set Time picker for the edittext totime
+        /**
+         * set Time picker for the EditText toTimeEditText
+         */
         toTimeEditText.setOnClickListener {
             DateAndTimePicker.getTimePickerDialog(this, toTimeEditText)
         }
-        // set Date picker for the edittext dateEditText
+        /**
+         * set Date picker for the EditText dateEditText
+         */
         dateFromEditText.setOnClickListener {
             DateAndTimePicker.getDatePickerDialog(this, dateFromEditText)
         }
+        /**
+         * set Date picker for the EditText dateToEditText
+         */
         dateToEditText.setOnClickListener {
             DateAndTimePicker.getDatePickerDialog(this, dateToEditText)
         }
@@ -84,7 +104,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
     /**
      * this function will select and store the days selected by user for recurring meeting
      */
-    fun getDays() {
+    private fun getDays() {
         val mBuilder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
         mBuilder.setMultiChoiceItems(listItems, checkedItems,
             DialogInterface.OnMultiChoiceClickListener { dialogInterface, position, isChecked ->
@@ -122,7 +142,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
     /**
      * this function ensures that user entered values for all editable fields
      */
-    fun validate(): Boolean {
+    private fun validate(): Boolean {
         if (TextUtils.isEmpty(fromTimeEditText.text.trim())) {
             Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
             return false
@@ -150,7 +170,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      *  if the above condition is not true than we show show a message in alert that the meeting duration must be less than 4hours
      *  if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
      */
-    fun applyValidationOnDateAndTime() {
+    private fun applyValidationOnDateAndTime() {
         val min_milliseconds: Long = 900000
         val max_milliseconds: Long = 14400000
 
@@ -183,19 +203,28 @@ class ProjectManagerInputActivity : AppCompatActivity() {
              */
 
             if (elapsed2 < 0) {
-                var builder = GetAleretDialog.getDialog(this, getString(R.string.invalid),getString(R.string.invalid_fromtime))
+                var builder =
+                    GetAleretDialog.getDialog(this, getString(R.string.invalid), getString(R.string.invalid_fromtime))
                 builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 }
                 GetAleretDialog.showDialog(builder)
             } else if ((min_milliseconds <= elapsed) && (max_milliseconds >= elapsed)) {
-                if(ConvertTimeInMillis.calculateDateinMillis(dateFromEditText.text.toString(), dateToEditText.text.toString())) {
+                if (ConvertTimeInMillis.calculateDateinMillis(
+                        dateFromEditText.text.toString(),
+                        dateToEditText.text.toString()
+                    )
+                ) {
                     goToBuildingsActivity()
-                }else {
+                } else {
                     Toast.makeText(this, getString(R.string.invalid_fromDate_or_toDate), Toast.LENGTH_SHORT).show()
                 }
 
             } else {
-                val builder = GetAleretDialog.getDialog(this, getString(R.string.invalid), getString(R.string.time_validation_message))
+                val builder = GetAleretDialog.getDialog(
+                    this,
+                    getString(R.string.invalid),
+                    getString(R.string.time_validation_message)
+                )
 
                 builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
                 }
@@ -209,7 +238,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
     /**
      * set data to the object which is used to send data from this activity to another activity and pass the intent
      */
-    fun goToBuildingsActivity() {
+    private fun goToBuildingsActivity() {
         var mSetIntentData = GetIntentDataFromActvity()
         mSetIntentData.fromtime = fromTimeEditText.text.toString().trim()
         mSetIntentData.totime = toTimeEditText.text.toString().trim()

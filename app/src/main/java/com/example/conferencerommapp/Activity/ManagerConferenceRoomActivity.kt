@@ -23,7 +23,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
     private lateinit var mCustomAdapter: ConferenceRoomAdapter
     private lateinit var mGetIntentDataFromActivity: GetIntentDataFromActvity
     @BindView(R.id.conference_recycler_view)
-    private lateinit var mRecyclerView: RecyclerView
+    lateinit var mRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
