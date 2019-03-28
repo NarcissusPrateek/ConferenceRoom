@@ -2,7 +2,7 @@ package com.example.conferencerommapp.Activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
+import android.text.Html.fromHtml
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -16,6 +16,7 @@ import com.example.conferencerommapp.Model.ManagerConference
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.ManagerConferenceRoomViewModel
 
+@Suppress("DEPRECATION")
 class ManagerConferenceRoomActivity : AppCompatActivity() {
 
 
@@ -31,7 +32,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Select_Room) + "</font>"))
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Select_Room) + "</font>")
         loadConferenceRoom()
     }
 
@@ -45,7 +46,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      * get intent data from previous activity
      */
     private fun getIntentData(): GetIntentDataFromActvity {
-        return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
+        return intent.extras!!.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
     /**
@@ -60,8 +61,8 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
             mCustomAdapter = ConferenceRoomAdapter(
                 it!!,
                 object : ConferenceRoomAdapter.BtnClickListener {
-                    override fun onBtnClick(roomId: String?, roomName: String?) {
-                        mGetIntentDataFromActvity.roomName = roomName
+                    override fun onBtnClick(roomId: String?, roomname: String?) {
+                        mGetIntentDataFromActvity.roomName = roomname
                         mGetIntentDataFromActvity.roomId = roomId
                         goToNextActivity(mGetIntentDataFromActvity)
                     }
@@ -95,7 +96,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      * and it will return that object which is used as a parameter for api call
      */
     private fun setDataToObjectForApiCall(mGetIntentDataFromActvity: GetIntentDataFromActvity): ManagerConference {
-        var input = ManagerConference()
+        val input = ManagerConference()
         input.FromTime = mGetIntentDataFromActvity.fromTimeList
         input.ToTime = mGetIntentDataFromActvity.toTimeList
         input.BId = mGetIntentDataFromActvity.buildingId!!.toInt()

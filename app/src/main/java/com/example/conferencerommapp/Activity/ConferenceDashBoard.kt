@@ -1,63 +1,83 @@
-package com.example.conferencerommapp
+package com.example.conferencerommapp.Activity
 
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Html
+import android.text.Html.fromHtml
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import com.example.conferencerommapp.Helper.Conference_Room_adapter_new
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.OnClick
+import com.example.conferencerommapp.ConferenceRecyclerAdapter
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Repository.HrConferenceRoomRepository
+import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.HrConferenceRoomViewModel
-import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
-import com.example.myapplication.Models.ConferenceList
-import com.github.clans.fab.FloatingActionButton
-import kotlinx.android.synthetic.main.activity_blocked_dashboard.*
-
 import kotlinx.android.synthetic.main.activity_conference_dash_board.*
-import kotlinx.android.synthetic.main.dashboard_list.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
+@Suppress("DEPRECATION")
 class ConferenceDashBoard : AppCompatActivity() {
-    lateinit var mHrConferenceRoomViewModel : HrConferenceRoomViewModel
+
+    @BindView(R.id.conference_list)
     lateinit var recyclerView: RecyclerView
-    lateinit var conferenceRoomAdapter : ConferenceRecyclerAdapter
-    lateinit var addConferenceButton : FloatingActionButton
+    var buildingId: Int = 0
+    private lateinit var mHrConferenceRoomViewModel: HrConferenceRoomViewModel
+    private lateinit var conferenceRoomAdapter: ConferenceRecyclerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_conference_dash_board)
 
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Conference_Rooms) + "</font>"))
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Conference_Rooms) + "</font>")
 
-        var buildingId = getIntentData()
-        addConferenceButton = findViewById(R.id.add_conferenece)
-        addConferenceButton.setOnClickListener {
-            goToNextActivity(buildingId)
-        }
-        recyclerView = findViewById(R.id.conference_list)
+        ButterKnife.bind(this)
+        buildingId = getIntentData()
+
         mHrConferenceRoomViewModel = ViewModelProviders.of(this).get(HrConferenceRoomViewModel::class.java)
         getConference(buildingId)
     }
-    fun getIntentData(): Int {
-        val bundle: Bundle = intent.extras
-        val buildingId = bundle.get(Constants.EXTRA_BUILDING_ID).toString().toInt()
-        return buildingId
+
+    /**
+     * Restart the Activity
+     */
+
+    override fun onRestart() {
+        super.onRestart()
+        val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
+        val buildingId = pref.getInt(Constants.EXTRA_BUILDING_ID, 0)
+        mHrConferenceRoomViewModel.mHrConferenceRoomRepository!!.makeApiCall(this, buildingId)
     }
+
+    /**
+     * onClick on this button goes to AddingConference Activity
+     */
+    @OnClick(R.id.add_conferenece)
+    fun addConfereceRoomFloatingActionButton() {
+        goToNextActivity(buildingId)
+
+    }
+
+    /**
+     * get the buildingId from the BuildingDashboard Activity
+     */
+
+    private fun getIntentData(): Int {
+        val bundle: Bundle? = intent.extras!!
+        return bundle!!.get(Constants.EXTRA_BUILDING_ID)!!.toString().toInt()
+    }
+
+    /**
+     * Passing Intent and shared preference
+     */
+
     private fun goToNextActivity(buildingId: Int) {
 
-        //shared preference code
-
-        var pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
+        val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
         val editor = pref.edit()
         editor.putInt(Constants.EXTRA_BUILDING_ID, buildingId)
         editor.apply()
@@ -66,20 +86,17 @@ class ConferenceDashBoard : AppCompatActivity() {
         intent.putExtra(Constants.EXTRA_BUILDING_ID, buildingId)
         startActivity(intent)
     }
-    override fun onRestart() {
-        super.onRestart()
-        val pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
-        var buildingId = pref.getInt("BuildingId", 0)
-        mHrConferenceRoomViewModel.mHrConferenceRoomRepository!!.makeApiCall(this,buildingId)
-    }
 
+    /**
+     * function calls the ViewModel of ConferecenceRoom and observe data from the database
+     */
     private fun getConference(buildingId: Int) {
-        mHrConferenceRoomViewModel.getConferenceRoomList(this,buildingId).observe(this, Observer {
+        mHrConferenceRoomViewModel.getConferenceRoomList(this, buildingId).observe(this, Observer {
             conferenceRoomAdapter = ConferenceRecyclerAdapter(it!!)
-            if(it.isEmpty()){
+            if (it.isEmpty()) {
                 empty_view_blocked1.visibility = View.VISIBLE
                 empty_view_blocked1.setBackgroundColor(Color.parseColor("#FFFFFF"))
-            }else{
+            } else {
                 empty_view_blocked1.visibility = View.GONE
                 recyclerView.adapter = conferenceRoomAdapter
             }

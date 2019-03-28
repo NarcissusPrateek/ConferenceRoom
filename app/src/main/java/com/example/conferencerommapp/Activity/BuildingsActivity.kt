@@ -2,7 +2,7 @@ package com.example.conferencerommapp.Activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
+import android.text.Html.fromHtml
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +15,7 @@ import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
 
+@Suppress("DEPRECATION")
 class BuildingsActivity : AppCompatActivity() {
 
     /**
@@ -31,7 +32,7 @@ class BuildingsActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>"))
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>")
         getViewModel()
 
     }
@@ -39,12 +40,12 @@ class BuildingsActivity : AppCompatActivity() {
     /**
      * get the data from intent
      */
-    fun getIntentData(): GetIntentDataFromActvity {
-        return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
+    private fun getIntentData(): GetIntentDataFromActvity {
+        return intent.extras!!.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
-    fun getViewModel() {
-        var mIntentDataFromActivity = getIntentData()
+    private fun getViewModel() {
+        val mIntentDataFromActivity = getIntentData()
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
         mBuildingsViewModel.getBuildingList(this).observe(this, Observer {
             /**
@@ -53,9 +54,9 @@ class BuildingsActivity : AppCompatActivity() {
             customAdapter = BuildingAdapter(this,
                 it!!,
                 object : BuildingAdapter.BtnClickListener {
-                    override fun onBtnClick(buildingId: String?, buildingName: String?) {
+                    override fun onBtnClick(buildingId: String?, buildingname: String?) {
                         mIntentDataFromActivity.buildingId = buildingId
-                        mIntentDataFromActivity.buildingName = buildingName
+                        mIntentDataFromActivity.buildingName = buildingname
                         goToConferenceRoomActivity(mIntentDataFromActivity)
                     }
                 }

@@ -27,6 +27,7 @@ import fr.ganfra.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_registration.*
 
 
+@Suppress("DEPRECATION")
 class RegistrationActivity : AppCompatActivity() {
 
     private var mGoogleSignInClient: GoogleSignInClient? = null
@@ -38,7 +39,7 @@ class RegistrationActivity : AppCompatActivity() {
     @BindView(R.id.spinner)
     lateinit var employeeRoleSpinner: MaterialSpinner
     val mEmployee = Employee()
-    lateinit var pref: SharedPreferences
+    private lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +47,7 @@ class RegistrationActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Registration) + "</font>"))
+        actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Registration) + "</font>")
 
         initializeFields()
     }
@@ -65,31 +66,34 @@ class RegistrationActivity : AppCompatActivity() {
     /**
      * validate all data of input fields entered by user
      */
-    fun validateInput(): Boolean {
-        if (employeeIdEditText.text.trim().isEmpty()) {
-            Toast.makeText(this@RegistrationActivity, "Invalid name", Toast.LENGTH_SHORT).show()
-            return false
-        } else if (employeeNameEditText.text.trim().isEmpty()) {
-            Toast.makeText(this@RegistrationActivity, "Invalid Id", Toast.LENGTH_SHORT).show()
-            return false
-        } else if (mEmployee.Role.toString().equals("Select Role")) {
-            Toast.makeText(this@RegistrationActivity, "Invalid Role", Toast.LENGTH_SHORT).show()
-            return false
-        } else {
-            return true
+    private fun validateInput(): Boolean {
+        return when {
+            employeeIdEditText.text.trim().isEmpty() -> {
+                Toast.makeText(this@RegistrationActivity, "Invalid name", Toast.LENGTH_SHORT).show()
+                false
+            }
+            employeeNameEditText.text.trim().isEmpty() -> {
+                Toast.makeText(this@RegistrationActivity, "Invalid Id", Toast.LENGTH_SHORT).show()
+                false
+            }
+            mEmployee.Role.toString() == "Select Role" -> {
+                Toast.makeText(this@RegistrationActivity, "Invalid Role", Toast.LENGTH_SHORT).show()
+                false
+            }
+            else -> true
         }
     }
 
     /**
      * get the view according to the id from layout file
      */
-    fun initializeFields() {
+    private fun initializeFields() {
         pref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         setValueToUserNameField()
         getValueFromRoleSpinner()
     }
 
-    fun setValueToUserNameField() {
+    private fun setValueToUserNameField() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
         if (account != null) {
             employeeNameEditText.setText(account.displayName.toString())
@@ -99,9 +103,9 @@ class RegistrationActivity : AppCompatActivity() {
     /**
      * function will set the spinner for selecting role in the company
      */
-    fun getValueFromRoleSpinner() {
+    private fun getValueFromRoleSpinner() {
 
-        var employeeRole = resources.getStringArray(R.array.role)
+        val employeeRole = resources.getStringArray(R.array.role)
         employeeRoleSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, employeeRole)
         employeeRoleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -118,13 +122,13 @@ class RegistrationActivity : AppCompatActivity() {
     /**
      * function will set the information entered by user to gloabal object employee
      */
-    fun setDataToEmployeeObjct() {
+    private fun setDataToEmployeeObjct() {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         if (acct != null) {
             mEmployee.EmpId = edittext_id.text.toString().trim()
             mEmployee.Name = textView_name.text.toString().trim()
             mEmployee.ActivationCode = "abc"
-            mEmployee.Email = acct!!.email.toString().trim()
+            mEmployee.Email = acct.email.toString().trim()
             mEmployee.Verified = false
         } else {
             Toast.makeText(this, "unable to get the data fro server", Toast.LENGTH_SHORT).show()
@@ -143,7 +147,7 @@ class RegistrationActivity : AppCompatActivity() {
     /**
      * to signout from the application
      */
-    fun signOut() {
+    private fun signOut() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
@@ -158,11 +162,11 @@ class RegistrationActivity : AppCompatActivity() {
     /**
      * this function will call some other viewmodel function which will make a request to backend for adding the employee
      */
-    fun addEmployee() {
+    private fun addEmployee() {
         mRegistrationViewModel = ViewModelProviders.of(this).get(RegistrationViewModel::class.java)
         mRegistrationViewModel.addEmployee(this, mEmployee)!!.observe(this, Observer {
             if (it == 200) {
-                setValueInSharedPreference(it)
+                setValueInSharedPreference()
                 startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
             }
         })
@@ -171,8 +175,8 @@ class RegistrationActivity : AppCompatActivity() {
     /**
      * this function sets the values in sharedPreference
      */
-    fun setValueInSharedPreference(status: Int) {
-        val editor = pref!!.edit()
+    private fun setValueInSharedPreference() {
+        val editor = pref.edit()
         editor.putInt(Constants.EXTRA_REGISTERED, 1)
         editor.apply()
     }

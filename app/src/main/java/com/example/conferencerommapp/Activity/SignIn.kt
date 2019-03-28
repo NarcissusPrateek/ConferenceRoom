@@ -1,18 +1,11 @@
 package com.example.conferencerommapp
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import android.util.Log
-import android.view.View
-import android.view.animation.AnimationUtils
+import android.view.animation.AnimationUtils.loadAnimation
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -20,23 +13,25 @@ import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
-import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.ViewModel.CheckRegistrationViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.common.SignInButton
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 
 class SignIn : AppCompatActivity() {
 
-    var RC_SIGN_IN = 0
+    private var RC_SIGN_IN = 0
     @BindView(R.id.l1)
     lateinit var linearLayoutUp: LinearLayout
     @BindView(R.id.l2)
     lateinit var linearLayoutDown: LinearLayout
-    var mGoogleSignInClient: GoogleSignInClient? = null
-    lateinit var prefs: SharedPreferences
+    private var mGoogleSignInClient: GoogleSignInClient? = null
+    private lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +41,7 @@ class SignIn : AppCompatActivity() {
     }
 
     @OnClick(R.id.sign_in_button)
-    fun SignIn() {
+    fun signIn() {
         startintentToGoogle()
     }
 
@@ -62,15 +57,15 @@ class SignIn : AppCompatActivity() {
     /**
      * function will starts a explict intent for the google sign in
      */
-    fun startintentToGoogle() {
-        val signInIntent = mGoogleSignInClient!!.getSignInIntent()
+    private fun startintentToGoogle() {
+        val signInIntent = mGoogleSignInClient!!.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
     /**
      * function will initialize the GoogleSignInClient
      */
-    fun initializeGoogleSignIn() {
+    private fun initializeGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .build()
@@ -80,10 +75,10 @@ class SignIn : AppCompatActivity() {
     /**
      * set aniimation for the login activity
      */
-    fun setAnimationToLayout() {
+    private fun setAnimationToLayout() {
 
-        linearLayoutUp.setAnimation(AnimationUtils.loadAnimation(this, R.anim.uotodown));
-        linearLayoutDown.setAnimation(AnimationUtils.loadAnimation(this, R.anim.downtoup));
+        linearLayoutUp.animation = loadAnimation(this, R.anim.uotodown)
+        linearLayoutDown.animation = loadAnimation(this, R.anim.downtoup)
     }
 
 
@@ -124,8 +119,8 @@ class SignIn : AppCompatActivity() {
      * this function will check whether the user is registered or not
      * if not registered than make an intent to registration activity
      */
-    fun checkRegistration(email: String) {
-        var mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
+    private fun checkRegistration(email: String) {
+        val mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
         mCheckRegistrationViewModel.checkRegistration(this, email).observe(this, Observer {
             setValueForSharedPreference(it)
         })
@@ -145,7 +140,7 @@ class SignIn : AppCompatActivity() {
             else -> {
                 val builder =
                     GetAleretDialog.getDialog(this, getString(R.string.error), getString(R.string.restart_app))
-                builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
                     finish()
                 }
                 GetAleretDialog.showDialog(builder)
@@ -156,10 +151,10 @@ class SignIn : AppCompatActivity() {
     /**
      * a function which will set the value in shared preference
      */
-    fun setValueForSharedPreference(status: Int) {
-        var code = status
-        val editor = prefs!!.edit()
-        editor.putInt("Code", code!!)
+    private fun setValueForSharedPreference(status: Int) {
+        val code = status
+        val editor = prefs.edit()
+        editor.putInt("Code", code)
         editor.apply()
         intentToNextActivity(code)
     }

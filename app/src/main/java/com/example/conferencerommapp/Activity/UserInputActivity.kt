@@ -2,7 +2,7 @@ package com.example.conferencerommapp.Activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
+import android.text.Html.fromHtml
 import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
@@ -23,6 +23,7 @@ import fr.ganfra.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_user_inputs.*
 
 
+@Suppress("DEPRECATION")
 class UserInputActivity : AppCompatActivity() {
 
 
@@ -42,7 +43,7 @@ class UserInputActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>"))
+        actionBar!!.title = fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>")
 
         setPickerToEdittextx()
     }
@@ -51,19 +52,19 @@ class UserInputActivity : AppCompatActivity() {
      * function will invoke whenever the button is hit
      */
     @OnClick(R.id.next)
-    fun submit(view: View) {
+    fun submit() {
         validationOnDataEnteredByUser()
     }
 
     /**
      * function will attach date and time picker to the input fields
      */
-    fun setPickerToEdittextx() {
+    private fun setPickerToEdittextx() {
 
         /**
          * array of Integers for setting values into the spinner
          */
-        var options = arrayOf(2, 4, 6, 8, 10, 12, 14, 16)
+        val options = arrayOf(2, 4, 6, 8, 10, 12, 14, 16)
 
         /**
          * set Time picker for the edittext fromtime
@@ -160,12 +161,12 @@ class UserInputActivity : AppCompatActivity() {
                  */
 
                 if (elapsed2 < 0) {
-                    var builder = GetAleretDialog.getDialog(
+                    val builder = GetAleretDialog.getDialog(
                         this,
                         getString(R.string.invalid),
                         getString(R.string.invalid_fromtime)
                     )
-                    builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                    builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
                     }
                     GetAleretDialog.showDialog(builder)
                 }
@@ -185,7 +186,7 @@ class UserInputActivity : AppCompatActivity() {
                         getString(R.string.time_validation_message)
                     )
 
-                    builder.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+                    builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
                     }
                     GetAleretDialog.showDialog(builder)
                 }
@@ -199,8 +200,8 @@ class UserInputActivity : AppCompatActivity() {
     /**
      * function will pass the intent with data to the next activity
      */
-    fun goToBuildingsActivity() {
-        var mGetIntentDataFromActvity = GetIntentDataFromActvity()
+    private fun goToBuildingsActivity() {
+        val mGetIntentDataFromActvity = GetIntentDataFromActvity()
         mGetIntentDataFromActvity.fromtime =
             (dateEditText.text.toString() + " " + fromTimeEditText.text.toString()).trim()
         mGetIntentDataFromActvity.totime = (dateEditText.text.toString() + " " + toTimeEditText.text.toString()).trim()

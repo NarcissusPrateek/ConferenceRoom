@@ -1,11 +1,7 @@
 package com.example.conferencerommapp
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,20 +12,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+
 import com.example.conferencerommapp.Helper.ColorOfDialogButton
 import com.example.conferencerommapp.Helper.Unblock
 import com.example.conferencerommapp.ViewModel.UnBlockRoomViewModel
-import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
-
-
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<BlockedDashboardNew.ViewHolder>() {

@@ -72,6 +72,14 @@
     <string name="select_members">Select Members</string>
     <string name="invalid_purpose">Invalid Purpose!</string>
     <string name="add_members">Add Members!</string>
+    <string name="room_added">Room Successfully added</string>
+    <string name="blockingStatus">Blocking Status</string>
+    <string name="room_is_blocked">Room is Blocked</string>
+    <string name="please_enter_totime">Enter the To-Time</string>
+    <string name="please_enter_date">Enter the Date</string>
+    <string name="enter_purpose"> Enter purpose of Blocking</string>
+    <string name="check">Check</string>
+    <string name="please_enter_fromtime">Enter the From-Time</string>
 
     <string-array name="role">
         <item>Intern</item>
