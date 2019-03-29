@@ -99,8 +99,12 @@
         <item>Intern</item>
         <item>SDE-1</item>
         <item>SDE-2</item>
+<<<<<<< HEAD
         <item>SDE-3</item>
         <item>HR</item>
+=======
+          <item>SDE-3</item>
+>>>>>>> 71c37a9aa9d37148c70640680590dca1e48e6116
         <item>Principal Engineer</item>
         <item>Project Manager</item>
         <item>CEO</item>
