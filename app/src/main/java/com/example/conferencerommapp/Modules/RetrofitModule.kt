@@ -13,11 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
-class RetrofitModule {
-    lateinit var application: Application
-    constructor(application: Application) {
-        this.application = application
-    }
+class RetrofitModule(var application: Application) {
 
 
     @Singleton

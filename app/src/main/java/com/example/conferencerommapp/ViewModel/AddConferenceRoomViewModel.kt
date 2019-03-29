@@ -22,7 +22,7 @@ class AddConferenceRoomViewModel: ViewModel()  {
      */
     fun addConferenceDetails(mContext: Context,mAddConference: AddConferenceRoom): MutableLiveData<Int>{
         mAddConferenceRepository = AddConferenceRepository.getInstance()
-        mStatus = mAddConferenceRepository!!.addConferenceDetails(mContext,mAddConference) as MutableLiveData<Int>
+        mStatus = mAddConferenceRepository!!.addConferenceDetails(mContext,mAddConference)
         return mStatus!!
     }
 

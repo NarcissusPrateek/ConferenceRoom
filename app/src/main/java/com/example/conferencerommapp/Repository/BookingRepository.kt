@@ -55,7 +55,7 @@ class BookingRepository {
         /**
          * getting Progress Dialog
          */
-        var progressDialog =
+        val progressDialog =
             GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
 
@@ -77,8 +77,8 @@ class BookingRepository {
                     mStatus!!.value = response.code()
                 } else {
                     try {
-                        var dialog = GetAleretDialog.getDialog(mContext, mContext.getString(R.string.status), "${JSONObject(response.errorBody()!!.string()).getString("Message")} for same date and time")
-                        dialog.setPositiveButton(mContext.getString(R.string.ok)) { dialog, which ->
+                        val dialog = GetAleretDialog.getDialog(mContext, mContext.getString(R.string.status), "${JSONObject(response.errorBody()!!.string()).getString("Message")} for same date and time")
+                        dialog.setPositiveButton(mContext.getString(R.string.ok)) { _, _ ->
                         }
                         GetAleretDialog.showDialog(dialog)
                     }catch (e: Exception) {

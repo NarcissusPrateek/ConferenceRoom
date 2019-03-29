@@ -17,7 +17,7 @@ class BlockConferenceRoomListRepository {
     var mConferenceRoomList: MutableLiveData<List<BuildingConference>>? = null
 
     companion object {
-        var mBlockConferenceRoomListRepository: BlockConferenceRoomListRepository? = null
+        private var mBlockConferenceRoomListRepository: BlockConferenceRoomListRepository? = null
         fun getInstane(): BlockConferenceRoomListRepository {
             if (mBlockConferenceRoomListRepository == null) {
                 mBlockConferenceRoomListRepository = BlockConferenceRoomListRepository()
@@ -33,7 +33,7 @@ class BlockConferenceRoomListRepository {
     }
 
     fun makeApiCall(mContext: Context, buildingId: Int) {
-        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message), mContext)
+        val progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message), mContext)
         progressDialog.show()
 
         val requestCall: Call<List<BuildingConference>> = Servicebuilder.getObject().getBuildingsConference(buildingId)
@@ -45,7 +45,7 @@ class BlockConferenceRoomListRepository {
             override fun onResponse(
                 call: Call<List<BuildingConference>>, response: Response<List<BuildingConference>>
             ) {
-                progressDialog!!.dismiss()
+                progressDialog.dismiss()
                 if (response.code() == Constants.OK_RESPONSE) {
                     mConferenceRoomList!!.value = response.body()
                 } else {

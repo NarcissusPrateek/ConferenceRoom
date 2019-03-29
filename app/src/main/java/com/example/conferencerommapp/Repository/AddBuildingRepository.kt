@@ -3,24 +3,18 @@ package com.example.conferencerommapp.Repository
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.conferencerommapp.Activity.AddingBuilding
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.AddBuilding
+import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import androidx.core.content.ContextCompat.startActivity
-import android.content.Intent
-import android.util.Log
-import android.widget.Toast
-import com.example.conferencerommapp.Activity.BuildingDashboard
-import com.example.conferencerommapp.R
-import org.json.JSONObject
 
 
 class AddBuildingRepository {
@@ -65,7 +59,7 @@ class AddBuildingRepository {
         /**
          * ProgreesDialog
          */
-        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
+        val progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
 
         /**
@@ -91,38 +85,40 @@ class AddBuildingRepository {
                 /**
                  * mStatus return 400 if the Buildings is already present in the Database
                  */
-                if(mStatus!!.value == 400){
-                    addBuildingAlertDialog.setMessage("Building Already Added")
-                    addBuildingAlertDialog.setPositiveButton("Ok") { dialog, which ->
+                when {
+                    mStatus!!.value == 400 -> {
+                        addBuildingAlertDialog.setMessage("Building Already Added")
+                        addBuildingAlertDialog.setPositiveButton("Ok") { _, _ ->
+                        }
+                        val dialog: AlertDialog = addBuildingAlertDialog.create()
+                        dialog.setCanceledOnTouchOutside(false)
+                        dialog.show()
                     }
-                    val dialog: AlertDialog = addBuildingAlertDialog.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
-                }
 
-                /**
-                 * mStatus return 500 if the Server Error occurs
-                 */
-                else if (mStatus!!.value == 500){
-                    addBuildingAlertDialog.setMessage("Server Error")
-                    addBuildingAlertDialog.setPositiveButton("Ok") { dialog, which ->
+                    /**
+                     * mStatus return 500 if the Server Error occurs
+                     */
+                    mStatus!!.value == 500 -> {
+                        addBuildingAlertDialog.setMessage("Server Error")
+                        addBuildingAlertDialog.setPositiveButton("Ok") { _, _ ->
+                        }
+                        val dialog: AlertDialog = addBuildingAlertDialog.create()
+                        dialog.setCanceledOnTouchOutside(false)
+                        dialog.show()
                     }
-                    val dialog: AlertDialog = addBuildingAlertDialog.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
-                }
 
-                /**
-                 * mStatus return 200 if the Building is Added Succesfully
-                 */
-                else if (mStatus!!.value == 200){
-                    addBuildingAlertDialog.setMessage("Building added successfully.")
-                    addBuildingAlertDialog.setPositiveButton("Ok") { dialog, which ->
-                        (mContext as Activity).finish()
+                    /**
+                     * mStatus return 200 if the Building is Added Succesfully
+                     */
+                    mStatus!!.value == 200 -> {
+                        addBuildingAlertDialog.setMessage("Building added successfully.")
+                        addBuildingAlertDialog.setPositiveButton("Ok") { _, _ ->
+                            (mContext as Activity).finish()
+                        }
+                        val dialog: AlertDialog = addBuildingAlertDialog.create()
+                        dialog.setCanceledOnTouchOutside(false)
+                        dialog.show()
                     }
-                    val dialog: AlertDialog = addBuildingAlertDialog.create()
-                    dialog.setCanceledOnTouchOutside(false)
-                    dialog.show()
                 }
             }
 

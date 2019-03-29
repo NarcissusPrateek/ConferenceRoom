@@ -7,12 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.Dashboard
-import com.example.conferencerommapp.services.ConferenceService
+import com.example.conferencerommapp.R
 import com.example.globofly.services.Servicebuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.example.conferencerommapp.R
 
 class BookingDashboardRepository {
     var mBookingList: MutableLiveData<List<Dashboard>>? = null
@@ -23,7 +22,7 @@ class BookingDashboardRepository {
      * or else it will return a new object
      */
     companion object {
-        var mBookingDashboardRepository: BookingDashboardRepository? = null
+        private var mBookingDashboardRepository: BookingDashboardRepository? = null
         fun getInstance(): BookingDashboardRepository {
             if (mBookingDashboardRepository == null) {
                 mBookingDashboardRepository = BookingDashboardRepository()
@@ -52,14 +51,14 @@ class BookingDashboardRepository {
         /**
          * getting Progress Dialog
          */
-        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message), mContext)
+        val progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message), mContext)
         progressDialog.show()
 
         /**
          * api call using retorfit
          */
         val service = Servicebuilder.getObject()
-        val requestCall: Call<List<Dashboard>> = service.getDashboard(email!!)
+        val requestCall: Call<List<Dashboard>> = service.getDashboard(email)
         requestCall.enqueue(object : Callback<List<Dashboard>> {
             override fun onFailure(call: Call<List<Dashboard>>, t: Throwable) {
                 progressDialog.dismiss()

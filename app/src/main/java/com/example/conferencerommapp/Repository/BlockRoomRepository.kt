@@ -20,7 +20,7 @@ class BlockRoomRepository {
     var mStatus: MutableLiveData<Int>? = null
 
     companion object {
-        var mBlockRoomRepository: BlockRoomRepository? = null
+        private var mBlockRoomRepository: BlockRoomRepository? = null
         fun getInstance(): BlockRoomRepository {
             if (mBlockRoomRepository == null) {
                 mBlockRoomRepository = BlockRoomRepository()
@@ -51,22 +51,24 @@ class BlockRoomRepository {
 
                 val builder = AlertDialog.Builder(mContext)
                 builder.setTitle("Blocking Status")
-                if (response.code() == Constants.OK_RESPONSE) {
-                    mStatus!!.value = response.code()
-                } else if (response.code().equals(400)) {
-                    builder.setMessage("Room already blocked!")
-                    builder.setPositiveButton("Ok") { dialog, which ->
-                        (mContext as Activity).finish()
+                when {
+                    response.code() == Constants.OK_RESPONSE -> mStatus!!.value = response.code()
+                    response.code().equals(400) -> {
+                        builder.setMessage("Room already blocked!")
+                        builder.setPositiveButton("Ok") { _, _ ->
+                            (mContext as Activity).finish()
+                        }
+                        val dialog: AlertDialog = builder.create()
+                        dialog.show()
                     }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.show()
-                } else {
-                    builder.setMessage("Something went wrong Room can't be Blocked.")
-                    builder.setPositiveButton(mContext.getString(R.string.ok)) { dialog, which ->
-                        (mContext as Activity).finish()
+                    else -> {
+                        builder.setMessage("Something went wrong Room can't be Blocked.")
+                        builder.setPositiveButton(mContext.getString(R.string.ok)) { _, _ ->
+                            (mContext as Activity).finish()
+                        }
+                        val dialog: AlertDialog = builder.create()
+                        dialog.show()
                     }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.show()
                 }
             }
 
