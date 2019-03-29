@@ -176,7 +176,8 @@ class DashBoardAdapter(val dashboardItemList: ArrayList<Manager>,val mContext: C
         holder.dateTextview.setOnClickListener {
             var list = dashboardItemList[position].fromlist
             var arrayList = ArrayList<String>()
-            for (item in list!!) {
+            for (item in list) {
+
                 arrayList.add(item.split("T")[0])
             }
             var listItems = arrayOfNulls<String>(arrayList.size)

@@ -40,6 +40,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         setContentView(R.layout.activity_main2)
 
         setNavigationViewItem()
+
         mBookingDashboardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
         loadDashboard()
     }
@@ -132,7 +133,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
                 Glide.with(this).load(R.drawable.yoga_lady_croped).into(empty_view)
-                r1_dashboard.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                r1_dashboard.setBackgroundColor(Color.parseColor("#FFFFF6"))
             } else {
                 empty_view.visibility = View.GONE
             }
