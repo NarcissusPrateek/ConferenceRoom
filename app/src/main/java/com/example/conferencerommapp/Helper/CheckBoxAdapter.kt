@@ -30,10 +30,8 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
         val employee = employee[position]
         holder.nameTxt.text = employee.name
         holder.myCheckBox.isChecked = employee.isSelected!!
-        if(employee.isSelected!!) {
-            if(!checkedEmployee.contains(employee)) {
-                checkedEmployee.add(employee)
-            }
+        if(employee.isSelected!! && !checkedEmployee.contains(employee)) {
+            checkedEmployee.add(employee)
         }
 
         /**

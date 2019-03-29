@@ -203,25 +203,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
-//        val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
-//        pref.edit().putInt(Constants.EXTRA_REGISTERED, 0)
-//        pref.edit().apply()
     }
 }
 
 
-/**
- * get the updated data from backend
- */
-//fun getUpdatedDataFromApi() {
-//    mBookingDashboardViewModel.getBookingList(this,"prateek300patel@gmail.com")
-//        mBookingDashboardViewModel.getBookingList(this, "prateek300patel@gmail.com").observe(this, Observer {
-//            if(it.isEmpty()) {
-//                empty_view.visibility = View.VISIBLE
-//                r1_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
-//            } else {
-//                empty_view.visibility = View.GONE
-//                setFilteredDataToAdapter(it)
-//            }
-//        })
-//}
