@@ -13,7 +13,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:visibility="gone"
-            android:src="@drawable/emptystate2"
+            android:src="@drawable/empty_state2"
     />
     <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="5dp"

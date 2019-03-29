@@ -134,7 +134,8 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         mBookingDashboardViewModel.getBookingList(this, email).observe(this, Observer {
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
-                r1_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
+                Glide.with(this).load(R.drawable.yoga_lady_croped).into(empty_view)
+                r1_dashboard.setBackgroundColor(Color.parseColor("#FFFFF6"))
             } else {
                 empty_view.visibility = View.GONE
             }

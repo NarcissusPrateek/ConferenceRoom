@@ -1,31 +1,21 @@
 package com.example.conferencerommapp
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.example.conferencerommapp.Activity.BlockConferenceRoomActivity
 import com.example.conferencerommapp.Activity.BuildingDashboard
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.ViewModel.BlockedDashboardViewModel
-import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
 import com.github.clans.fab.FloatingActionButton
 import com.github.clans.fab.FloatingActionMenu
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import kotlinx.android.synthetic.main.activity_blocked_dashboard.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class BlockedDashboard : AppCompatActivity() {
 
