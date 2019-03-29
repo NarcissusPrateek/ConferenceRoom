@@ -23,7 +23,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Sign in</string>
-    <!-- Strings related to login -->
+
+
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
@@ -38,13 +39,13 @@
     <string name="Block">Block Room</string>
     <string name="details_invalid">Details are Invalid!!!</string>
     <string name="preference">myPref</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="server_error">Some Internal server Error!</string>
     <string name="server_not_found">Server not found!! Please try again after some time</string>
     <string name="error">Error!</string>
     <string name="restart_app">Plese Restart the application..</string>
-    <string name="progress_message">Processing...</string>
-    <string name="progress_message_processing">Processing...</string>
+    <string name="progress_message">Loading…</string>
+    <string name="progress_message_processing">Processing…</string>
     <string name="cancel">Cancel</string>
     <string name="sign_out">Successfully signed out</string>
     <string name="select_capacity">Please Select Capacity</string>
@@ -54,7 +55,7 @@
     <string name="no">No</string>
     <string name="invalid_from_time">Invalid From Time</string>
     <string name="invalid_to_time">Invalid To Time</string>
-    <string name="invaild_date">Invalid Date</string>
+    <string name="invalid_date">Invalid Date</string>
     <string name="invalid_capacity">Invalid capacity</string>
     <string name="invalid">Invalid</string>
     <string name="time_validation_message">From-Time must be greater than To-Time and the meeting time must be less than
@@ -99,12 +100,10 @@
         <item>Intern</item>
         <item>SDE-1</item>
         <item>SDE-2</item>
-<<<<<<< HEAD
+        <item>HR</item>
         <item>SDE-3</item>
         <item>HR</item>
-=======
-          <item>SDE-3</item>
->>>>>>> 71c37a9aa9d37148c70640680590dca1e48e6116
+        <item>SDE-3</item>
         <item>Principal Engineer</item>
         <item>Project Manager</item>
         <item>CEO</item>

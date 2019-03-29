@@ -112,7 +112,7 @@ class UserInputActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, getString(R.string.invalid_to_time), Toast.LENGTH_SHORT).show()
             return false
         } else if (TextUtils.isEmpty(dateEditText.text.trim())) {
-            Toast.makeText(applicationContext, getString(R.string.invaild_date), Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, getString(R.string.invalid_date), Toast.LENGTH_SHORT).show()
             return false
         } else if (capacity == getString(R.string.select_capacity)) {
             Toast.makeText(applicationContext, getString(R.string.invalid_capacity), Toast.LENGTH_SHORT).show()
