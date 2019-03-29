@@ -1,57 +1,63 @@
-package com.example.conferencerommapp
+package com.example.conferencerommapp.Activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Html
+import android.text.Html.fromHtml
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import com.example.conferencerommapp.Activity.BlockConferenceRoomActivity
-import com.example.conferencerommapp.Activity.BuildingDashboard
-import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.OnClick
+import com.example.conferencerommapp.BlockedDashboardNew
+import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BlockedDashboardViewModel
-import com.github.clans.fab.FloatingActionButton
-import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.activity_blocked_dashboard.*
 
+@SuppressLint("Registered")
+@Suppress("DEPRECATION")
 class BlockedDashboard : AppCompatActivity() {
 
-    lateinit var addConferenceRoom: FloatingActionButton
-    lateinit var maintenance: FloatingActionButton
-    lateinit var menu : FloatingActionMenu
+    @BindView(R.id.block_recyclerView)
     lateinit var recyclerView: RecyclerView
-    lateinit var blockedAdapter : BlockedDashboardNew
-    lateinit var mBlockedDashboardViewModel : BlockedDashboardViewModel
+    private lateinit var blockedAdapter: BlockedDashboardNew
+    lateinit var mBlockedDashboardViewModel: BlockedDashboardViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blocked_dashboard)
         val actionBar = supportActionBar
-        actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Blocked_Rooms) + "</font>")
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Blocked_Rooms) + "</font>")
 
-        addConferenceRoom = findViewById(R.id.add_conference)
-        maintenance= findViewById(R.id.maintenance)
-        menu = findViewById(R.id.menu)
-        recyclerView = findViewById(R.id.block_recyclerView)
-        menu.setClosedOnTouchOutside(true)
-
+        ButterKnife.bind(this)
         mBlockedDashboardViewModel = ViewModelProviders.of(this).get(BlockedDashboardViewModel::class.java)
-        maintenance.setOnClickListener {
-            val maintenanceintent = Intent(applicationContext, BlockConferenceRoomActivity::class.java)
-            startActivity(maintenanceintent)
-        }
-
-        addConferenceRoom.setOnClickListener {
-            val addConferenceintent = Intent(applicationContext, BuildingDashboard::class.java)
-            startActivity(addConferenceintent)
-        }
         loadBlocking()
 
     }
-     override fun onBackPressed() {
+
+    @OnClick(R.id.menu)
+    fun floatingActionMenuOptions() {
+        menu.setClosedOnTouchOutside(true)
+    }
+
+    @OnClick(R.id.maintenance)
+    fun blockConferenceActivity() {
+        val maintenanceintent = Intent(applicationContext, BlockConferenceRoomActivity::class.java)
+        startActivity(maintenanceintent)
+    }
+
+    @OnClick(R.id.add_conference)
+    fun addConferenceBuildingActivity() {
+        val addConferenceintent = Intent(applicationContext, BuildingDashboard::class.java)
+        startActivity(addConferenceintent)
+
+    }
+
+    override fun onBackPressed() {
         startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
         finish()
     }
@@ -63,14 +69,13 @@ class BlockedDashboard : AppCompatActivity() {
 
     private fun loadBlocking() {
         mBlockedDashboardViewModel.getBlockedList(this).observe(this, Observer {
-            if (it.isEmpty()){
+            if (it.isEmpty()) {
                 empty_view_blocked.visibility = View.VISIBLE
                 empty_view_blocked.setBackgroundColor(Color.parseColor("#FFFFFF"))
-            }
-            else{
+            } else {
                 empty_view_blocked.visibility = View.GONE
             }
-            blockedAdapter = BlockedDashboardNew(it,this)
+            blockedAdapter = BlockedDashboardNew(it, this)
             recyclerView.adapter = blockedAdapter
 
         })

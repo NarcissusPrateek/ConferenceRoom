@@ -18,18 +18,18 @@ class UnblockRoomRepository {
     var mStatus: MutableLiveData<Int>? = null
 
     companion object {
-        var mUnblockRoomRepository: UnblockRoomRepository? = null
-        fun getInstance():UnblockRoomRepository{
-            if(mUnblockRoomRepository == null){
+        private var mUnblockRoomRepository: UnblockRoomRepository? = null
+        fun getInstance(): UnblockRoomRepository {
+            if (mUnblockRoomRepository == null) {
                 mUnblockRoomRepository = UnblockRoomRepository()
             }
             return mUnblockRoomRepository!!
         }
     }
 
-    fun unblockRoom(mContext: Context,room : Unblock):MutableLiveData<Int>{
+    fun unblockRoom(mContext: Context, room: Unblock): MutableLiveData<Int> {
         mStatus = MutableLiveData()
-        makeApiCall(mContext,room)
+        makeApiCall(mContext, room)
         return mStatus!!
     }
 
@@ -38,19 +38,20 @@ class UnblockRoomRepository {
         /**
          * getting Progress Dialog
          */
-        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message), mContext)
+        val progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message), mContext)
         progressDialog.show()
 
         val unBlockApi = Servicebuilder.buildService(ConferenceService::class.java)
-        val requestCall : Call<ResponseBody> = unBlockApi.unBlockingConferenceRoom(room)
+        val requestCall: Call<ResponseBody> = unBlockApi.unBlockingConferenceRoom(room)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                progressDialog!!.dismiss()
+                progressDialog.dismiss()
                 Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_LONG).show()
 
             }
+
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                progressDialog!!.dismiss()
+                progressDialog.dismiss()
                 if (response.code() == Constants.OK_RESPONSE) {
                     mStatus!!.value = response.code()
                 } else {

@@ -2,7 +2,7 @@ package com.example.conferencerommapp.Activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
+import android.text.Html.fromHtml
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -17,11 +17,13 @@ import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.ConferenceRoomViewModel
 
+@Suppress("DEPRECATION")
 class ConferenceRoomActivity : AppCompatActivity() {
 
     private lateinit var mConferenceRoomViewModel: ConferenceRoomViewModel
     lateinit var mCustomAdapter: ConferenceRoomAdapter
-    @BindView(R.id.conference_recycler_view) lateinit var mRecyclerView: RecyclerView
+    @BindView(R.id.conference_recycler_view)
+    lateinit var mRecyclerView: RecyclerView
     private lateinit var mIntentDataFromActivity: GetIntentDataFromActvity
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,24 +32,24 @@ class ConferenceRoomActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.setTitle(Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Select_Room) + "</font>"))
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Select_Room) + "</font>")
 
         mIntentDataFromActivity = getIntentData()
-        var mFetchRoom = setDataToObjectForApiCall(mIntentDataFromActivity)
+        val mFetchRoom = setDataToObjectForApiCall(mIntentDataFromActivity)
         getViewModel(mIntentDataFromActivity, mFetchRoom)
     }
 
     /**
      * get intent data from previous activity
      */
-    fun getIntentData(): GetIntentDataFromActvity {
-        return intent.extras.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
+    private fun getIntentData(): GetIntentDataFromActvity {
+        return intent.extras!!.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
     /**
      * get the object of ViewModel class and by using this object we call the api and set the observer on the function
      */
-    fun getViewModel(mIntentDataFromActvity: GetIntentDataFromActvity, mFetchRoom: FetchConferenceRoom) {
+    private fun getViewModel(mIntentDataFromActvity: GetIntentDataFromActvity, mFetchRoom: FetchConferenceRoom) {
         mConferenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
         mConferenceRoomViewModel.getConferenceRoomList(this, mFetchRoom).observe(this, Observer {
             if(it.isEmpty()) {
@@ -56,9 +58,9 @@ class ConferenceRoomActivity : AppCompatActivity() {
                 mCustomAdapter = ConferenceRoomAdapter(
                     it!!,
                     object : ConferenceRoomAdapter.BtnClickListener {
-                        override fun onBtnClick(roomId: String?, roomName: String?) {
+                        override fun onBtnClick(roomId: String?, roomname: String?) {
                             mIntentDataFromActvity.roomId = roomId
-                            mIntentDataFromActvity.roomName = roomName
+                            mIntentDataFromActvity.roomName = roomname
                             goToNextActivity(mIntentDataFromActvity)
                         }
                     })
@@ -90,8 +92,8 @@ class ConferenceRoomActivity : AppCompatActivity() {
      * function will set data for different properties of object of FetchConferenceRoom class
      * and it will return that object which is used as a parameter for api call
      */
-    fun setDataToObjectForApiCall(mIntentDataFromActvity: GetIntentDataFromActvity): FetchConferenceRoom {
-        var mFetchRoom = FetchConferenceRoom()
+    private fun setDataToObjectForApiCall(mIntentDataFromActvity: GetIntentDataFromActvity): FetchConferenceRoom {
+        val mFetchRoom = FetchConferenceRoom()
         mFetchRoom.fromTime = mIntentDataFromActvity.fromtime
         mFetchRoom.toTime = mIntentDataFromActvity.totime
         mFetchRoom.capacity = mIntentDataFromActvity.capacity!!.toInt()
@@ -104,7 +106,7 @@ class ConferenceRoomActivity : AppCompatActivity() {
      */
     fun showDialog() {
         val mDialog = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_not_available))
-        mDialog.setPositiveButton(getString(R.string.ok)) { dialog, which ->
+        mDialog.setPositiveButton(getString(R.string.ok)) {_,_->
             finish()
         }
         GetAleretDialog.showDialog(mDialog)
