@@ -148,7 +148,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             ArrayAdapter<String>(this@BlockConferenceRoomActivity, android.R.layout.simple_list_item_1, items)
         buiding_Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
+                /**
+                 * It selects the first building
+                 */
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -178,7 +180,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             ArrayAdapter<String>(this@BlockConferenceRoomActivity, android.R.layout.simple_list_item_1, conferencename)
         conference_Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-
+                /**
+                 * It selects the first conference room
+                 */
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

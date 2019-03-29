@@ -199,9 +199,15 @@ class ManagerBookingActivity : AppCompatActivity() {
     private fun setClickListnerOnEditText(view: View) {
         view.editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                /**
+                 * Nothing Here
+                 */
             }
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                /**
+                 * Nothing Here
+                 */
             }
 
             override fun afterTextChanged(editable: Editable) {
