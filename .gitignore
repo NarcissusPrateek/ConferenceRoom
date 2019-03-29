@@ -12,4 +12,6 @@
 /captures
 .externalNativeBuild
 .idea
+.sonar_lock
+report-task.txt
 
