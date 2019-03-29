@@ -5,30 +5,30 @@ import com.google.gson.annotations.SerializedName
 data class Dashboard (
 
     @SerializedName("fromTime")
-    var FromTime : String? = null,
+    var fromTime : String? = null,
 
     @SerializedName("toTime")
-    var ToTime : String? = null,
+    var toTime : String? = null,
 
     @SerializedName("buildingName")
-    var BName : String? = null,
+    var buildingName : String? = null,
 
     @SerializedName("roomId")
-    var CId : Int? = null,
+    var roomId : Int? = null,
 
     @SerializedName("roomName")
-    var CName : String? = null,
+    var roomName : String? = null,
 
     @SerializedName("purpose")
-    var Purpose: String? = null,
+    var purpose: String? = null,
 
     @SerializedName("email")
-    var Email: String? = null,
+    var email: String? = null,
 
     @SerializedName("status")
-    var Status: String? = null,
+    var status: String? = null,
 
     @SerializedName("name")
-    var Name: List<String>? = null
+    var name: List<String>? = null
 )
 

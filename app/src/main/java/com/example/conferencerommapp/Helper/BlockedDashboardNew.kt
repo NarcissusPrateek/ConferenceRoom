@@ -40,7 +40,7 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
 
 
         holder.itemView.setOnClickListener {
-            blockedList[position].CId
+            blockedList[position].roomId
         }
     }
 
@@ -75,11 +75,11 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
     @SuppressLint("SetTextI18n")
     fun setDataToFields(holder: ViewHolder, position: Int) {
         holder.blocked = blockedList[position]
-        holder.conferenceName.text = blockedList[position].CName
-        holder.buildingName.text = blockedList[position].BName
-        holder.purpose.text = blockedList[position].Purpose
-        holder.date.text = blockedList[position].FromTime!!.split("T")[0]
-        holder.fromtime.text = blockedList[position].FromTime!!.split("T")[1] + " - " + blockedList[position].ToTime!!.split("T")[1]
+        holder.conferenceName.text = blockedList[position].roomName
+        holder.buildingName.text = blockedList[position].buildingName
+        holder.purpose.text = blockedList[position].purpose
+        holder.date.text = blockedList[position].fromTime!!.split("T")[0]
+        holder.fromtime.text = blockedList[position].fromTime!!.split("T")[1] + " - " + blockedList[position].toTime!!.split("T")[1]
 
     }
 
@@ -124,9 +124,9 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
             builder.setMessage("Are you sure you want to unblock the Room?")
             builder.setPositiveButton("Yes"){_,_ ->
                 val block = Unblock()
-                block.CId = blockedList[position].CId
-                block.FromTime = blockedList[position].FromTime
-                block.ToTime = blockedList[position].ToTime
+                block.cId = blockedList[position].roomId
+                block.fromTime = blockedList[position].fromTime
+                block.toTime = blockedList[position].toTime
                 unBlockRoom(mContext, block)
             }
             builder.setNegativeButton("No"){_, _ ->

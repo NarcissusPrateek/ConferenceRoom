@@ -41,6 +41,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         setContentView(R.layout.activity_main2)
         ButterKnife.bind(this)
         setNavigationViewItem()
+
         mBookingDashboardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
         loadDashboard()
     }
@@ -133,7 +134,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
                 Glide.with(this).load(R.drawable.yoga_lady_croped).into(empty_view)
-                r1_dashboard.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                r1_dashboard.setBackgroundColor(Color.parseColor("#FFFFF6"))
             } else {
                 empty_view.visibility = View.GONE
             }
@@ -170,25 +171,25 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         for (item in dashboardItemList) {
             var flag = 0
             for (i in finalList) {
-                if (i.Purpose == item.Purpose) {
-                    i.fromlist.add(item.FromTime!!)
-                    i.Status.add(item.Status!!)
+                if (i.Purpose == item.purpose) {
+                    i.fromlist.add(item.fromTime!!)
+                    i.Status.add(item.status!!)
                     flag = 1
                     break
                 }
             }
             if (flag == 0) {
                 val final = Manager()
-                final.BName = item.BName
-                final.CId = item.CId
-                final.CName = item.CName
-                final.Purpose = item.Purpose
-                final.Name = item.Name
-                final.FromTime = item.FromTime
-                final.ToTime = item.ToTime
-                final.Email = item.Email
-                final.Status.add(item.Status!!)
-                final.fromlist.add(item.FromTime!!.split("T")[0])
+                final.BName = item.buildingName
+                final.CId = item.roomId
+                final.CName = item.roomName
+                final.Purpose = item.purpose
+                final.Name = item.name
+                final.FromTime = item.fromTime
+                final.ToTime = item.toTime
+                final.Email = item.email
+                final.Status.add(item.status!!)
+                final.fromlist.add(item.fromTime!!.split("T")[0])
                 finalList.add(final)
             }
         }

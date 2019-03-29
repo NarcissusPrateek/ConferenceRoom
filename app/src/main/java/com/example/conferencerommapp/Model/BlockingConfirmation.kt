@@ -4,8 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class BlockingConfirmation (
     @SerializedName("name")
-    val Name: String? = null,
+    val name: String? = null,
     @SerializedName("purpose")
-    val Purpose: String? = null,
+    val purpose: String? = null,
+
     var mStatus: Int? = 0
 )

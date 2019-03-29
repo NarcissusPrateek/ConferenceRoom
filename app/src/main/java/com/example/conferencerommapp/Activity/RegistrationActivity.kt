@@ -76,8 +76,8 @@ class RegistrationActivity : AppCompatActivity() {
                 Toast.makeText(this@RegistrationActivity, "Invalid Id", Toast.LENGTH_SHORT).show()
                 false
             }
-            mEmployee.Role.toString() == "Select Role" -> {
-                Toast.makeText(this@RegistrationActivity, "Invalid Role", Toast.LENGTH_SHORT).show()
+            mEmployee.role.toString() == "Select role" -> {
+                Toast.makeText(this@RegistrationActivity, "Invalid role", Toast.LENGTH_SHORT).show()
                 false
             }
             else -> true
@@ -109,11 +109,11 @@ class RegistrationActivity : AppCompatActivity() {
         employeeRoleSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, employeeRole)
         employeeRoleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                mEmployee.Role = "Intern"
+                mEmployee.role = "Intern"
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                mEmployee.Role = spinner.getItemAtPosition(position).toString()
+                mEmployee.role = spinner.getItemAtPosition(position).toString()
             }
         }
     }
@@ -125,11 +125,11 @@ class RegistrationActivity : AppCompatActivity() {
     private fun setDataToEmployeeObjct() {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         if (acct != null) {
-            mEmployee.EmpId = edittext_id.text.toString().trim()
-            mEmployee.Name = textView_name.text.toString().trim()
-            mEmployee.ActivationCode = "abc"
-            mEmployee.Email = acct.email.toString().trim()
-            mEmployee.Verified = false
+            mEmployee.employeeId = edittext_id.text.toString().trim()
+            mEmployee.name = textView_name.text.toString().trim()
+            mEmployee.activationCode = "abc"
+            mEmployee.email = acct.email.toString().trim()
+            mEmployee.verified = false
         } else {
             Toast.makeText(this, "unable to get the data fro server", Toast.LENGTH_SHORT).show()
         }

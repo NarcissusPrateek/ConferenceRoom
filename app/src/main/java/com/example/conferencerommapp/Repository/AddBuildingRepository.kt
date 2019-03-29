@@ -20,7 +20,7 @@ import retrofit2.Response
 class AddBuildingRepository {
 
     /**
-     * mStatus is used to know the Status code from the backend
+     * mStatus is used to know the status code from the backend
      */
     var mStatus:MutableLiveData<Int>? = null
     var ok: Int? = null

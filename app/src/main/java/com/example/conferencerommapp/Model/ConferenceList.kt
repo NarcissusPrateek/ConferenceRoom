@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ConferenceList(
         @SerializedName("roomName")
-        val CName : String? = null,
+        val roomName : String? = null,
         @SerializedName("capacity")
-        val Capacity : Int? = 0
+        val capacity : Int? = 0
 )

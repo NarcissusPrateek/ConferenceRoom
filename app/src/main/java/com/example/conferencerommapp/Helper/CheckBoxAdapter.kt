@@ -31,9 +31,7 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
         holder.nameTxt.text = employee.name
         holder.myCheckBox.isChecked = employee.isSelected!!
         if(employee.isSelected!!) {
-            if(checkedEmployee.contains(employee)) {
-
-            }else {
+            if(!checkedEmployee.contains(employee)) {
                 checkedEmployee.add(employee)
             }
         }

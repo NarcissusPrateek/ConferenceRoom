@@ -11,7 +11,7 @@ import butterknife.ButterKnife
 import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.R
 
-class Conference_Room_adapter_new(private val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<Conference_Room_adapter_new.ViewHolder>() {
+class ConferenceRoomAdapterNew(private val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<ConferenceRoomAdapterNew.ViewHolder>() {
 
     companion object {
         var mClickListener: BtnClickListener? = null
@@ -30,13 +30,13 @@ class Conference_Room_adapter_new(private val conferenceRoomList: List<Conferenc
 
         holder.txvRoomCapacity.text = conferenceRoomList[position].roomCapacity
 
-        if(conferenceRoomList[position].Status.equals("Available"))
+        if(conferenceRoomList[position].status.equals("Available"))
         {
             holder.button!!.setBackgroundColor(Color.GREEN)
             holder.button!!.setOnClickListener {
 
             }
-        }else if(conferenceRoomList[position].Status.equals("Booked")){
+        }else if(conferenceRoomList[position].status.equals("Booked")){
             holder.button!!.setBackgroundColor(Color.RED)
             holder.button!!.isEnabled = false
         }

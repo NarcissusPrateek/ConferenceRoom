@@ -50,7 +50,7 @@ class BlockRoomRepository {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
                 val builder = AlertDialog.Builder(mContext)
-                builder.setTitle("Blocking Status")
+                builder.setTitle("Blocking status")
                 when {
                     response.code() == Constants.OK_RESPONSE -> mStatus!!.value = response.code()
                     response.code().equals(400) -> {

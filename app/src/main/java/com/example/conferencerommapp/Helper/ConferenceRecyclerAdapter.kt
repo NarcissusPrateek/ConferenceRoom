@@ -21,8 +21,8 @@ class ConferenceRecyclerAdapter(private val conferencceList:List<ConferenceList>
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.conferencelist=conferencceList[position]
-        holder.conferenceName.text=conferencceList[position].CName
-        holder.conferencecapacity.text= conferencceList[position].Capacity.toString()
+        holder.conferenceName.text=conferencceList[position].roomName
+        holder.conferencecapacity.text= conferencceList[position].capacity.toString()
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {

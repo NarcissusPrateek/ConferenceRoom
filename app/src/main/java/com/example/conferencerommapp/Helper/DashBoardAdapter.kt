@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnClick
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Model.CancelBooking
 import com.example.conferencerommapp.Model.Manager
@@ -165,7 +166,7 @@ class DashBoardAdapter(
         }
         val listItems = arrayOfNulls<String>(arrayList.size)
         arrayList.toArray(listItems)
-        val builder = android.app.AlertDialog.Builder(mContext)
+        val builder = AlertDialog.Builder(mContext)
         builder.setTitle("Members of meeting.")
         builder.setItems(listItems
         ) { _, _ -> }
@@ -188,6 +189,7 @@ class DashBoardAdapter(
     /**
      * if the meeting is recurring then add dates of meeting to the data field
      */
+    @SuppressLint("SimpleDateFormat")
     private fun setDataToDialogShowDates(
         holder: ViewHolder,
         position: Int,
@@ -210,7 +212,7 @@ class DashBoardAdapter(
             }
             val listItems = arrayOfNulls<String>(arrayList.size)
             arrayList.toArray(listItems)
-            val builder = android.app.AlertDialog.Builder(mContext)
+            val builder = AlertDialog.Builder(mContext)
             builder.setTitle(context.getString(R.string.dates_of_meeting))
             builder.setItems(listItems) { _, which ->
                 if (dashboardItemList[position].Status[which] == "Cancelled") {
@@ -250,7 +252,7 @@ class DashBoardAdapter(
      * if the booking is cancelled by HR than do nothing and set clickable property to false
      * if the booking is not cancelled and user wants to cancel it than allow user to cancel the booking
      */
-    fun setFunctionOnButton(
+    private fun setFunctionOnButton(
         holder: ViewHolder,
         position: Int,
         context: Context

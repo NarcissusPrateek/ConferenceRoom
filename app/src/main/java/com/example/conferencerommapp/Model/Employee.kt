@@ -1,19 +1,26 @@
 package com.example.conferencerommapp.Model
 
+import com.google.gson.annotations.SerializedName
+
 data class Employee (
 
 
+    @SerializedName("email")
+    var email: String? = null,
 
-    var Email: String? = null,
+    @SerializedName("employeeId")
+    var employeeId: String? = null,
 
-    var EmpId: String? = null,
+    @SerializedName("name")
+    var name: String? = null,
 
-    var Name: String? = null,
+    @SerializedName("role")
+    var role: String? = null,
 
-    var Role: String? = null,
+    @SerializedName("activationCode")
+    var activationCode: String? = null,
 
-    var ActivationCode: String? = null,
-
-    var Verified: Boolean? = false
+    @SerializedName("verified")
+    var verified: Boolean? = false
 
 )

@@ -20,7 +20,7 @@ import retrofit2.Response
 
 class AddConferenceRepository {
 
-    // mStatus is used to know the Status code from the backend
+    // mStatus is used to know the status code from the backend
     var mStatus: MutableLiveData<Int>? = null
     companion object {
         var mAddConferenceRepository: AddConferenceRepository? = null
@@ -64,7 +64,7 @@ class AddConferenceRepository {
                     try{
                         val dialog = GetAleretDialog.getDialog(
                             mContext,
-                            "Status",
+                            "status",
                             JSONObject(response.errorBody()!!.string()).getString("Message")
                         )
                         dialog.setPositiveButton(mContext.getString(R.string.ok)) { _, _ -> }

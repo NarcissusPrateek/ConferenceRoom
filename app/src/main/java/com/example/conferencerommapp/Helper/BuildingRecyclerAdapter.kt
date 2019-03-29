@@ -25,9 +25,9 @@ class BuildingRecyclerAdapter(private val buildingList: List<BuildingT>, val btn
         mClickListener = btnlistener
 
         holder.building = buildingList[position]
-        holder.txvBuilding.text = buildingList[position].BName
-        val id = buildingList[position].BId
-        val buildingname = buildingList[position].BName
+        holder.txvBuilding.text = buildingList[position].buildingName
+        val id = buildingList[position].buildingId
+        val buildingname = buildingList[position].buildingName
         holder.itemView.setOnClickListener {
             mClickListener?.onBtnClick(id, buildingname)
         }

@@ -5,12 +5,12 @@ import com.google.gson.annotations.SerializedName
 //Model Class Of the AddConference
 data class AddConferenceRoom(
    @SerializedName("buildingId")
-   var  BId:Int?= 0,
+   var  bId:Int?= 0,
 
    @SerializedName("roomName")
-   var CName :String?=null,
+   var roomName :String?=null,
 
    @SerializedName("capacity")
-   var Capacity :Int? = 0
+   var capacity :Int? = 0
 
 )

@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName
 data class ManagerConference(
 
     @SerializedName("fromTime")
-    var FromTime : ArrayList<String>? = null,
+    var fromTime : ArrayList<String>? = null,
 
     @SerializedName("toTime")
-    var ToTime : ArrayList<String>? = null,
+    var toTime : ArrayList<String>? = null,
 
     @SerializedName("buildingId")
-    var BId : Int? = 0
+    var buildingId : Int? = 0
 )

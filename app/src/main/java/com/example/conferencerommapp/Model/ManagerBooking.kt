@@ -5,27 +5,27 @@ import com.google.gson.annotations.SerializedName
 data class ManagerBooking(
 
     @SerializedName("email")
-    var Email: String? = null,
+    var email: String? = null,
 
     @SerializedName("roomId")
-    var CId: Int? = 0,
+    var roomId: Int? = 0,
 
     @SerializedName("buildingId")
-    var BId: Int? = 0,
+    var buildingId: Int? = 0,
 
     @SerializedName("fromTime")
-    var FromTime: ArrayList<String>? = null,
+    var fromTime: ArrayList<String>? = null,
 
     @SerializedName("roomName")
-    var CName: String? = null,
+    var roomName: String? = null,
 
     @SerializedName("toTime")
-    var ToTime: ArrayList<String>? = null,
+    var toTime: ArrayList<String>? = null,
 
     @SerializedName("purpose")
-    var Purpose: String? = null,
+    var purpose: String? = null,
 
     @SerializedName("cCMail")
-    var CCMail: String? = null
+    var cCMail: String? = null
 
 )

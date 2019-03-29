@@ -94,7 +94,7 @@ class ConferenceRoomAdapter(private val mConferenceRoomList: List<ConferenceRoom
         holder.conferenceRoom = mConferenceRoomList[position]
         holder.txvRoom.text = mConferenceRoomList[position].roomName
         holder.txvRoomCapacity.text = mConferenceRoomList[position].roomCapacity
-        holder.txvStatus.text = mConferenceRoomList[position].Status
+        holder.txvStatus.text = mConferenceRoomList[position].status
     }
 
     /**
