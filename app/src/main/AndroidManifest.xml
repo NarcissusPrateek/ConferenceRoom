@@ -83,22 +83,22 @@
                 android:parentActivityName=".Activity.ConferenceDashBoard"/>
         <activity
                 android:name=".Activity.BuildingDashboard"
-                android:parentActivityName=".BlockedDashboard"/>
+                android:parentActivityName=".Activity.BlockedDashboard"/>
         <activity
                 android:name=".RegistrationActivity"
                 android:label="Registration"/>
         <activity
-                android:name=".BlockedDashboard"
+                android:name=".Activity.BlockedDashboard"
                 android:parentActivityName=".Activity.UserBookingsDashboardActivity"/>
         <activity
                 android:name=".Activity.BlockConferenceRoomActivity"
                 android:launchMode="singleTop"
-                android:parentActivityName=".BlockedDashboard"/>
+                android:parentActivityName=".Activity.BlockedDashboard"/>
         <activity
                 android:name=".Activity.ConferenceDashBoard"
                 android:launchMode="singleTop"
                 android:parentActivityName=".Activity.BuildingDashboard"/>
-        <activity android:name=".Activity.MultiItemChecker"/>
+
     </application>
 
 </manifest>

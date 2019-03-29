@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import butterknife.ButterKnife
 import butterknife.OnClick
 import com.bumptech.glide.Glide
 import com.example.conferencerommapp.Helper.DashBoardAdapter
@@ -38,7 +39,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
-
+        ButterKnife.bind(this)
         setNavigationViewItem()
         mBookingDashboardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
         loadDashboard()
