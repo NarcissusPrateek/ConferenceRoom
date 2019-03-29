@@ -1,5 +1,6 @@
 package com.example.globofly.services
 
+import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.services.ConferenceService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object Servicebuilder  {
-    private const val URL = "http://192.168.1.188/CRB/"
+
 
     private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
@@ -16,7 +17,7 @@ object Servicebuilder  {
 
 
     private val builder: Retrofit.Builder = Retrofit.Builder()
-                                            .baseUrl(URL)
+                                            .baseUrl(Constants.IP_ADDRESS)
                                             .addConverterFactory(GsonConverterFactory.create()).client(okHttp.build())
     private val retrofit: Retrofit = builder.build()
 
