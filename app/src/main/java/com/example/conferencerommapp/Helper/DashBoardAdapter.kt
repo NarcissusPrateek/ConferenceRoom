@@ -23,6 +23,7 @@ import com.example.conferencerommapp.Model.CancelBooking
 import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.CancelBookingViewModel
+import java.text.SimpleDateFormat
 
 @Suppress("NAME_SHADOWING")
 class DashBoardAdapter(
@@ -199,6 +200,11 @@ class DashBoardAdapter(
         holder.dateTextview.setOnClickListener {
             val list = dashboardItemList[position].fromlist
             val arrayList = ArrayList<String>()
+            val simpleDateFormate = SimpleDateFormat("yyyy-MM-dd")
+            val simpleDateFormat2 = SimpleDateFormat("dd MMMM yyyy")
+            for (item in list) {
+                arrayList.add(simpleDateFormat2.format(simpleDateFormate.parse(item.split("T")[0])))
+            }
             for (item in list) {
                 arrayList.add(item.split("T")[0])
             }
@@ -217,12 +223,13 @@ class DashBoardAdapter(
                     )
                     builder.setPositiveButton(mContext.getString(R.string.ok)) { _, _ ->
                         val mCancel = CancelBooking()
+                        val date = simpleDateFormate.format(simpleDateFormat2.parse(listItems[which].toString()))
                         mCancel.roomId = dashboardItemList[position].CId
                         mCancel.email = dashboardItemList[position].Email
                         mCancel.fromTime =
-                            listItems[which].toString() + "T" + dashboardItemList[position].FromTime!!.split("T")[1]
+                            date + "T" + dashboardItemList[position].FromTime!!.split("T")[1]
                         mCancel.toTime =
-                            listItems[which].toString() + "T" + dashboardItemList[position].ToTime!!.split("T")[1]
+                            date + "T" + dashboardItemList[position].ToTime!!.split("T")[1]
                         cancelBooking(mCancel, mContext)
                     }
                     builder.setNegativeButton(mContext.getString(R.string.cancel)) { _, _ ->
