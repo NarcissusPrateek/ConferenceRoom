@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Helper
 
+import android.annotation.SuppressLint
 import android.content.Context
 
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.R
 
@@ -17,6 +20,7 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
     /**
      * attach a view for the recyclerview items
      */
+    @SuppressLint("InflateParams")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_alertdialog, null)
         return ViewHolder(v)
@@ -60,16 +64,19 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-        var nameTxt: TextView
-        var myCheckBox: CheckBox
 
         lateinit var myItemClickListener: ItemClickListener
 
         init {
-            nameTxt = itemView.findViewById(R.id.textViewName)
-            myCheckBox = itemView.findViewById(R.id.checkBox)
+            ButterKnife.bind(this, itemView)
             myCheckBox.setOnClickListener(this)
         }
+        @BindView(R.id.textViewName)
+        lateinit var nameTxt: TextView
+        @BindView(R.id.checkBox)
+        lateinit var myCheckBox: CheckBox
+
+
 
         fun setItemClickListener(ic: ItemClickListener) {
             this.myItemClickListener = ic

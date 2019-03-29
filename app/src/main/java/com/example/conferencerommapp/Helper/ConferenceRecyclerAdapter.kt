@@ -1,26 +1,17 @@
-package com.example.conferencerommapp
+package com.example.conferencerommapp.Helper
 
-import android.content.Intent
-import android.util.Log
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.conferencerommapp.R
 
 import com.example.myapplication.Models.ConferenceList
 
 class ConferenceRecyclerAdapter(private val conferencceList:List<ConferenceList>) : androidx.recyclerview.widget.RecyclerView.Adapter<ConferenceRecyclerAdapter.ViewHolder>(){
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConferenceRecyclerAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.conference_list, parent, false)
-        return ConferenceRecyclerAdapter.ViewHolder(view)
+        return ViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -28,7 +19,7 @@ class ConferenceRecyclerAdapter(private val conferencceList:List<ConferenceList>
 
     }
 
-    override fun onBindViewHolder(holder: ConferenceRecyclerAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.conferencelist=conferencceList[position]
         holder.conferenceName.text=conferencceList[position].CName
         holder.conferencecapacity.text= conferencceList[position].Capacity.toString()

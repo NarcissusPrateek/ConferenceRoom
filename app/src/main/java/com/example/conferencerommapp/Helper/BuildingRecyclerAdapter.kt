@@ -3,11 +3,11 @@ package com.example.conferencerommapp.Helper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.example.conferencerommapp.BuildingT
 import com.example.conferencerommapp.R
-import kotlin.random.Random
 
 class BuildingRecyclerAdapter(private val buildingList: List<BuildingT>, val btnlistener: BtnClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<BuildingRecyclerAdapter.ViewHolder>() {
 
@@ -26,10 +26,10 @@ class BuildingRecyclerAdapter(private val buildingList: List<BuildingT>, val btn
 
         holder.building = buildingList[position]
         holder.txvBuilding.text = buildingList[position].BName
-        var id = buildingList[position].BId
-        var building_name = buildingList[position].BName
-        holder.itemView.setOnClickListener { v ->
-            mClickListener?.onBtnClick(id, building_name)
+        val id = buildingList[position].BId
+        val buildingname = buildingList[position].BName
+        holder.itemView.setOnClickListener {
+            mClickListener?.onBtnClick(id, buildingname)
         }
     }
 
@@ -38,8 +38,11 @@ class BuildingRecyclerAdapter(private val buildingList: List<BuildingT>, val btn
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-
-        val txvBuilding: TextView = itemView.findViewById(R.id.building_name)
+        init {
+            ButterKnife.bind(this, itemView)
+        }
+        @BindView(R.id.building_name)
+        lateinit var txvBuilding: TextView
         var building: BuildingT? = null
 
         override fun toString(): String {
@@ -47,7 +50,7 @@ class BuildingRecyclerAdapter(private val buildingList: List<BuildingT>, val btn
         }
     }
 
-    open interface BtnClickListener {
+    interface BtnClickListener {
         fun onBtnClick(buildingId: Int?,buildingname: String?)
     }
 }

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.example.conferencerommapp.ConferenceRecyclerAdapter
+import com.example.conferencerommapp.Helper.ConferenceRecyclerAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.HrConferenceRoomViewModel

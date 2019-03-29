@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.example.conferencerommapp.Helper
 
 import android.app.ProgressDialog
@@ -11,7 +13,7 @@ class GetProgress {
          * and return the object of ProgressDialog
          */
         fun getProgressDialog(msg: String, context: Context) : ProgressDialog {
-            var progressDialog = ProgressDialog(context)
+            val progressDialog = ProgressDialog(context)
             progressDialog.setMessage(msg)
             progressDialog.setCancelable(false)
             return progressDialog

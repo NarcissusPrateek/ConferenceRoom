@@ -159,13 +159,8 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         dashBord_recyclerView1.adapter =
             DashBoardAdapter(
                 finalList,
-                this@UserBookingsDashboardActivity,
-                object : DashBoardAdapter.DashBoardInterface {
-                    override fun onCancelClicked() {
-                        //getUpdatedDataFromApi()
-                        // loadDashboard()
-                    }
-                })
+                this@UserBookingsDashboardActivity
+            )
     }
 
     /**
