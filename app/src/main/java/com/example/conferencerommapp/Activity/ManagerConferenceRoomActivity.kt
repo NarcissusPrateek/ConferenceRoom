@@ -97,9 +97,9 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      */
     private fun setDataToObjectForApiCall(mGetIntentDataFromActvity: GetIntentDataFromActvity): ManagerConference {
         val input = ManagerConference()
-        input.FromTime = mGetIntentDataFromActvity.fromTimeList
-        input.ToTime = mGetIntentDataFromActvity.toTimeList
-        input.BId = mGetIntentDataFromActvity.buildingId!!.toInt()
+        input.fromTime = mGetIntentDataFromActvity.fromTimeList
+        input.toTime = mGetIntentDataFromActvity.toTimeList
+        input.buildingId = mGetIntentDataFromActvity.buildingId!!.toInt()
         return input
     }
 }

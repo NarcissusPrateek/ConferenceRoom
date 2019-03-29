@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import butterknife.ButterKnife
 import butterknife.OnClick
 import com.bumptech.glide.Glide
 import com.example.conferencerommapp.Helper.DashBoardAdapter
@@ -38,7 +39,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
-
+        ButterKnife.bind(this)
         setNavigationViewItem()
 
         mBookingDashboardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
@@ -159,13 +160,8 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         dashBord_recyclerView1.adapter =
             DashBoardAdapter(
                 finalList,
-                this@UserBookingsDashboardActivity,
-                object : DashBoardAdapter.DashBoardInterface {
-                    override fun onCancelClicked() {
-                        //getUpdatedDataFromApi()
-                        // loadDashboard()
-                    }
-                })
+                this@UserBookingsDashboardActivity
+            )
     }
 
     /**
@@ -175,25 +171,25 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         for (item in dashboardItemList) {
             var flag = 0
             for (i in finalList) {
-                if (i.Purpose == item.Purpose) {
-                    i.fromlist.add(item.FromTime!!)
-                    i.Status.add(item.Status!!)
+                if (i.Purpose == item.purpose) {
+                    i.fromlist.add(item.fromTime!!)
+                    i.Status.add(item.status!!)
                     flag = 1
                     break
                 }
             }
             if (flag == 0) {
                 val final = Manager()
-                final.BName = item.BName
-                final.CId = item.CId
-                final.CName = item.CName
-                final.Purpose = item.Purpose
-                final.Name = item.Name
-                final.FromTime = item.FromTime
-                final.ToTime = item.ToTime
-                final.Email = item.Email
-                final.Status.add(item.Status!!)
-                final.fromlist.add(item.FromTime!!.split("T")[0])
+                final.BName = item.buildingName
+                final.CId = item.roomId
+                final.CName = item.roomName
+                final.Purpose = item.purpose
+                final.Name = item.name
+                final.FromTime = item.fromTime
+                final.ToTime = item.toTime
+                final.Email = item.email
+                final.Status.add(item.status!!)
+                final.fromlist.add(item.fromTime!!.split("T")[0])
                 finalList.add(final)
             }
         }

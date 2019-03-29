@@ -1,5 +1,6 @@
-package com.example.conferencerommapp
+package com.example.conferencerommapp.Helper
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
@@ -14,16 +15,17 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.example.conferencerommapp.Activity.BlockedDashboard
-
-import com.example.conferencerommapp.Helper.ColorOfDialogButton
-import com.example.conferencerommapp.Helper.Unblock
+import com.example.conferencerommapp.Blocked
+import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.UnBlockRoomViewModel
 
 
 class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<BlockedDashboardNew.ViewHolder>() {
 
-    var currentPosition = 0
+    private var currentPosition = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         val view = LayoutInflater.from(parent.context).inflate(R.layout.block_dashboard_list, parent, false)
@@ -37,9 +39,8 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
         setFunctionOnButton(holder, position)
 
 
-        holder.itemView.setOnClickListener { v ->
-            var id = blockedList[position].CId
-
+        holder.itemView.setOnClickListener {
+            blockedList[position].roomId
         }
     }
 
@@ -50,53 +51,64 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        val conferenceName : TextView = itemView.findViewById(R.id.block_conferenceRoomName)
-        val buildingName : TextView = itemView.findViewById(R.id.block_building_name)
-        val purpose : TextView = itemView.findViewById(R.id.block_purpose)
-        val fromtime : TextView = itemView.findViewById(R.id.block_from_time)
-        val date : TextView = itemView.findViewById(R.id.block_date)
-        val card: CardView = itemView.findViewById(R.id.card_block)
-        val linearLayout:LinearLayout = itemView.findViewById(R.id.linearlayout_block)
+        init {
+            ButterKnife.bind(this, itemView)
+        }
+        @BindView(R.id.block_conferenceRoomName)
+        lateinit var conferenceName : TextView
+        @BindView(R.id.block_building_name)
+        lateinit var buildingName : TextView
+        @BindView(R.id.block_purpose)
+        lateinit var purpose : TextView
+        @BindView(R.id.block_from_time)
+        lateinit var fromtime : TextView
+        @BindView(R.id.block_date)
+        lateinit var date : TextView
+        @BindView(R.id.card_block)
+        lateinit var card: CardView
+        @BindView(R.id.linearlayout_block)
+        lateinit var linearLayout:LinearLayout
         val unblock :Button = itemView.findViewById(R.id.unblock)
         var blocked: Blocked? = null
     }
 
+    @SuppressLint("SetTextI18n")
     fun setDataToFields(holder: ViewHolder, position: Int) {
         holder.blocked = blockedList[position]
-        holder.conferenceName.text = blockedList[position].CName
-        holder.buildingName.text = blockedList[position].BName
-        holder.purpose.text = blockedList[position].Purpose
-        holder.date.text = blockedList[position].FromTime!!.split("T")[0]
-        holder.fromtime.text = blockedList[position].FromTime!!.split("T")[1] + " - " + blockedList[position].ToTime!!.split("T")[1]
+        holder.conferenceName.text = blockedList[position].roomName
+        holder.buildingName.text = blockedList[position].buildingName
+        holder.purpose.text = blockedList[position].purpose
+        holder.date.text = blockedList[position].fromTime!!.split("T")[0]
+        holder.fromtime.text = blockedList[position].fromTime!!.split("T")[1] + " - " + blockedList[position].toTime!!.split("T")[1]
 
     }
 
-    fun setAnimationToTheRecyclerViewItem(holder: ViewHolder, position: Int) {
-        holder.card.setOnClickListener( {
+    private fun setAnimationToTheRecyclerViewItem(holder: ViewHolder, position: Int) {
+        holder.card.setOnClickListener {
             currentPosition = position
             notifyDataSetChanged()
 
-        })
+        }
         if (currentPosition == position) {
             if (holder.linearLayout.visibility == View.GONE) {
-                var animmation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.animation)
+                val animmation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.animation)
                 holder.linearLayout.visibility = View.VISIBLE
                 holder.linearLayout.startAnimation(animmation)
             } else {
-                var animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
+                val animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
                 holder.linearLayout.visibility = View.GONE
                 holder.linearLayout.startAnimation(animation)
             }
 
         } else {
-            var animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
+            val animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
             holder.linearLayout.visibility = View.GONE
             holder.linearLayout.startAnimation(animation)
         }
     }
 
-    fun unBlockRoom(mContext: Context,room: Unblock){
-        var mUnBlockRoomViewModel= ViewModelProviders.of(mContext as BlockedDashboard).get(UnBlockRoomViewModel::class.java)
+    private fun unBlockRoom(mContext: Context, room: Unblock){
+        val mUnBlockRoomViewModel= ViewModelProviders.of(mContext as BlockedDashboard).get(UnBlockRoomViewModel::class.java)
 
         mUnBlockRoomViewModel.unBlockRoom(mContext,room).observe(mContext, Observer {
             Toast.makeText(mContext, "UnBlock Room Successfully", Toast.LENGTH_SHORT).show()
@@ -104,20 +116,20 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
         })
     }
 
-    fun setFunctionOnButton(holder: ViewHolder,position: Int){
+    private fun setFunctionOnButton(holder: ViewHolder, position: Int){
         holder.unblock.setOnClickListener {
 
-            var builder = AlertDialog.Builder(mContext)
+            val builder = AlertDialog.Builder(mContext)
             builder.setTitle("Confirm ")
             builder.setMessage("Are you sure you want to unblock the Room?")
-            builder.setPositiveButton("Yes"){dialog, which ->
-                var block = Unblock()
-                block.CId = blockedList[position].CId
-                block.FromTime = blockedList[position].FromTime
-                block.ToTime = blockedList[position].ToTime
+            builder.setPositiveButton("Yes"){_,_ ->
+                val block = Unblock()
+                block.cId = blockedList[position].roomId
+                block.fromTime = blockedList[position].fromTime
+                block.toTime = blockedList[position].toTime
                 unBlockRoom(mContext, block)
             }
-            builder.setNegativeButton("No"){dialog, which ->
+            builder.setNegativeButton("No"){_, _ ->
             }
             val dialog: AlertDialog = builder.create()
             dialog.setCancelable(false)
@@ -125,4 +137,6 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
             ColorOfDialogButton.setColorOfDialogButton(dialog)
         }
     }
+
+
 }

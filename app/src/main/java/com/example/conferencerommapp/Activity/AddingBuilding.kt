@@ -23,7 +23,7 @@ class AddingBuilding : AppCompatActivity() {
      * Declaring Global variables and butterknife
      */
     @BindView(R.id.input_buildingName)
-    lateinit var buildingnameEditText: EditText
+    lateinit var buildingNameEditText: EditText
     @BindView(R.id.input_buildingPlace)
     lateinit var buildingplaceEditText: EditText
 
@@ -55,7 +55,7 @@ class AddingBuilding : AppCompatActivity() {
      *  set values to the different properties of object which is required for api call
      */
     private fun addDataToObject(mAddBuilding: AddBuilding) {
-        mAddBuilding.buildingName = buildingnameEditText.text.toString().trim()
+        mAddBuilding.buildingName = buildingNameEditText.text.toString().trim()
         mAddBuilding.place = buildingplaceEditText.text.toString().trim()
     }
 
@@ -63,7 +63,7 @@ class AddingBuilding : AppCompatActivity() {
      * validate all input fields
      */
     private fun validateInputs(): Boolean {
-        if (buildingnameEditText.text.toString().trim().isEmpty()) {
+        if (buildingNameEditText.text.toString().trim().isEmpty()) {
             Toast.makeText(this, "Enter the Building name", Toast.LENGTH_SHORT).show()
             return false
         } else if (buildingplaceEditText.text.trim().isEmpty()) {

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.example.conferencerommapp.BlockedDashboardNew
+import com.example.conferencerommapp.Helper.BlockedDashboardNew
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BlockedDashboardViewModel
 import kotlinx.android.synthetic.main.activity_blocked_dashboard.*

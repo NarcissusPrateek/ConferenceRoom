@@ -1,12 +1,14 @@
 package com.example.conferencerommapp.Repository
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.AddConferenceRoom
+import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
@@ -14,19 +16,12 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.R.string
-import android.widget.Toast
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetAleretDialog
-import com.example.conferencerommapp.R
-import java.lang.Exception
 
 
 class AddConferenceRepository {
 
-    // mStatus is used to know the Status code from the backend
+    // mStatus is used to know the status code from the backend
     var mStatus: MutableLiveData<Int>? = null
-    var mStatusMessage : MutableLiveData<String>? = null
     companion object {
         var mAddConferenceRepository: AddConferenceRepository? = null
         fun getInstance():AddConferenceRepository{
@@ -48,7 +43,7 @@ class AddConferenceRepository {
     private fun makeAddConferenceRoomApiCall(mContext: Context, mConferenceRoom: AddConferenceRoom) {
 
         //ProgreesDialog
-        var progressDialog = GetProgress.getProgressDialog("Loading...", mContext)
+        val progressDialog = GetProgress.getProgressDialog("Loading...", mContext)
         progressDialog.show()
 
         //Retrofit Call
@@ -67,12 +62,12 @@ class AddConferenceRepository {
                     mStatus!!.value = response.code()
                 } else {
                     try{
-                        var dialog = GetAleretDialog.getDialog(
+                        val dialog = GetAleretDialog.getDialog(
                             mContext,
-                            "Status",
+                            "status",
                             JSONObject(response.errorBody()!!.string()).getString("Message")
                         )
-                        dialog.setPositiveButton(mContext.getString(R.string.ok)) { dialog, which -> }
+                        dialog.setPositiveButton(mContext.getString(R.string.ok)) { _, _ -> }
                         GetAleretDialog.showDialog(dialog)
                     }catch (e: Exception) {
                         Log.e("", e.message)

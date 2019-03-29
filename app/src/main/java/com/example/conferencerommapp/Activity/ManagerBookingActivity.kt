@@ -79,8 +79,8 @@ class ManagerBookingActivity : AppCompatActivity() {
     @OnClick(R.id.book_button)
     fun bookMeeting() {
         if (validateInput()) {
-            mManagerBooking.CName = getIntentData().roomName
-            mManagerBooking.Purpose = purposeEditText.text.toString()
+            mManagerBooking.roomName = getIntentData().roomName
+            mManagerBooking.purpose = purposeEditText.text.toString()
             addBooking()
         }
     }
@@ -89,11 +89,11 @@ class ManagerBookingActivity : AppCompatActivity() {
      * set values to the different properties of object which is required for api call
      */
     private fun addDataToObject(mGetIntentDataFromActvity: GetIntentDataFromActvity) {
-        mManagerBooking.Email = acct.email
-        mManagerBooking.CId = mGetIntentDataFromActvity.roomId!!.toInt()
-        mManagerBooking.BId = mGetIntentDataFromActvity.buildingId!!.toInt()
-        mManagerBooking.FromTime = mGetIntentDataFromActvity.fromTimeList
-        mManagerBooking.ToTime = mGetIntentDataFromActvity.toTimeList
+        mManagerBooking.email = acct.email
+        mManagerBooking.roomId = mGetIntentDataFromActvity.roomId!!.toInt()
+        mManagerBooking.buildingId = mGetIntentDataFromActvity.buildingId!!.toInt()
+        mManagerBooking.fromTime = mGetIntentDataFromActvity.fromTimeList
+        mManagerBooking.toTime = mGetIntentDataFromActvity.toTimeList
     }
 
 
@@ -178,12 +178,12 @@ class ManagerBookingActivity : AppCompatActivity() {
                     }
                 }
                 addPersonEditText.setText(name)
-                mManagerBooking.CCMail = email
+                mManagerBooking.cCMail = email
 
             }
             mBuilder.setNegativeButton(getString(R.string.cancel)) { _: DialogInterface?, _: Int ->
                 addPersonEditText.setText("")
-                mManagerBooking.CCMail = ""
+                mManagerBooking.cCMail = ""
             }
             mBuilder.setView(view)
             val builder = mBuilder.create()

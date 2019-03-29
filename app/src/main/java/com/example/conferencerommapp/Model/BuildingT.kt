@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName
 
 data class BuildingT(
     @SerializedName("buildingId")
-    val BId: Int,
+    val buildingId: Int,
     @SerializedName("buildingName")
-    val BName: String,
+    val buildingName: String,
     @SerializedName("place")
-    val Place : String
+    val place : String
 )

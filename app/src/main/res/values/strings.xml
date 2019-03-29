@@ -80,12 +80,27 @@
     <string name="enter_purpose"> Enter purpose of Blocking</string>
     <string name="check">Check</string>
     <string name="please_enter_fromtime">Enter the From-Time</string>
+    <string name="show_dates">Show Dates</string>
+    <string name="dates_of_meeting">Dates Of Meeting.</string>
+    <string name="cancelled_by_hr">Cancelled by HR! Please check your email</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="room_hint">Room Name (1st Floor)</string>
+    <string name="ADD">ADD</string>
+    <string name="employee_name">Employee Name</string>
+    <string name="building_name">Building Name</string>
+    <string name="room_name">Room Name</string>
+    <string name="date">Date</string>
+    <string name="from">From</string>
+    <string name="purpose">Purpose</string>
+    <string name="submit">SUBMIT</string>
 
     <string-array name="role">
         <item>Intern</item>
         <item>SDE-1</item>
         <item>SDE-2</item>
         <item>SDE-3</item>
+        <item>HR</item>
         <item>Principal Engineer</item>
         <item>Project Manager</item>
         <item>CEO</item>

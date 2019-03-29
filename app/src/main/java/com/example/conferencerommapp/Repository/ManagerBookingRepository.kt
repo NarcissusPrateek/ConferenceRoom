@@ -28,7 +28,7 @@ class ManagerBookingRepository {
      */
     companion object {
         private val TAG = ManagerBookingRepository::class.simpleName
-        var mManagerBookingRepository: ManagerBookingRepository? = null
+        private var mManagerBookingRepository: ManagerBookingRepository? = null
         fun getInstance(): ManagerBookingRepository {
             if (mManagerBookingRepository == null) {
                 mManagerBookingRepository = ManagerBookingRepository()
@@ -55,7 +55,7 @@ class ManagerBookingRepository {
         /**
          * get Progress Dialog
          */
-        var progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
+        val progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
 
         /**
@@ -75,8 +75,8 @@ class ManagerBookingRepository {
                     mStatus!!.value = response.code()
                 } else {
                     try {
-                        var dialog = GetAleretDialog.getDialog(mContext, mContext.getString(R.string.status), "${JSONObject(response.errorBody()!!.string()).getString("Message")} for same date and time")
-                        dialog.setPositiveButton(mContext.getString(R.string.ok)) { dialog, which ->
+                        val dialog = GetAleretDialog.getDialog(mContext, mContext.getString(R.string.status), "${JSONObject(response.errorBody()!!.string()).getString("Message")} for same date and time")
+                        dialog.setPositiveButton(mContext.getString(R.string.ok)) { _, _ ->
                         }
                         GetAleretDialog.showDialog(dialog)
                     }catch (e: Exception) {

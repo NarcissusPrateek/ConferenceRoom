@@ -60,7 +60,7 @@ class AddingConference : AppCompatActivity() {
     }
 
     /**
-     * fuction will set the BlockConferenceRoomActivity Value for the Capacity
+     * fuction will set the BlockConferenceRoomActivity Value for the capacity
      */
     fun setSpinnerForCapacity() {
         val capacitySpinnerOptions = arrayOf(2, 4, 6, 8, 10, 12, 14)
@@ -84,9 +84,9 @@ class AddingConference : AppCompatActivity() {
     private fun addDataToObject(mConferenceRoom: AddConferenceRoom) {
         val bundle: Bundle? = intent.extras
         val buildingId = bundle!!.get(Constants.EXTRA_BUILDING_ID)!!.toString().toInt()
-        mConferenceRoom.BId = buildingId
-        mConferenceRoom.CName = conferenceRoomEditText.text.toString().trim()
-        mConferenceRoom.Capacity = capacity.toInt()
+        mConferenceRoom.bId = buildingId
+        mConferenceRoom.roomName = conferenceRoomEditText.text.toString().trim()
+        mConferenceRoom.capacity = capacity.toInt()
 
 
     }

@@ -64,11 +64,11 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
     private fun addDataToobject() {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
-        room.Email = acct!!.email
-        room.Purpose = purposeEditText.text.toString()
-        room.FromTime = dateEditText.text.toString() + " " + fromTimeEditText.text.toString()
-        room.ToTime = dateEditText.text.toString() + " " + toTimeEditText.text.toString()
-        room.Status = "abc"
+        room.email = acct!!.email
+        room.purpose = purposeEditText.text.toString()
+        room.fromTime = dateEditText.text.toString() + " " + fromTimeEditText.text.toString()
+        room.toTime = dateEditText.text.toString() + " " + toTimeEditText.text.toString()
+        room.status = "abc"
     }
 
     private fun setDialogsToInputFields() {
@@ -104,8 +104,8 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             } else {
                 val builder = AlertDialog.Builder(this@BlockConferenceRoomActivity)
                 builder.setTitle(getString(R.string.blockingStatus))
-                val name = it.Name
-                val purpose = it.Purpose
+                val name = it.name
+                val purpose = it.purpose
                 builder.setMessage(
                     "Room is already Booked by Employee $name for $purpose.\nAre you sure the 'BLOCKING' is Necessary?"
                 )
@@ -152,7 +152,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                room.BId = itemsid[position]
+                room.bId = itemsid[position]
                 conferenceRoomListFromBackend(itemsid[position])
             }
         }
@@ -171,8 +171,8 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         val conferenceid = mutableListOf<Int>()
 
         for (item in it) {
-            conferencename.add(item.CName!!)
-            conferenceid.add(item.CId)
+            conferencename.add(item.roomName!!)
+            conferenceid.add(item.roomId)
         }
         conference_Spinner.adapter =
             ArrayAdapter<String>(this@BlockConferenceRoomActivity, android.R.layout.simple_list_item_1, conferencename)
@@ -182,7 +182,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                room.CId = conferenceid[position]
+                room.cId = conferenceid[position]
             }
         }
 
@@ -235,7 +235,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         val endTime = toTime_b.text.toString()
 
         val builder = AlertDialog.Builder(this@BlockConferenceRoomActivity)
-        builder.setTitle("Check...")
+        builder.setTitle(getString(R.string.check))
         try {
             val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMiliis(
                 startTime,

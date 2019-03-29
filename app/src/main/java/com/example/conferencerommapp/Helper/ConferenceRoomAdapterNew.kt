@@ -1,16 +1,17 @@
 package com.example.conferencerommapp.Helper
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.R
 
-class Conference_Room_adapter_new(private val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<Conference_Room_adapter_new.ViewHolder>() {
+class ConferenceRoomAdapterNew(private val conferenceRoomList: List<ConferenceRoom>, val btnlistener: BtnClickListener) : androidx.recyclerview.widget.RecyclerView.Adapter<ConferenceRoomAdapterNew.ViewHolder>() {
 
     companion object {
         var mClickListener: BtnClickListener? = null
@@ -29,24 +30,24 @@ class Conference_Room_adapter_new(private val conferenceRoomList: List<Conferenc
 
         holder.txvRoomCapacity.text = conferenceRoomList[position].roomCapacity
 
-        if(conferenceRoomList[position].Status.equals("Available"))
+        if(conferenceRoomList[position].status.equals("Available"))
         {
             holder.button!!.setBackgroundColor(Color.GREEN)
             holder.button!!.setOnClickListener {
-                Log.i("--------","Room is Available")
+
             }
-        }else if(conferenceRoomList[position].Status.equals("Booked")){
+        }else if(conferenceRoomList[position].status.equals("Booked")){
             holder.button!!.setBackgroundColor(Color.RED)
-            holder.button!!.setEnabled(false)
+            holder.button!!.isEnabled = false
         }
         else {
             holder.button!!.setBackgroundColor(Color.YELLOW)
-            holder.button!!.setEnabled(false)
+            holder.button!!.isEnabled = false
         }
 
 
         holder.itemView.setOnClickListener { v ->
-            val context = v.context
+            v.context
             val roomId = conferenceRoomList[position].roomId
             val roomname = conferenceRoomList[position].roomName
             mClickListener?.onBtnClick(roomId.toString(),roomname)
@@ -58,16 +59,21 @@ class Conference_Room_adapter_new(private val conferenceRoomList: List<Conferenc
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-
-        val txvRoom: TextView = itemView.findViewById(R.id.txv_room)
-        val txvRoomCapacity: TextView = itemView.findViewById(R.id.txv_room_capacity)
+        init {
+            ButterKnife.bind(itemView)
+        }
+        @BindView(R.id.txv_room)
+        lateinit var txvRoom: TextView
+        @BindView(R.id.txv_room_capacity)
+        lateinit var txvRoomCapacity: TextView
         var conferenceRoom: ConferenceRoom? = null
         var button: Button? = null
         override fun toString(): String {
             return """${super.toString()} '${txvRoom.text}'"""
         }
     }
-    open interface BtnClickListener {
+
+    interface BtnClickListener {
         fun onBtnClick(roomId: String?,roomname: String?)
     }
 

@@ -43,7 +43,8 @@ class UserInputActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.title = fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>")
+        actionBar!!.title =
+            fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>")
 
         setPickerToEdittextx()
     }
@@ -103,7 +104,7 @@ class UserInputActivity : AppCompatActivity() {
     /**
      * check validation for all input fields
      */
-    fun validate(): Boolean {
+    private fun validate(): Boolean {
         if (TextUtils.isEmpty(fromTimeEditText.text.trim())) {
             Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
             return false
@@ -113,7 +114,7 @@ class UserInputActivity : AppCompatActivity() {
         } else if (TextUtils.isEmpty(dateEditText.text.trim())) {
             Toast.makeText(applicationContext, getString(R.string.invaild_date), Toast.LENGTH_SHORT).show()
             return false
-        } else if (capacity.equals("Select Capacity")) {
+        } else if (capacity == getString(R.string.select_capacity)) {
             Toast.makeText(applicationContext, getString(R.string.invalid_capacity), Toast.LENGTH_SHORT).show()
             return false
         } else {
@@ -124,15 +125,13 @@ class UserInputActivity : AppCompatActivity() {
     /**
      * function will apply some validation on data entered by user
      */
-    fun validationOnDataEnteredByUser() {
+    private fun validationOnDataEnteredByUser() {
 
         /**
          * Validate each input field whether they are empty or not
          * If the field contains no values we show a toast to user saying that the value is invalid for particular field
          */
-        if (!validate()) {
-
-        } else {
+        if (validate()) {
             val minMilliseconds: Long = 900000
             val maxMilliseconds: Long = 14400000
 
@@ -166,7 +165,7 @@ class UserInputActivity : AppCompatActivity() {
                         getString(R.string.invalid),
                         getString(R.string.invalid_fromtime)
                     )
-                    builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
+                    builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                     }
                     GetAleretDialog.showDialog(builder)
                 }
@@ -186,7 +185,7 @@ class UserInputActivity : AppCompatActivity() {
                         getString(R.string.time_validation_message)
                     )
 
-                    builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
+                    builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                     }
                     GetAleretDialog.showDialog(builder)
                 }
@@ -194,7 +193,6 @@ class UserInputActivity : AppCompatActivity() {
                 Toast.makeText(this@UserInputActivity, getString(R.string.details_invalid), Toast.LENGTH_LONG).show()
             }
         }
-
     }
 
     /**
