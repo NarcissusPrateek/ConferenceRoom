@@ -4,15 +4,18 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html.fromHtml
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
@@ -55,7 +58,6 @@ class BookingActivity : AppCompatActivity() {
     private var customAdapter: CheckBoxAdapter? = null
     private var checkedEmployee = ArrayList<EmployeeList>()
     private var mBooking = Booking()
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -65,10 +67,9 @@ class BookingActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Confirm_Details) + "</font>")
 
-
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         val mIntentDataFromActivity = getIntentData()
-        setDataToTextview(mIntentDataFromActivity, acct!!.displayName.toString())
+        setDataToTextView(mIntentDataFromActivity, acct!!.displayName.toString())
         setDialogForSelectingMeetingMembers()
         setDialog(mIntentDataFromActivity)
         addDataToObject(mIntentDataFromActivity)
@@ -115,14 +116,14 @@ class BookingActivity : AppCompatActivity() {
      * this function get the filtered data and according to the data set the data into adapter
      */
     fun filter(text: String) {
-        val filterdNames = ArrayList<EmployeeList>()
+        val filterName = ArrayList<EmployeeList>()
         for (s in names) {
 
             if (s.name!!.toLowerCase().contains(text.toLowerCase())) {
-                filterdNames.add(s)
+                filterName.add(s)
             }
         }
-        customAdapter!!.filterList(filterdNames)
+        customAdapter!!.filterList(filterName)
     }
 
     /**
@@ -142,7 +143,7 @@ class BookingActivity : AppCompatActivity() {
      * function will set the data into textview
      */
     @SuppressLint("SetTextI18n")
-    fun setDataToTextview(mBookingDetails: GetIntentDataFromActvity, userName: String) {
+    fun setDataToTextView(mBookingDetails: GetIntentDataFromActvity, userName: String) {
         fromTimeTextView.text =
             mBookingDetails.fromtime!!.split(" ")[1] + " - " + mBookingDetails.totime!!.split(" ")[1]
         dateTextView.text = mBookingDetails.date!!
@@ -178,9 +179,13 @@ class BookingActivity : AppCompatActivity() {
             customAdapter = CheckBoxAdapter(names, checkedEmployee, this@BookingActivity)
             val view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
             view.recycler_view.adapter = customAdapter
-            view.clear_Text.setOnClickListener {
-                view.editTextSearch.setText("")
+            view.editTextSearch.onRightDrawableClicked {
+                it.text.clear()
             }
+
+//            view.clear_Text.setOnClickListener {
+//                view.editTextSearch.setText("")
+//            }
             setClickListnerOnEditText(view)
             mBuilder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                 var email = ""
@@ -250,11 +255,34 @@ class BookingActivity : AppCompatActivity() {
      *  redirect to UserBookingDashboardActivity
      */
     private fun goToBookingDashboard() {
-        val mDialog = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booked_successfully))
-        mDialog.setPositiveButton(getString(R.string.ok)) { _,_ ->
+        val mDialog =
+            GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booked_successfully))
+        mDialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
             startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
             finish()
         }
         GetAleretDialog.showDialog(mDialog)
+    }
+
+    private fun addRightCancelDrawable(editText: EditText) {
+        val cancel = ContextCompat.getDrawable(this, R.drawable.ic_cancel_black_24dp)
+        cancel?.setBounds(0, 0, cancel.intrinsicWidth, cancel.intrinsicHeight)
+        editText.setCompoundDrawables(null, null, cancel, null)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun EditText.onRightDrawableClicked(onClicked: (view: EditText) -> Unit) {
+        this.setOnTouchListener { v, event ->
+            var hasConsumed = false
+            if (v is EditText) {
+                if (event.x >= v.width - v.totalPaddingRight) {
+                    if (event.action == MotionEvent.ACTION_UP) {
+                        onClicked(this)
+                    }
+                    hasConsumed = true
+                }
+            }
+            hasConsumed
+        }
     }
 }

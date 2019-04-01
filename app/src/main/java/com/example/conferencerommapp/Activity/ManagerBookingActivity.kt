@@ -158,9 +158,9 @@ class ManagerBookingActivity : AppCompatActivity() {
             customAdapter = CheckBoxAdapter(names, checkedEmployee, this@ManagerBookingActivity)
             val view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
             view.recycler_view.adapter = customAdapter
-            view.clear_Text.setOnClickListener {
-                view.editTextSearch.setText("")
-            }
+//            view.clear_Text.setOnClickListener {
+//                view.editTextSearch.setText("")
+//            }
             setClickListnerOnEditText(view)
             mBuilder.setPositiveButton(getString(R.string.ok)) { _,_ ->
                 var email = ""

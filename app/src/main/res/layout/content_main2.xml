@@ -24,10 +24,9 @@
             android:layout_centerInParent="true"
             android:layout_marginTop="10dp"
             android:layout_alignParentTop="true"/>
-
     <TextView
             android:layout_width="match_parent"
-            android:text="You have no upcoming events.\n Let's change that!"
+            android:text="@string/no_upcoming_events_n_let_s_change_that"
             android:textSize="17dp"
             android:visibility="gone"
             android:layout_below="@id/empty_view"

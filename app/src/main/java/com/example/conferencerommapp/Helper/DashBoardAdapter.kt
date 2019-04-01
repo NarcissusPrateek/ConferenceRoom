@@ -74,11 +74,6 @@ class DashBoardAdapter(
                 mContext,
                 mCancel.email!!
             )
-
-            //dashBoardInterface.onCancelClicked()
-//            }else {
-//                Toast.makeText(mContext, "Response Error", Toast.LENGTH_LONG).show()
-//            }
         })
     }
 
@@ -91,7 +86,7 @@ class DashBoardAdapter(
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         init {
-            ButterKnife.bind(this,itemView)
+            ButterKnife.bind(this, itemView)
         }
 
         @BindView(R.id.building_name)
@@ -206,9 +201,6 @@ class DashBoardAdapter(
             val simpleDateFormat2 = SimpleDateFormat("dd MMMM yyyy")
             for (item in list) {
                 arrayList.add(simpleDateFormat2.format(simpleDateFormate.parse(item.split("T")[0])))
-            }
-            for (item in list) {
-                arrayList.add(item.split("T")[0])
             }
             val listItems = arrayOfNulls<String>(arrayList.size)
             arrayList.toArray(listItems)

@@ -133,10 +133,14 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         mBookingDashboardViewModel.getBookingList(this, email).observe(this, Observer {
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
+                textView_no_events.visibility = View.VISIBLE
                 Glide.with(this).load(R.drawable.yoga_lady_croped).into(empty_view)
+                dashBord_recyclerView1.visibility = View.GONE
                 r1_dashboard.setBackgroundColor(Color.parseColor("#FFFFF6"))
             } else {
                 empty_view.visibility = View.GONE
+                textView_no_events.visibility = View.GONE
+                dashBord_recyclerView1.visibility = View.VISIBLE
             }
             setFilteredDataToAdapter(it)
         })

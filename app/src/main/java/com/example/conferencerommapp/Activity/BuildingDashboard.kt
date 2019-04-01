@@ -62,8 +62,6 @@ class BuildingDashboard : AppCompatActivity() {
      */
     private fun getViewModel() {
         mBuildingsViewModel.getBuildingList(this).observe(this, Observer {
-
-
             buildingAdapter = BuildingAdapter(this,
                 it!!,
                 object : BuildingAdapter.BtnClickListener {

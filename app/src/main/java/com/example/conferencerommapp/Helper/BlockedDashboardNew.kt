@@ -43,9 +43,6 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
             blockedList[position].roomId
         }
     }
-
-
-
     override fun getItemCount(): Int {
         return blockedList.size
     }
@@ -66,7 +63,7 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
         lateinit var date : TextView
         @BindView(R.id.card_block)
         lateinit var card: CardView
-        @BindView(R.id.linearlayout_block)
+        @BindView(R.id.linearlayout_blocked)
         lateinit var linearLayout:LinearLayout
         val unblock :Button = itemView.findViewById(R.id.unblock)
         var blocked: Blocked? = null

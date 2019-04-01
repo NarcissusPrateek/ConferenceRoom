@@ -64,7 +64,7 @@ class BuildingAdapter(var mContext: Context, private val mBuildingList: List<Bui
         init {
             ButterKnife.bind(this, itemView)
         }
-        @BindView(R.id.txv_building)
+        @BindView(R.id.textviewBuilding)
         lateinit var txvBuilding: TextView
         var building: Building? = null
     }

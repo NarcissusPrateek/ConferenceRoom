@@ -78,7 +78,7 @@
     <string name="room_is_blocked">Room is Blocked</string>
     <string name="please_enter_totime">Enter the To-Time</string>
     <string name="please_enter_date">Enter the Date</string>
-    <string name="enter_purpose"> Enter purpose of Blocking</string>
+    <string name="enter_purpose">Enter purpose of Blocking</string>
     <string name="check">Check</string>
     <string name="please_enter_fromtime">Enter the From-Time</string>
     <string name="show_dates">Show Dates</string>
@@ -95,6 +95,9 @@
     <string name="from">From</string>
     <string name="purpose">Purpose</string>
     <string name="submit">SUBMIT</string>
+    <string name="enter_name_to_search">Enter Name to search</string>
+    <string name="no_upcoming_events_n_let_s_change_that">No upcoming events. Let\'s change that!</string>
+
 
     <string-array name="role">
         <item>Intern</item>

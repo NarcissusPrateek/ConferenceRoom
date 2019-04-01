@@ -15,20 +15,22 @@
             android:roundIcon="@drawable/letterm"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".Activity.LoginFormActivity">
+        </activity>
         <activity
                 android:name=".Activity.ProjectManagerInputActivity"
                 android:launchMode="singleTop"
                 android:parentActivityName=".Activity.UserBookingsDashboardActivity">
         </activity>
         <activity
+                android:name=".Activity.ManagerBookingActivity"
                 android:launchMode="singleTop"
-                android:parentActivityName=".Activity.ConferenceRoomActivity"
-                android:name=".Activity.ManagerBookingActivity">
+                android:parentActivityName=".Activity.ConferenceRoomActivity">
         </activity>
         <activity
+                android:name=".Activity.ManagerConferenceRoomActivity"
                 android:launchMode="singleTop"
-                android:parentActivityName=".Activity.BuildingsActivity"
-                android:name=".Activity.ManagerConferenceRoomActivity">
+                android:parentActivityName=".Activity.BuildingsActivity">
         </activity>
         <activity
                 android:name=".Activity.UserBookingsDashboardActivity"
@@ -39,7 +41,7 @@
         <activity
                 android:name=".Activity.ManagerBuildingsActivity"
                 android:launchMode="singleTop"
-                android:parentActivityName=".Activity.ProjectManagerInputActivity"></activity>
+                android:parentActivityName=".Activity.ProjectManagerInputActivity"/>
         <activity
                 android:name=".Activity.SplashScreen"
                 android:theme="@style/AppTheme.NoActionBar">
@@ -98,7 +100,6 @@
                 android:name=".Activity.ConferenceDashBoard"
                 android:launchMode="singleTop"
                 android:parentActivityName=".Activity.BuildingDashboard"/>
-
     </application>
 
 </manifest>
