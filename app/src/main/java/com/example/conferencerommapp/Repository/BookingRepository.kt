@@ -29,7 +29,7 @@ class BookingRepository {
      */
     companion object {
         private val TAG = BookingRepository::class.simpleName
-        var mBookingRepository: BookingRepository? = null
+        private var mBookingRepository: BookingRepository? = null
         fun getInstance(): BookingRepository {
             if (mBookingRepository == null) {
                 mBookingRepository = BookingRepository()

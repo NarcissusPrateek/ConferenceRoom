@@ -52,7 +52,7 @@ class SplashScreen : AppCompatActivity() {
     /**
      * pass the intent for the SignIn Activity
      */
-    fun signIn() {
+    private fun signIn() {
         startActivity(Intent(applicationContext, SignIn::class.java))
         finish()
     }
@@ -61,7 +61,7 @@ class SplashScreen : AppCompatActivity() {
     /**
      * according to the backend status function will redirect control to some other activity
      */
-    fun goToNextActivity(code: Int?) {
+    private fun goToNextActivity(code: Int?) {
         when (code) {
             11, 10, 2, 12 -> {
                 startActivity(Intent(this@SplashScreen, UserBookingsDashboardActivity::class.java))
@@ -89,11 +89,10 @@ class SplashScreen : AppCompatActivity() {
      * set value in shared preference
      */
     private fun setValueForSharedPreference(status: Int) {
-        val code = status
         val editor = prefs.edit()
-        editor.putInt("Code", code)
+        editor.putInt("Code", status)
         editor.apply()
-        goToNextActivity(code)
+        goToNextActivity(status)
     }
 }
 

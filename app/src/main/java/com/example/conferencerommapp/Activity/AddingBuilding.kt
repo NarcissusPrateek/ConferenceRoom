@@ -25,7 +25,7 @@ class AddingBuilding : AppCompatActivity() {
     @BindView(R.id.input_buildingName)
     lateinit var buildingNameEditText: EditText
     @BindView(R.id.input_buildingPlace)
-    lateinit var buildingplaceEditText: EditText
+    lateinit var buildingPlaceEditText: EditText
 
     private lateinit var mAddBuildingViewModel: AddBuildingViewModel
     private var mAddBuilding = AddBuilding()
@@ -43,7 +43,7 @@ class AddingBuilding : AppCompatActivity() {
     /**
      * function will invoke whenever the add button is clicked
      */
-    @OnClick(R.id.addbuilding)
+    @OnClick(R.id.add_building)
     fun getBuildingDetails() {
         if (validateInputs()) {
             addDataToObject(mAddBuilding)
@@ -56,7 +56,7 @@ class AddingBuilding : AppCompatActivity() {
      */
     private fun addDataToObject(mAddBuilding: AddBuilding) {
         mAddBuilding.buildingName = buildingNameEditText.text.toString().trim()
-        mAddBuilding.place = buildingplaceEditText.text.toString().trim()
+        mAddBuilding.place = buildingPlaceEditText.text.toString().trim()
     }
 
     /**
@@ -66,7 +66,7 @@ class AddingBuilding : AppCompatActivity() {
         if (buildingNameEditText.text.toString().trim().isEmpty()) {
             Toast.makeText(this, "Enter the Building name", Toast.LENGTH_SHORT).show()
             return false
-        } else if (buildingplaceEditText.text.trim().isEmpty()) {
+        } else if (buildingPlaceEditText.text.trim().isEmpty()) {
             Toast.makeText(this, "Enter the Building place", Toast.LENGTH_SHORT).show()
             return false
         }

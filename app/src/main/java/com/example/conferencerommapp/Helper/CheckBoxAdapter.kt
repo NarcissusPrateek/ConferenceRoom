@@ -28,7 +28,7 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val employee = employee[position]
-        holder.nameTxt.text = employee.name
+        holder.myCheckBox.text = employee.name
         holder.myCheckBox.isChecked = employee.isSelected!!
         if(employee.isSelected!! && !checkedEmployee.contains(employee)) {
             checkedEmployee.add(employee)
@@ -67,8 +67,6 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
             ButterKnife.bind(this, itemView)
             myCheckBox.setOnClickListener(this)
         }
-        @BindView(R.id.textViewName)
-        lateinit var nameTxt: TextView
         @BindView(R.id.checkBox)
         lateinit var myCheckBox: CheckBox
 

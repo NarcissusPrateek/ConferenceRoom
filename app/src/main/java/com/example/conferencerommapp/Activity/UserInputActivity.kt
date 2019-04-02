@@ -46,7 +46,7 @@ class UserInputActivity : AppCompatActivity() {
         actionBar!!.title =
             fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>")
 
-        setPickerToEdittextx()
+        setPickerToEditText()
     }
 
     /**
@@ -60,7 +60,7 @@ class UserInputActivity : AppCompatActivity() {
     /**
      * function will attach date and time picker to the input fields
      */
-    private fun setPickerToEdittextx() {
+    private fun setPickerToEditText() {
 
         /**
          * array of Integers for setting values into the spinner
