@@ -10,29 +10,28 @@ import org.junit.runner.RunWith
 import java.lang.Exception
 
 @RunWith(AndroidJUnit4::class)
-@LargeTest
 class TestAddingBuilding {
 
     @get: Rule
     private val mActivityTestRule = ActivityTestRule(AddingBuilding::class.java)
-    private var mAddingBuilding: AddingBuilding? = null
+    private val mAddingBuilding = mActivityTestRule.activity!!
 
     @Before
     fun setUp() {
-        mAddingBuilding = mActivityTestRule.activity
+
     }
 
     @Test
     fun preCondition() {
         try{
             Log.i("--------------", mAddingBuilding.toString())
-            Assert.assertNotNull(mAddingBuilding!!.findViewById(R.id.input_buildingName))
+            Assert.assertNotNull(mAddingBuilding.findViewById(R.id.edit_text_building_name))
         }catch (e: Exception) {
-            //Log.i("--------------", e.message)
+//            Log.i("--------------", e.message)
         }
     }
     @After
     fun tearDown() {
-        mAddingBuilding = null
+
     }
 }

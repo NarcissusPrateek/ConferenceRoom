@@ -22,9 +22,9 @@ class AddingBuilding : AppCompatActivity() {
     /**
      * Declaring Global variables and butterknife
      */
-    @BindView(R.id.input_buildingName)
+    @BindView(R.id.edit_text_building_name)
     lateinit var buildingNameEditText: EditText
-    @BindView(R.id.input_buildingPlace)
+    @BindView(R.id.edit_text_building_place)
     lateinit var buildingPlaceEditText: EditText
 
     private lateinit var mAddBuildingViewModel: AddBuildingViewModel
