@@ -11,5 +11,6 @@ class Manager {
     var Status =  ArrayList<String>()
     var fromlist = ArrayList<String>()
     var Name: List<String>? = null
+    var cCMail: List<String>? = null
 }
 

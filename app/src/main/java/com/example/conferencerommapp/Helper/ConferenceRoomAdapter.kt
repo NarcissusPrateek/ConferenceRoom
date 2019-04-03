@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.Nullable
 import androidx.cardview.widget.CardView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -35,6 +36,7 @@ class ConferenceRoomAdapter(private val mConferenceRoomList: List<ConferenceRoom
     /**
      * bind data to the view
      */
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         mClickListener = btnlistener
         setDataToViewItems(holder, position)
@@ -73,6 +75,7 @@ class ConferenceRoomAdapter(private val mConferenceRoomList: List<ConferenceRoom
         lateinit var txvRoom: TextView
         @BindView(R.id.txv_room_capacity)
         lateinit var txvRoomCapacity: TextView
+        @Nullable
         @BindView(R.id.status_txv)
         lateinit var txvStatus: TextView
         @BindView(R.id.cardview2)

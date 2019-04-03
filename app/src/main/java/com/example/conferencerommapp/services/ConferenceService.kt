@@ -71,4 +71,7 @@ interface ConferenceService {
     @GET("api/conference/{id}")
     fun conferencelist(@Query("buildingId") id: Int): Call<List<ConferenceList>>
 
+    @PUT("api/Booking")
+    fun update(@Body updateBooking: UpdateBooking):Call<ResponseBody>
+
 }

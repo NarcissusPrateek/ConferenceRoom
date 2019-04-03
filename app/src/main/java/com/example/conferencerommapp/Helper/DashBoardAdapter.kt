@@ -3,7 +3,9 @@ package com.example.conferencerommapp.Helper
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +15,17 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.Nullable
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
+import com.example.conferencerommapp.Activity.UpdateBookingActivity
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Model.CancelBooking
+import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.CancelBookingViewModel
@@ -56,6 +61,27 @@ class DashBoardAdapter(
         setButtonFunctionalityAccordingToStatus(holder, position)
 
         setFunctionOnButton(holder, position, mContext)
+
+        editActivity(holder,position,mContext)
+    }
+
+    private fun editActivity(holder: ViewHolder, position: Int, mContext: Context) {
+        holder.updateTextView.setOnClickListener {
+            val mGetIntentDataFromActvity = GetIntentDataFromActvity()
+            val fromtime = dashboardItemList[position].FromTime
+            val datefrom = fromtime!!.split("T")
+            mGetIntentDataFromActvity.purpose = dashboardItemList[position].Purpose
+            mGetIntentDataFromActvity.buildingName = dashboardItemList[position].BName
+            mGetIntentDataFromActvity.roomName = dashboardItemList[position].CName
+            mGetIntentDataFromActvity.roomId = dashboardItemList[position].CId.toString()
+            mGetIntentDataFromActvity.date = datefrom[0]
+            mGetIntentDataFromActvity.fromtime = dashboardItemList[position].FromTime
+            mGetIntentDataFromActvity.totime = dashboardItemList[position].ToTime
+            mGetIntentDataFromActvity.cCMail =dashboardItemList[position].cCMail
+            val updateActvity = Intent(mContext,UpdateBookingActivity::class.java)
+            updateActvity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
+            mContext.startActivity(updateActvity)
+        }
     }
 
     /**
@@ -88,7 +114,7 @@ class DashBoardAdapter(
         init {
             ButterKnife.bind(this, itemView)
         }
-
+        @Nullable
         @BindView(R.id.building_name)
         lateinit var buildingNameTextview: TextView
         @BindView(R.id.conferenceRoomName)
@@ -107,6 +133,8 @@ class DashBoardAdapter(
         lateinit var card: CardView
         @BindView(R.id.btnshow)
         lateinit var showButton: Button
+        @BindView(R.id.edit_time)
+        lateinit var updateTextView: TextView
         var dashboard: Manager? = null
     }
 

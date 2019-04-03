@@ -3,7 +3,6 @@ package com.example.conferencerommapp.Model
 import com.google.gson.annotations.SerializedName
 
 data class Dashboard (
-
     @SerializedName("fromTime")
     var fromTime : String? = null,
 
@@ -29,6 +28,9 @@ data class Dashboard (
     var status: String? = null,
 
     @SerializedName("name")
-    var name: List<String>? = null
+    var name: List<String>? = null,
+
+    @SerializedName("cCMail")
+    var cCMail: List<String>? = null
 )
 

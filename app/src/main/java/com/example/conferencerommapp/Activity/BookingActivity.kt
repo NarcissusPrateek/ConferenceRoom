@@ -274,13 +274,11 @@ class BookingActivity : AppCompatActivity() {
     private fun EditText.onRightDrawableClicked(onClicked: (view: EditText) -> Unit) {
         this.setOnTouchListener { v, event ->
             var hasConsumed = false
-            if (v is EditText) {
-                if (event.x >= v.width - v.totalPaddingRight) {
-                    if (event.action == MotionEvent.ACTION_UP) {
-                        onClicked(this)
-                    }
-                    hasConsumed = true
+            if (v is EditText && event.x >= v.width - v.totalPaddingRight) {
+                if (event.action == MotionEvent.ACTION_UP) {
+                    onClicked(this)
                 }
+                hasConsumed = true
             }
             hasConsumed
         }

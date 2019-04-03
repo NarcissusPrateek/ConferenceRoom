@@ -193,6 +193,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 final.ToTime = item.toTime
                 final.Email = item.email
                 final.Status.add(item.status!!)
+                final.cCMail = item.cCMail
                 final.fromlist.add(item.fromTime!!.split("T")[0])
                 finalList.add(final)
             }

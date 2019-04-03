@@ -15,6 +15,8 @@
             android:roundIcon="@drawable/letterm"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".Activity.UpdateBookingActivity">
+        </activity>
         <activity android:name=".Activity.LoginFormActivity">
         </activity>
         <activity

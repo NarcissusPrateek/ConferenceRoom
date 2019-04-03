@@ -14,5 +14,7 @@ class GetIntentDataFromActvity(
     var listOfDays: ArrayList<Int> = ArrayList(),
     var toDate: String? = null,
     var fromTimeList: ArrayList<String> = ArrayList(),
-    var toTimeList: ArrayList<String> = ArrayList()
+    var toTimeList: ArrayList<String> = ArrayList(),
+    var purpose: String? = null,
+    var cCMail: List<String>? = null
 ) : Serializable
