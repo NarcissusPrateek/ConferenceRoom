@@ -264,11 +264,6 @@ class BookingActivity : AppCompatActivity() {
         GetAleretDialog.showDialog(mDialog)
     }
 
-    private fun addRightCancelDrawable(editText: EditText) {
-        val cancel = ContextCompat.getDrawable(this, R.drawable.ic_cancel_black_24dp)
-        cancel?.setBounds(0, 0, cancel.intrinsicWidth, cancel.intrinsicHeight)
-        editText.setCompoundDrawables(null, null, cancel, null)
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun EditText.onRightDrawableClicked(onClicked: (view: EditText) -> Unit) {

@@ -41,6 +41,7 @@ class UpdateBookingRepository{
         /**
          * getting Progress Dialog
          */
+        Log.i("-----------------", mUpdateBooking.toString())
         val progressDialog =
             GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
@@ -75,6 +76,4 @@ class UpdateBookingRepository{
         })
 
     }
-
-
 }

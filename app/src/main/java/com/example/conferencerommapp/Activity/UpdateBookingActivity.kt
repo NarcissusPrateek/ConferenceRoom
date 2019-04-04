@@ -46,21 +46,21 @@ class UpdateBookingActivity : AppCompatActivity() {
     @BindView(R.id.conferenceRoomName)
     lateinit var roomname: EditText
 
+    private lateinit var mIntentDataFromActivity: GetIntentDataFromActvity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_booking)
-        val mIntentDataFromActivity = getIntentData()
+        mIntentDataFromActivity = getIntentData()
         ButterKnife.bind(this)
         setValuesInEditText(mIntentDataFromActivity)
 
         setEditTextPicker()
-        addDataToObjects(mIntentDataFromActivity)
     }
 
     private fun addDataToObjects(mIntentDataFromActivity: GetIntentDataFromActvity) {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         mUpdateBooking.email=acct!!.email
-        mUpdateBooking.cCMail = mIntentDataFromActivity.cCMail
+        mUpdateBooking.cCMail = mIntentDataFromActivity.cCMail!!.joinToString()
         mUpdateBooking.roomId = mIntentDataFromActivity.roomId!!.toInt()
         mUpdateBooking.roomName = mIntentDataFromActivity.roomName!!
         mUpdateBooking.newfromTime = (date.text.toString() + " " + newfromtime.text.toString()).trim()
@@ -71,6 +71,7 @@ class UpdateBookingActivity : AppCompatActivity() {
 
     @OnClick(R.id.update)
     fun updateMeeting(){
+        addDataToObjects(mIntentDataFromActivity)
         validationOnDataEnteredByUser()
     }
 
@@ -125,7 +126,7 @@ class UpdateBookingActivity : AppCompatActivity() {
                  * if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
                  */
                 else if ((minMilliseconds <= elapsed) && (maxMilliseconds >= elapsed)) {
-                        updateMeetingDetails()
+                    updateMeetingDetails()
                 } else {
                     val builder = GetAleretDialog.getDialog(
                         this,
@@ -145,6 +146,7 @@ class UpdateBookingActivity : AppCompatActivity() {
 
     private fun updateMeetingDetails() {
         mUpdateBookingViewModel = ViewModelProviders.of(this).get(UpdateBookingViewModel::class.java)
+
         mUpdateBookingViewModel.updateBookingDetails(this, mUpdateBooking).observe(this, Observer {
             if(it == Constants.OK_RESPONSE) {
                 var builder = GetAleretDialog.getDialog(this,getString(R.string.status),"Successfully updated")
@@ -184,7 +186,6 @@ class UpdateBookingActivity : AppCompatActivity() {
     private fun setValuesInEditText(mIntentDataFromActivity: GetIntentDataFromActvity) {
         val simpleDateFormatForTime = java.text.SimpleDateFormat("HH:mm:ss")
         val simpleDateFormatForTime1 = java.text.SimpleDateFormat("HH:mm")
-        Log.i("---",mIntentDataFromActivity.fromtime)
         val mdate = mIntentDataFromActivity.date!!
         val mfromtime = mIntentDataFromActivity.fromtime!!.split("T")
         oldfromtime = mfromtime[1]

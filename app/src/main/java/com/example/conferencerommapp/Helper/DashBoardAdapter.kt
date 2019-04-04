@@ -119,6 +119,7 @@ class DashBoardAdapter(
         lateinit var buildingNameTextview: TextView
         @BindView(R.id.conferenceRoomName)
         lateinit var roomNameTextview: TextView
+        @Nullable
         @BindView(R.id.from_time)
         lateinit var fromtimetextview: TextView
         @BindView(R.id.date)
@@ -256,6 +257,10 @@ class DashBoardAdapter(
                     }
                     builder.setNegativeButton(mContext.getString(R.string.cancel)) { _, _ ->
                     }
+                    builder.setNeutralButton("Update"){_,_->
+                        Log.i("----",position.toString())
+                        editAlert(position,context)
+                    }
                     val dialog: AlertDialog = builder.create()
                     dialog.setCancelable(false)
                     dialog.show()
@@ -266,6 +271,24 @@ class DashBoardAdapter(
             val mDialog = builder.create()
             mDialog.show()
         }
+    }
+
+    private fun editAlert(position: Int, context: Context) {
+
+        val mGetIntentDataFromActvity = GetIntentDataFromActvity()
+        val fromtime = dashboardItemList[position].FromTime
+        val datefrom = fromtime!!.split("T")
+        mGetIntentDataFromActvity.purpose = dashboardItemList[position].Purpose
+        mGetIntentDataFromActvity.buildingName = dashboardItemList[position].BName
+        mGetIntentDataFromActvity.roomName = dashboardItemList[position].CName
+        mGetIntentDataFromActvity.roomId = dashboardItemList[position].CId.toString()
+        mGetIntentDataFromActvity.date = datefrom[0]
+        mGetIntentDataFromActvity.fromtime = dashboardItemList[position].FromTime
+        mGetIntentDataFromActvity.totime = dashboardItemList[position].ToTime
+        mGetIntentDataFromActvity.cCMail =dashboardItemList[position].cCMail
+        val updateActvity = Intent(mContext,UpdateBookingActivity::class.java)
+        updateActvity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
+        mContext.startActivity(updateActvity)
     }
 
     /**

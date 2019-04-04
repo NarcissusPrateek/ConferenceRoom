@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -47,9 +48,10 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     }
 
     @OnClick(R.id.user_input)
-    fun userInputActivityFloatingActionButton(){
+    fun userInputActivityFloatingActionButton() {
         startActivity(Intent(this@UserBookingsDashboardActivity, UserInputActivity::class.java))
     }
+
     /**
      * on pressing of back button this function will clear the activity stack and close the application
      */
@@ -172,10 +174,15 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      * perform filter task on List of all booking whether they are of recurring type of not
      */
     private fun getFilteredList(dashboardItemList: List<Dashboard>) {
+
         for (item in dashboardItemList) {
             var flag = 0
             for (i in finalList) {
-                if (i.Purpose == item.purpose) {
+                if (
+                    i.Purpose == item.purpose &&
+                    i.FromTime!!.split("T")[1] == item.fromTime!!.split("T")[1] &&
+                    i.ToTime!!.split("T")[1] == item.toTime!!.split("T")[1]
+                ) {
                     i.fromlist.add(item.fromTime!!)
                     i.Status.add(item.status!!)
                     flag = 1
