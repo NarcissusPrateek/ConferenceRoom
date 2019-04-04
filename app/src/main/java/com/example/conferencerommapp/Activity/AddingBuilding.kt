@@ -43,7 +43,7 @@ class AddingBuilding : AppCompatActivity() {
     /**
      * function will invoke whenever the add button is clicked
      */
-    @OnClick(R.id.add_building)
+    @OnClick(R.id.button_add_building)
     fun getBuildingDetails() {
         if (validateInputs()) {
             addDataToObject(mAddBuilding)

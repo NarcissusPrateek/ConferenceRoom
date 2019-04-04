@@ -43,7 +43,7 @@ class BuildingDashboard : AppCompatActivity() {
     /**
      * onClick on this button goes to AddBuilding Activity
      */
-    @OnClick(R.id.add_building)
+    @OnClick(R.id.button_add_building)
     fun addBuildingFloatingButton() {
         startActivity(Intent(this, AddingBuilding::class.java))
     }

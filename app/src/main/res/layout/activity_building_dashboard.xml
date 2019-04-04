@@ -26,7 +26,7 @@
             app:menu_colorPressed="@color/colorPrimary"
             app:fab_colorNormal="@color/colorPrimary"
             android:src="@drawable/ic_add_white_24dp"
-            android:id="@+id/add_building"
+            android:id="@+id/button_add_building"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
 
