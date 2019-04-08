@@ -5,6 +5,7 @@ import android.icu.text.SimpleDateFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.text.Html
 import android.text.TextUtils
 import android.util.Log
 import android.widget.EditText
@@ -50,6 +51,8 @@ class UpdateBookingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_booking)
+        val actionBar = supportActionBar
+        actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.update) + "</font>")
         mIntentDataFromActivity = getIntentData()
         ButterKnife.bind(this)
         setValuesInEditText(mIntentDataFromActivity)

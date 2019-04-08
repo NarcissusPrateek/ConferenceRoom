@@ -10,5 +10,6 @@
 <color name="colorPrimary1">#007FAF</color>
 <color name="lightdarkOrange">#ebd6ab</color>
 <color name="lightOrange">#fdf2df</color>
+    <color name="nonEditableValues">#56585A</color>
 
 </resources>
