@@ -245,8 +245,8 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      */
     private fun goToBuildingsActivity() {
         val mSetIntentData = GetIntentDataFromActvity()
-        mSetIntentData.fromtime = fromTimeEditText.text.toString().trim()
-        mSetIntentData.totime = toTimeEditText.text.toString().trim()
+        mSetIntentData.fromTime = fromTimeEditText.text.toString().trim()
+        mSetIntentData.toTime = toTimeEditText.text.toString().trim()
         mSetIntentData.date = dateFromEditText.text.toString().trim()
         mSetIntentData.toDate = dateToEditText.text.toString().trim()
         mSetIntentData.listOfDays.clear()

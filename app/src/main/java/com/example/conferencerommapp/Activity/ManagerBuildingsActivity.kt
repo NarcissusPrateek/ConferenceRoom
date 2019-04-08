@@ -50,8 +50,8 @@ class ManagerBuildingsActivity : AppCompatActivity() {
     private fun loadBuildings() {
         val mGetIntentDataFromActvity = getIntentData()
         getDateAccordingToDay(
-            mGetIntentDataFromActvity.fromtime!!,
-            mGetIntentDataFromActvity.totime!!,
+            mGetIntentDataFromActvity.fromTime!!,
+            mGetIntentDataFromActvity.toTime!!,
             mGetIntentDataFromActvity.date!!,
             mGetIntentDataFromActvity.toDate!!,
             mGetIntentDataFromActvity.listOfDays

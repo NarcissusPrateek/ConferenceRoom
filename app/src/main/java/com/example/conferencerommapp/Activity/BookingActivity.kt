@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html.fromHtml
@@ -15,7 +14,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
@@ -93,8 +91,8 @@ class BookingActivity : AppCompatActivity() {
         mBooking.email = acct!!.email
         mBooking.roomId = mBookingDetails.roomId!!.toInt()
         mBooking.buildingId = mBookingDetails.buildingId!!.toInt()
-        mBooking.fromTime = mBookingDetails.fromtime!!
-        mBooking.toTime = mBookingDetails.totime!!
+        mBooking.fromTime = mBookingDetails.fromTime!!
+        mBooking.toTime = mBookingDetails.toTime!!
         mBooking.roomName = mBookingDetails.roomName!!
     }
 
@@ -145,7 +143,7 @@ class BookingActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     fun setDataToTextView(mBookingDetails: GetIntentDataFromActvity, userName: String) {
         fromTimeTextView.text =
-            mBookingDetails.fromtime!!.split(" ")[1] + " - " + mBookingDetails.totime!!.split(" ")[1]
+            mBookingDetails.fromTime!!.split(" ")[1] + " - " + mBookingDetails.toTime!!.split(" ")[1]
         dateTextView.text = mBookingDetails.date!!
         roomNameTextView.text = mBookingDetails.roomName!!
         buildingNameTextView.text = mBookingDetails.buildingName!!

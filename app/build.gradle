@@ -88,4 +88,13 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.1.1'
 
+
+    // Anko dependecy for background task
+    implementation "org.jetbrains.anko:anko-commons:0.10.4"
+
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2'
+
+
+
+
 }

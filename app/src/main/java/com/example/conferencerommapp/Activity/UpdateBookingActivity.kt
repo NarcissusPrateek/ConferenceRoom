@@ -1,17 +1,14 @@
 package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
-import android.icu.text.SimpleDateFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
 import android.text.TextUtils
-import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -178,7 +175,7 @@ class UpdateBookingActivity : AppCompatActivity() {
         }
 
         /**
-         * set Time picker for the edittext totime
+         * set Time picker for the edittext toTime
          */
         newtotime.setOnClickListener {
             DateAndTimePicker.getTimePickerDialog(this, newtotime)
@@ -190,9 +187,9 @@ class UpdateBookingActivity : AppCompatActivity() {
         val simpleDateFormatForTime = java.text.SimpleDateFormat("HH:mm:ss")
         val simpleDateFormatForTime1 = java.text.SimpleDateFormat("HH:mm")
         val mdate = mIntentDataFromActivity.date!!
-        val mfromtime = mIntentDataFromActivity.fromtime!!.split("T")
+        val mfromtime = mIntentDataFromActivity.fromTime!!.split("T")
         oldfromtime = mfromtime[1]
-        val mtotime = mIntentDataFromActivity.totime!!.split("T")
+        val mtotime = mIntentDataFromActivity.toTime!!.split("T")
         oldtotime = mtotime[1]
         purpose.text = mIntentDataFromActivity.purpose!!.toEditable()
         newfromtime.text = simpleDateFormatForTime1.format(simpleDateFormatForTime.parse(mfromtime[1])).toEditable()//oldfromtime.toString().toEditable()

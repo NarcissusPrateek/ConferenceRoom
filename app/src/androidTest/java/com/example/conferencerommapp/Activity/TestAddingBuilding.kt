@@ -3,8 +3,7 @@ package com.example.conferencerommapp.Activity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import com.example.conferencerommapp.R
@@ -41,10 +40,10 @@ class TestAddingBuilding {
     @Test
     fun checkEditTextContent() {
         onView(withId(R.id.edit_text_building_name))
-            .check(matches(withText("")))
+            .check(matches(isDisplayed()))
 
         onView(withId(R.id.edit_text_building_place))
-            .check(matches(withText("")))
+            .check(matches(isDisplayed()))
     }
     @Test
     fun addButtonTest() {

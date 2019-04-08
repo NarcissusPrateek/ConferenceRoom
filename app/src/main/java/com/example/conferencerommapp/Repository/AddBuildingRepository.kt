@@ -22,7 +22,7 @@ class AddBuildingRepository {
     /**
      * mStatus is used to know the status code from the backend
      */
-    var mStatus:MutableLiveData<Int>? = null
+    var mStatus: MutableLiveData<Int>? = null
     var ok: Int? = null
 
     /**
@@ -31,9 +31,9 @@ class AddBuildingRepository {
      * or else it will return a new object
      */
     companion object {
-        var mAddBuildingRepository:AddBuildingRepository? = null
-        fun getInstance():AddBuildingRepository{
-            if(mAddBuildingRepository == null){
+        private var mAddBuildingRepository: AddBuildingRepository? = null
+        fun getInstance(): AddBuildingRepository {
+            if (mAddBuildingRepository == null) {
                 mAddBuildingRepository = AddBuildingRepository()
             }
             return mAddBuildingRepository!!
@@ -44,9 +44,11 @@ class AddBuildingRepository {
      * function will initialize the MutableLivedata Object and than call a function for api call
      * Passing the Context and model and call API, In return sends the status of LiveData
      */
-    fun addBuildingDetails(mContext: Context,mAddBuilding: AddBuilding) : LiveData<Int>{
-        mStatus = MutableLiveData()
-        makeAddBuildingApiCall(mContext,mAddBuilding)
+    fun addBuildingDetails(mContext: Context, mAddBuilding: AddBuilding): LiveData<Int> {
+        if(mStatus == null) {
+            mStatus = MutableLiveData()
+        }
+        makeAddBuildingApiCall(mContext, mAddBuilding)
         return mStatus!!
     }
 
@@ -59,20 +61,22 @@ class AddBuildingRepository {
         /**
          * ProgreesDialog
          */
-        val progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
+        val progressDialog =
+            GetProgress.getProgressDialog(mContext.getString(R.string.progress_message_processing), mContext)
         progressDialog.show()
 
         /**
          * Retrofit Call
          */
-        val addBuildingService:ConferenceService = Servicebuilder.buildService(ConferenceService::class.java)
-        val addBuildingrequestCall:Call<ResponseBody> = addBuildingService.addBuilding(mAddBuilding)
+        val addBuildingService: ConferenceService = Servicebuilder.buildService(ConferenceService::class.java)
+        val addBuildingrequestCall: Call<ResponseBody> = addBuildingService.addBuilding(mAddBuilding)
 
-        addBuildingrequestCall.enqueue(object :Callback<ResponseBody>{
+        addBuildingrequestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 progressDialog.dismiss()
                 Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
             }
+
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 /**
                  * Alert Dialog for Success or Failure of Adding Buildings

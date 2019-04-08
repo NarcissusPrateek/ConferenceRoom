@@ -27,8 +27,8 @@ class DateAndTimePicker {
                     selectedTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
                     selectedTime.set(Calendar.MINUTE, minute)
 
-                    val nowtime = timeFormat.format(selectedTime.time).toString()
-                    setTime.text = Editable.Factory.getInstance().newEditable(nowtime)
+                    val mCurrentTime = timeFormat.format(selectedTime.time).toString()
+                    setTime.text = Editable.Factory.getInstance().newEditable(mCurrentTime)
                 }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true)
             timePickerDialog.show()
         }

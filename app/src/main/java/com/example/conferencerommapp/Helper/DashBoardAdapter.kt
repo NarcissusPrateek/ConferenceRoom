@@ -21,7 +21,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnClick
 import com.example.conferencerommapp.Activity.UpdateBookingActivity
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Model.CancelBooking
@@ -75,8 +74,8 @@ class DashBoardAdapter(
             mGetIntentDataFromActvity.roomName = dashboardItemList[position].CName
             mGetIntentDataFromActvity.roomId = dashboardItemList[position].CId.toString()
             mGetIntentDataFromActvity.date = datefrom[0]
-            mGetIntentDataFromActvity.fromtime = dashboardItemList[position].FromTime
-            mGetIntentDataFromActvity.totime = dashboardItemList[position].ToTime
+            mGetIntentDataFromActvity.fromTime = dashboardItemList[position].FromTime
+            mGetIntentDataFromActvity.toTime = dashboardItemList[position].ToTime
             mGetIntentDataFromActvity.cCMail =dashboardItemList[position].cCMail
             val updateActvity = Intent(mContext,UpdateBookingActivity::class.java)
             updateActvity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
@@ -283,8 +282,8 @@ class DashBoardAdapter(
         mGetIntentDataFromActvity.roomName = dashboardItemList[position].CName
         mGetIntentDataFromActvity.roomId = dashboardItemList[position].CId.toString()
         mGetIntentDataFromActvity.date = datefrom[0]
-        mGetIntentDataFromActvity.fromtime = dashboardItemList[position].FromTime
-        mGetIntentDataFromActvity.totime = dashboardItemList[position].ToTime
+        mGetIntentDataFromActvity.fromTime = dashboardItemList[position].FromTime
+        mGetIntentDataFromActvity.toTime = dashboardItemList[position].ToTime
         mGetIntentDataFromActvity.cCMail =dashboardItemList[position].cCMail
         val updateActvity = Intent(mContext,UpdateBookingActivity::class.java)
         updateActvity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)

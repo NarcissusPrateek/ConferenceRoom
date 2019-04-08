@@ -1,17 +1,18 @@
 package com.example.conferencerommapp.Repository
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetAleretDialog
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.BlockRoom
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,35 +41,29 @@ class BlockRoomRepository {
     }
 
     fun makeCallToApi(mContext: Context, room: BlockRoom) {
-        val blockroomapi = Servicebuilder.buildService(ConferenceService::class.java)
-        val requestCall: Call<ResponseBody> = blockroomapi.blockconference(room)
+
+        /**
+         * get progress dialog
+         */
+        val progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.status), mContext)
+        progressDialog.show()
+        val blockRoomApi = Servicebuilder.buildService(ConferenceService::class.java)
+        val requestCall: Call<ResponseBody> = blockRoomApi.blockconference(room)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
-                val builder = AlertDialog.Builder(mContext)
-                builder.setTitle("Blocking status")
-                when {
-                    response.code() == Constants.OK_RESPONSE -> mStatus!!.value = response.code()
-                    response.code().equals(400) -> {
-                        builder.setMessage("Room already blocked!")
-                        builder.setPositiveButton("Ok") { _, _ ->
-                            (mContext as Activity).finish()
-                        }
-                        val dialog: AlertDialog = builder.create()
-                        dialog.show()
-                    }
-                    else -> {
-                        builder.setMessage("Something went wrong Room can't be Blocked.")
-                        builder.setPositiveButton(mContext.getString(R.string.ok)) { _, _ ->
-                            (mContext as Activity).finish()
-                        }
-                        val dialog: AlertDialog = builder.create()
-                        dialog.show()
-                    }
+                if (response.code() == Constants.OK_RESPONSE) {
+                    mStatus!!.value = response.code()
+                } else {
+                    var mBuilder = GetAleretDialog.getDialog(
+                        mContext,
+                        mContext.getString(R.string.status),
+                        "${JSONObject(response.errorBody()!!.string()).getString("Message")} "
+                    )
+                    GetAleretDialog.showDialog(mBuilder)
                 }
             }
 

@@ -94,8 +94,8 @@ class ConferenceRoomActivity : AppCompatActivity() {
      */
     private fun setDataToObjectForApiCall(mIntentDataFromActvity: GetIntentDataFromActvity): FetchConferenceRoom {
         val mFetchRoom = FetchConferenceRoom()
-        mFetchRoom.fromTime = mIntentDataFromActvity.fromtime
-        mFetchRoom.toTime = mIntentDataFromActvity.totime
+        mFetchRoom.fromTime = mIntentDataFromActvity.fromTime
+        mFetchRoom.toTime = mIntentDataFromActvity.toTime
         mFetchRoom.capacity = mIntentDataFromActvity.capacity!!.toInt()
         mFetchRoom.buildingId = mIntentDataFromActvity.buildingId!!.toInt()
         return mFetchRoom

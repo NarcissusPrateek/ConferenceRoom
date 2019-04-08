@@ -28,4 +28,7 @@ class AddBuildingViewModel : ViewModel() {
         mStatus = mAddBuildingRepository!!.addBuildingDetails(mContext, mAddBuilding) as MutableLiveData<Int>
         return mStatus
     }
+    fun validateTime(a: Int):Int {
+        return a
+    }
 }

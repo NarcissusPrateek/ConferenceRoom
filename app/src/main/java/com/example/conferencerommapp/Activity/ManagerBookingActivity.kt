@@ -124,7 +124,7 @@ class ManagerBookingActivity : AppCompatActivity() {
      */
     @SuppressLint("SetTextI18n")
     private fun setDataToTextview(mGetIntentDataFromActvity: GetIntentDataFromActvity, userName: String) {
-        fromTimeTextView.text = mGetIntentDataFromActvity.fromtime + " - " + mGetIntentDataFromActvity.totime
+        fromTimeTextView.text = mGetIntentDataFromActvity.fromTime + " - " + mGetIntentDataFromActvity.toTime
         dateTextView.text = mGetIntentDataFromActvity.date + " - " + mGetIntentDataFromActvity.toDate
         buildingNameTextView.text = mGetIntentDataFromActvity.buildingName
         roomNameTextView.text = mGetIntentDataFromActvity.roomName!!
