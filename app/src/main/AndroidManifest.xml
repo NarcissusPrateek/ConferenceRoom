@@ -16,6 +16,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
+                android:launchMode="singleTop"
+                android:parentActivityName=".Activity.UserBookingsDashboardActivity"
                 android:name=".Activity.UpdateBookingActivity"
                 android:screenOrientation="portrait">
         </activity>
