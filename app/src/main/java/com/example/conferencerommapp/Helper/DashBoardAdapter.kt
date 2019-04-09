@@ -50,36 +50,33 @@ class DashBoardAdapter(
 
         setDataToFields(holder, position)
 
-        val fromtime = dashboardItemList[position].FromTime
-        val totime = dashboardItemList[position].ToTime
-        val datefrom = fromtime!!.split("T")
-        val dateto = totime!!.split("T")
+        val fromTime = dashboardItemList[position].FromTime
+        val toTime = dashboardItemList[position].ToTime
+        val fromDate = fromTime!!.split("T")
+        val toDate = toTime!!.split("T")
 
-        holder.fromtimetextview.text = datefrom[1] + " - " + dateto[1]
-
+        holder.fromtimetextview.text = fromDate[1] + " - " + toDate[1]
         setButtonFunctionalityAccordingToStatus(holder, position)
-
         setFunctionOnButton(holder, position, mContext)
-
         editActivity(holder,position,mContext)
     }
 
     private fun editActivity(holder: ViewHolder, position: Int, mContext: Context) {
         holder.updateTextView.setOnClickListener {
-            val mGetIntentDataFromActvity = GetIntentDataFromActvity()
-            val fromtime = dashboardItemList[position].FromTime
-            val datefrom = fromtime!!.split("T")
-            mGetIntentDataFromActvity.purpose = dashboardItemList[position].Purpose
-            mGetIntentDataFromActvity.buildingName = dashboardItemList[position].BName
-            mGetIntentDataFromActvity.roomName = dashboardItemList[position].CName
-            mGetIntentDataFromActvity.roomId = dashboardItemList[position].CId.toString()
-            mGetIntentDataFromActvity.date = datefrom[0]
-            mGetIntentDataFromActvity.fromTime = dashboardItemList[position].FromTime
-            mGetIntentDataFromActvity.toTime = dashboardItemList[position].ToTime
-            mGetIntentDataFromActvity.cCMail =dashboardItemList[position].cCMail
-            val updateActvity = Intent(mContext,UpdateBookingActivity::class.java)
-            updateActvity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
-            mContext.startActivity(updateActvity)
+            val mGetIntentDataFromActivity = GetIntentDataFromActvity()
+            val fromTime = dashboardItemList[position].FromTime
+            val fromDate = fromTime!!.split("T")
+            mGetIntentDataFromActivity.purpose = dashboardItemList[position].Purpose
+            mGetIntentDataFromActivity.buildingName = dashboardItemList[position].BName
+            mGetIntentDataFromActivity.roomName = dashboardItemList[position].CName
+            mGetIntentDataFromActivity.roomId = dashboardItemList[position].CId.toString()
+            mGetIntentDataFromActivity.date = fromDate[0]
+            mGetIntentDataFromActivity.fromTime = dashboardItemList[position].FromTime
+            mGetIntentDataFromActivity.toTime = dashboardItemList[position].ToTime
+            mGetIntentDataFromActivity.cCMail =dashboardItemList[position].cCMail
+            val updateActivity = Intent(mContext,UpdateBookingActivity::class.java)
+            updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActivity)
+            mContext.startActivity(updateActivity)
         }
     }
 
@@ -117,14 +114,14 @@ class DashBoardAdapter(
         @BindView(R.id.building_name)
         lateinit var buildingNameTextview: TextView
         @BindView(R.id.conferenceRoomName)
-        lateinit var roomNameTextview: TextView
+        lateinit var roomNameTextView: TextView
         @Nullable
         @BindView(R.id.from_time)
         lateinit var fromtimetextview: TextView
         @BindView(R.id.date)
-        lateinit var dateTextview: TextView
+        lateinit var dateTextView: TextView
         @BindView(R.id.purpose)
-        lateinit var purposeTextview: TextView
+        lateinit var purposeTextView: TextView
         @BindView(R.id.btnCancel)
         lateinit var cancelButton: Button
         @BindView(R.id.linearlayout)
@@ -149,19 +146,19 @@ class DashBoardAdapter(
         }
         if (currentPosition == position) {
             if (holder.linearLayout.visibility == View.GONE) {
-                val animmation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.animation)
+                val mAnimation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.animation)
                 holder.linearLayout.visibility = View.VISIBLE
-                holder.linearLayout.startAnimation(animmation)
+                holder.linearLayout.startAnimation(mAnimation)
             } else {
-                val animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
+                val mAnimation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
                 holder.linearLayout.visibility = View.GONE
-                holder.linearLayout.startAnimation(animation)
+                holder.linearLayout.startAnimation(mAnimation)
             }
 
         } else {
-            val animation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
+            val mAnimation: Animation = AnimationUtils.loadAnimation(mContext, R.anim.close)
             holder.linearLayout.visibility = View.GONE
-            holder.linearLayout.startAnimation(animation)
+            holder.linearLayout.startAnimation(mAnimation)
         }
     }
 
@@ -171,8 +168,8 @@ class DashBoardAdapter(
     private fun setDataToFields(holder: ViewHolder, position: Int) {
         holder.dashboard = dashboardItemList[position]
         holder.buildingNameTextview.text = dashboardItemList[position].BName
-        holder.roomNameTextview.text = dashboardItemList[position].CName
-        holder.purposeTextview.text = dashboardItemList[position].Purpose
+        holder.roomNameTextView.text = dashboardItemList[position].CName
+        holder.purposeTextView.text = dashboardItemList[position].Purpose
         holder.showButton.setOnClickListener {
             setMeetingMembers(position)
         }
@@ -201,9 +198,8 @@ class DashBoardAdapter(
      * set button text according to the type of meeting and booking status
      */
     private fun setButtonFunctionalityAccordingToStatus(holder: ViewHolder, position: Int) {
-
         if (dashboardItemList[position].fromlist.size == 1)
-            holder.dateTextview.text = dashboardItemList[position].FromTime!!.split("T")[0]
+            holder.dateTextView.text = dashboardItemList[position].FromTime!!.split("T")[0]
         else {
             setDataToDialogShowDates(holder, position, mContext)
         }
@@ -219,10 +215,10 @@ class DashBoardAdapter(
         context: Context
     ) {
 
-        holder.dateTextview.text = context.getString(R.string.show_dates)
-        holder.dateTextview.setTextColor(Color.parseColor("#0072BC"))
+        holder.dateTextView.text = context.getString(R.string.show_dates)
+        holder.dateTextView.setTextColor(Color.parseColor("#0072BC"))
         holder.cancelButton.visibility = View.INVISIBLE
-        holder.dateTextview.setOnClickListener {
+        holder.dateTextView.setOnClickListener {
             val list = dashboardItemList[position].fromlist
             val arrayList = ArrayList<String>()
             val simpleDateFormate = SimpleDateFormat("yyyy-MM-dd")

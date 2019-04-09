@@ -48,6 +48,7 @@ class BuildingsActivity : AppCompatActivity() {
         val mIntentDataFromActivity = getIntentData()
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
         mBuildingsViewModel.getBuildingList(this).observe(this, Observer {
+
             /**
              * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
              */
@@ -66,7 +67,7 @@ class BuildingsActivity : AppCompatActivity() {
     }
 
     /**
-     * onRestart  of activity we make the api call to referesh the data
+     * onRestart  of activity we make the api call to refresh the data
      */
     override fun onRestart() {
         super.onRestart()

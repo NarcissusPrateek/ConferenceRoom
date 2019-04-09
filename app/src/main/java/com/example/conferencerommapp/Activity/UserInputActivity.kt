@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -159,15 +158,9 @@ class UserInputActivity : AppCompatActivity() {
         startActivity(mBuildingIntent)
     }
 
-    fun validateTime(startTime: String, endTime: String) {
+    private fun validateTime(startTime: String, endTime: String) {
         val minMilliseconds: Long = 900000
         val maxMilliseconds: Long = 14400000
-
-        /**
-         * Get the start and end time of meeting from the input fields
-         */
-//        startTime = fromTimeEditText.text.toString()
-//        endTime = toTimeEditText.text.toString()
 
         /**
          * setting a aalert dialog instance for the current context
@@ -177,16 +170,16 @@ class UserInputActivity : AppCompatActivity() {
             /**
              * getting the values for time validation variables from method calculateTimeInMillis
              */
-            val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMiliis(
+            val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMilliseconds(
                 startTime,
                 endTime,
                 date.text.toString()
             )
+
             /**
              * if the elapsed2 < 0 that means the from time is less than the current time. In that case
              * we restrict the user to move forword and show some message in alert that the time is not valid
              */
-
             if (elapsed2 < 0) {
                 val builder = GetAleretDialog.getDialog(
                     this,
@@ -197,8 +190,9 @@ class UserInputActivity : AppCompatActivity() {
                 }
                 GetAleretDialog.showDialog(builder)
             }
+
             /**
-             * if MIN_MILIISECONDS <= elapsed that means the meeting duration is more than 15 min
+             * if MIN_MILLISECONDS <= elapsed that means the meeting duration is more than 15 min
              * if the above condition is not true than we show a message in alert that the meeting duration must be greater than 15 min
              * if MAX_MILLISECONDS >= elapsed that means the meeting duration is less than 4hours
              * if the above condition is not true than we show show a message in alert that the meeting duration must be less than 4hours
@@ -219,9 +213,6 @@ class UserInputActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Toast.makeText(this@UserInputActivity, getString(R.string.details_invalid), Toast.LENGTH_LONG).show()
         }
-    }
-    fun validateTime(a: Int):Int {
-        return a
     }
 }
 

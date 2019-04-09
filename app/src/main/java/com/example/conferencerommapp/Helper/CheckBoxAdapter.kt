@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -88,8 +87,8 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
     /**
      * fuction will update recyclerview items according to the filtered data
      */
-    fun filterList(filterdNames: ArrayList<EmployeeList>) {
-        this.employee = filterdNames
+    fun filterList(filteredNames: ArrayList<EmployeeList>) {
+        this.employee = filteredNames
         notifyDataSetChanged()
     }
 

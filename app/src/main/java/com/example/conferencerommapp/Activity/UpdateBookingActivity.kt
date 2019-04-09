@@ -98,7 +98,7 @@ class UpdateBookingActivity : AppCompatActivity() {
                 /**
                  * getting the values for time validation variables from method calculateTimeInMillis
                  */
-                val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMiliis(
+                val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMilliseconds(
                     startTime,
                     endTime,
                     date.text.toString()

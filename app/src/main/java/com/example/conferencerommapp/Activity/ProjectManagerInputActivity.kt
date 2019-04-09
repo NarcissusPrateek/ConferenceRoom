@@ -197,7 +197,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             /**
              *  getting the values for time validation variables from method calculateTimeInMillis
              */
-            val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMiliis(
+            val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMilliseconds(
                 startTime,
                 endTime,
                 dateFromEditText.text.toString()
@@ -214,7 +214,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                 }
                 GetAleretDialog.showDialog(builder)
             } else if ((minmilliseconds <= elapsed) && (maxmilliseconds >= elapsed)) {
-                if (ConvertTimeInMillis.calculateDateinMillis(
+                if (ConvertTimeInMillis.calculateDateInMilliseconds(
                         dateFromEditText.text.toString(),
                         dateToEditText.text.toString()
                     )

@@ -32,7 +32,6 @@ class AddConferenceRepository {
         }
     }
 
-
     //Passing the Context and model and call API, In return sends the status of LiveData
     fun addConferenceDetails(mContext:Context,mConferenceRoom : AddConferenceRoom):MutableLiveData<Int>{
         mStatus = MutableLiveData()

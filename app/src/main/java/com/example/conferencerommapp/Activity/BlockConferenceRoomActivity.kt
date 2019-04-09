@@ -241,7 +241,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this@BlockConferenceRoomActivity)
         builder.setTitle(getString(R.string.check))
         try {
-            val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMiliis(
+            val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMilliseconds(
                 startTime,
                 endTime,
                 date_block.text.toString()

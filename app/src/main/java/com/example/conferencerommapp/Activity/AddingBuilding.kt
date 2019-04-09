@@ -12,8 +12,10 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetAleretDialog
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.AddBuilding
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.ValidateField.ValidateInputFields
 import com.example.conferencerommapp.ViewModel.AddBuildingViewModel
 
 @Suppress("DEPRECATION")
@@ -63,30 +65,45 @@ class AddingBuilding : AppCompatActivity() {
      * validate all input fields
      */
     private fun validateInputs(): Boolean {
-        if (buildingNameEditText.text.toString().trim().isEmpty()) {
-            Toast.makeText(this, "Enter the Building name", Toast.LENGTH_SHORT).show()
+        if (!ValidateInputFields.validateInputForEmpty(buildingNameEditText.text.toString())) {
+            Toast.makeText(this, getString(R.string.missing_building_name), Toast.LENGTH_SHORT).show()
             return false
-        } else if (buildingPlaceEditText.text.trim().isEmpty()) {
-            Toast.makeText(this, "Enter the Building place", Toast.LENGTH_SHORT).show()
+        } else if (!ValidateInputFields.validateInputForEmpty(buildingPlaceEditText.text.toString())) {
+            Toast.makeText(this, getString(R.string.missing_building_place), Toast.LENGTH_SHORT).show()
             return false
         }
         return true
     }
 
     /**
-     * function calls the ViewModel of addingBuilding and data into the database
+     * function calls the ViewModel of addingBuilding and send data to the backend
      */
     private fun addBuild(building: AddBuilding) {
+        /**
+         * Get the progress dialog from GetProgress Helper class
+         */
+        val mProgressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddBuildingViewModel = ViewModelProviders.of(this).get(AddBuildingViewModel::class.java)
-        mAddBuildingViewModel.addBuildingDetails(this, building)!!.observe(this, Observer {
-            if (it == Constants.OK_RESPONSE) {
-                val dialog = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_added))
-                dialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
-                    finish()
+        mProgressDialog.show()
+        mAddBuildingViewModel.addBuildingDetails(building)!!.observe(this, Observer {
+            mProgressDialog.dismiss()
+            when (it) {
+                Constants.OK_RESPONSE -> {
+                    val dialog =
+                        GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_added))
+                    dialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                        finish()
+                    }
+                    GetAleretDialog.showDialog(dialog)
                 }
-                GetAleretDialog.showDialog(dialog)
+                Constants.INTERNAL_SERVER_ERROR -> {
+                    Toast.makeText(this, getString(R.string.internal_server_error), Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    val dialog = GetAleretDialog.getDialog(this, getString(R.string.status), "Bla Bla Bla")
+                    GetAleretDialog.showDialog(dialog)
+                }
             }
-
         })
     }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.example.conferencerommapp.Model.AddBuilding
 import com.example.conferencerommapp.Repository.AddBuildingRepository
 
-class AddBuildingViewModel : ViewModel() {
+open class AddBuildingViewModel : ViewModel() {
 
     /**
      * a object which will hold the reference to the corrosponding repository class
@@ -23,12 +23,9 @@ class AddBuildingViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun addBuildingDetails(mContext: Context, mAddBuilding: AddBuilding): MutableLiveData<Int>? {
+    fun addBuildingDetails(mAddBuilding: AddBuilding): MutableLiveData<Int>? {
         mAddBuildingRepository = AddBuildingRepository.getInstance()
-        mStatus = mAddBuildingRepository!!.addBuildingDetails(mContext, mAddBuilding) as MutableLiveData<Int>
+        mStatus = mAddBuildingRepository!!.addBuildingDetails(mAddBuilding) as MutableLiveData<Int>
         return mStatus
-    }
-    fun validateTime(a: Int):Int {
-        return a
     }
 }

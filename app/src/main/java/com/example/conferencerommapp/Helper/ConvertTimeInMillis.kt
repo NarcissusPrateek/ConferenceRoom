@@ -13,24 +13,23 @@ class ConvertTimeInMillis {
          * convert the time into milliseconds and return the difference between two time
          */
         @SuppressLint("SimpleDateFormat")
-        fun calculateTimeInMiliis(startTime: String, endTime: String, date: String): Pair<Long, Long> {
+        fun calculateTimeInMilliseconds(startTime: String, endTime: String, date: String): Pair<Long, Long> {
             val simpleDateFormatForTime = SimpleDateFormat("HH:mm")
             val simpleDateFormatForDate = SimpleDateFormat("yyyy-M-dd HH:mm")
-            val d1 = simpleDateFormatForTime.parse(startTime)
-            val d2 = simpleDateFormatForTime.parse(endTime)
-            val d3 = simpleDateFormatForDate.parse("$date $startTime")
-
-            val elapsed = d2.time - d1.time
-            val currtime = System.currentTimeMillis()
-            val elapsed2 = d3.time - currtime
-            return Pair(elapsed, elapsed2)
+            val startTimeInDateObject = simpleDateFormatForTime.parse(startTime)
+            val endTimeInDateObject = simpleDateFormatForTime.parse(endTime)
+            val startTimeAndDateTimeInDateObject = simpleDateFormatForDate.parse("$date $startTime")
+            val differenceOfStartAndEndTimeInMillis = endTimeInDateObject.time - startTimeInDateObject.time
+            val currTime = System.currentTimeMillis()
+            val differenceOfStartTimeAndCurrentTImeInMillis = startTimeAndDateTimeInDateObject.time - currTime
+            return Pair(differenceOfStartAndEndTimeInMillis, differenceOfStartTimeAndCurrentTImeInMillis)
         }
         @SuppressLint("SimpleDateFormat")
-        fun calculateDateinMillis(fromDate: String, toDate: String): Boolean {
-            val simpleDateFormatForDate1 = SimpleDateFormat("yyyy-M-dd")
-            val fromDateinDateFormat = simpleDateFormatForDate1.parse(fromDate)
-            val toDateinDateFormat = simpleDateFormatForDate1.parse(toDate)
-            val dateDifference = toDateinDateFormat.time - fromDateinDateFormat.time
+        fun calculateDateInMilliseconds(fromDate: String, toDate: String): Boolean {
+            val simpleDateFormatForDate = SimpleDateFormat("yyyy-M-dd")
+            val fromDateInDateFormat = simpleDateFormatForDate.parse(fromDate)
+            val toDateInDateFormat = simpleDateFormatForDate.parse(toDate)
+            val dateDifference = toDateInDateFormat.time - fromDateInDateFormat.time
             if(dateDifference > 0) {
                 return true
             }
