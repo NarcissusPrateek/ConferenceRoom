@@ -20,9 +20,9 @@ class AddConferenceRoomViewModel: ViewModel()  {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun addConferenceDetails(mContext: Context,mAddConference: AddConferenceRoom): MutableLiveData<Int>{
+    fun addConferenceDetails(mAddConference: AddConferenceRoom): MutableLiveData<Int>{
         mAddConferenceRepository = AddConferenceRepository.getInstance()
-        mStatus = mAddConferenceRepository!!.addConferenceDetails(mContext,mAddConference)
+        mStatus = mAddConferenceRepository!!.addConferenceDetails(mAddConference)
         return mStatus!!
     }
 
