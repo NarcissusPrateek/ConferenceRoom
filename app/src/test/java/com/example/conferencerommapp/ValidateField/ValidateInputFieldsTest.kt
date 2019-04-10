@@ -22,7 +22,7 @@ class ValidateInputFieldsTest {
      * test for input only contains white spaces
      */
     @Test
-    fun validateInputFields_inputOnlySpaces_returnTrue() {
+    fun validateInputFields_inputOnlySpaces_returnFalse() {
         val name = "   "
         assertSame(false, ValidateInputFields.validateInputForEmpty(name))
     }

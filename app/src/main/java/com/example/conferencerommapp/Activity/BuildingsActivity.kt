@@ -47,7 +47,7 @@ class BuildingsActivity : AppCompatActivity() {
     private fun getViewModel() {
         val mIntentDataFromActivity = getIntentData()
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
-        mBuildingsViewModel.getBuildingList(this).observe(this, Observer {
+        mBuildingsViewModel.getBuildingList().observe(this, Observer {
 
             /**
              * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
@@ -71,7 +71,7 @@ class BuildingsActivity : AppCompatActivity() {
      */
     override fun onRestart() {
         super.onRestart()
-        mBuildingsViewModel.mBuildingsRepository!!.makeApiCall(this)
+        mBuildingsViewModel.mBuildingsRepository!!.makeApiCall()
     }
 
     /**

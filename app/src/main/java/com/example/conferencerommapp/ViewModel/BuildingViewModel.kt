@@ -22,11 +22,11 @@ class BuildingViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun getBuildingList(context: Context): MutableLiveData<List<Building>> {
+    fun getBuildingList(): MutableLiveData<List<Building>> {
         if (mBuildingList == null) {
             mBuildingsRepository = BuildingsRepository.getInstance()
         }
-        mBuildingList = mBuildingsRepository!!.getBuildingList(context) as MutableLiveData<List<Building>>
+        mBuildingList = mBuildingsRepository!!.getBuildingList() as MutableLiveData<List<Building>>
         return mBuildingList!!
     }
 }

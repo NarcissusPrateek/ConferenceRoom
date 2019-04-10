@@ -194,9 +194,9 @@ class UserInputActivityTest {
 
 
     }
-    @Test
-    fun validate() {
-        val mAddingBuildingViewModel = AddBuildingViewModel()
-        assertEquals(5, mAddingBuildingViewModel.validateTime(5))
-    }
+//    @Test
+//    fun validate() {
+//        val mAddingBuildingViewModel = AddBuildingViewModel()
+//        assertEquals(5, mAddingBuildingViewModel.validateTime(5))
+//    }
 }

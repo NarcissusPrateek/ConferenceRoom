@@ -90,7 +90,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
     private fun getBuilding() {
         val mBuildingViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
-        mBuildingViewModel.getBuildingList(this).observe(this, androidx.lifecycle.Observer {
+        mBuildingViewModel.getBuildingList().observe(this, androidx.lifecycle.Observer {
             buildingListFromBackend(it)
         })
     }

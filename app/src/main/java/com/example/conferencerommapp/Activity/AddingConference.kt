@@ -18,6 +18,7 @@ import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.ValidateField.ValidateInputFields
 import com.example.conferencerommapp.ViewModel.AddConferenceRoomViewModel
 import fr.ganfra.materialspinner.MaterialSpinner
 
@@ -96,7 +97,7 @@ class AddingConference : AppCompatActivity() {
      * validate all input fields
      */
     private fun validateInputs(): Boolean {
-        if (conferenceRoomEditText.text.toString().trim().isEmpty()) {
+        if (!ValidateInputFields.validateInputForEmpty(conferenceRoomEditText.text.toString().trim())) {
             Toast.makeText(this@AddingConference, getString(R.string.enter_room_name), Toast.LENGTH_LONG).show()
             return false
         } else if (capacity == getString(R.string.select_capacity)) {
@@ -118,7 +119,8 @@ class AddingConference : AppCompatActivity() {
             mProgressDialog.dismiss()
             when (it) {
                 Constants.OK_RESPONSE -> {
-                    val dialog =
+                    val dialog
+                            =
                         GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_added))
                     dialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
                         finish()
