@@ -11,6 +11,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.BuildingAdapter
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.ManagerBuildingViewModel
@@ -44,7 +45,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
      */
     override fun onRestart() {
         super.onRestart()
-        mManagerBuildingViewModel.getBuildingList(this)
+        mManagerBuildingViewModel.getBuildingList()
     }
 
     private fun loadBuildings() {
@@ -110,23 +111,38 @@ class ManagerBuildingsActivity : AppCompatActivity() {
      */
     private fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity) {
         mManagerBuildingViewModel = ViewModelProviders.of(this).get(ManagerBuildingViewModel::class.java)
-        mManagerBuildingViewModel.getBuildingList(this).observe(this, androidx.lifecycle.Observer {
-            mCustomAdapter = BuildingAdapter(this,
-                it!!,
-                object : BuildingAdapter.BtnClickListener {
-                    override fun onBtnClick(buildingId: String?, buildingname: String?) {
-                        mIntentDataFromActivity.buildingId = buildingId
-                        mIntentDataFromActivity.buildingName = buildingname
-                        mIntentDataFromActivity.fromTimeList.clear()
-                        mIntentDataFromActivity.toTimeList.clear()
-                        mIntentDataFromActivity.fromTimeList.addAll(fromTimeList)
-                        mIntentDataFromActivity.toTimeList.addAll(toTimeList)
-                        goToNextActivity(mIntentDataFromActivity)
+        /**
+         * get Progress Dialog
+         */
+        var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        progressDialog.show()
+        mManagerBuildingViewModel.getBuildingList()
+        progressDialog.dismiss()
+        mManagerBuildingViewModel.returnBuildingSuccess().observe(this, androidx.lifecycle.Observer {
+            if(it.isEmpty()) {
+                // some message
+            }else {
+                mCustomAdapter = BuildingAdapter(this,
+                    it!!,
+                    object : BuildingAdapter.BtnClickListener {
+                        override fun onBtnClick(buildingId: String?, buildingname: String?) {
+                            mIntentDataFromActivity.buildingId = buildingId
+                            mIntentDataFromActivity.buildingName = buildingname
+                            mIntentDataFromActivity.fromTimeList.clear()
+                            mIntentDataFromActivity.toTimeList.clear()
+                            mIntentDataFromActivity.fromTimeList.addAll(fromTimeList)
+                            mIntentDataFromActivity.toTimeList.addAll(toTimeList)
+                            goToNextActivity(mIntentDataFromActivity)
+                        }
                     }
-                }
-            )
-            mRecyclerView.adapter = mCustomAdapter
+                )
+                mRecyclerView.adapter = mCustomAdapter
+            }
         })
+        mManagerBuildingViewModel.returnBuildingFailure().observe(this, androidx.lifecycle.Observer {
+            // messgae according to the response code from server
+        })
+
     }
 
     /**

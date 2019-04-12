@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.Dashboard
 import com.example.conferencerommapp.R
 import com.example.globofly.services.Servicebuilder
@@ -14,7 +15,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class BookingDashboardRepository {
-    var mBookingList: MutableLiveData<List<Dashboard>>? = null
 
     /**
      * this block provides a static method which will return the object of repository
@@ -36,45 +36,30 @@ class BookingDashboardRepository {
      * function will initialize the MutableLivedata Object and than call a function for api call
      * Passing the Context and model and call API, In return sends the status of LiveData
      */
-    fun getBookingList(mContext: Context, email: String): LiveData<List<Dashboard>> {
-        mBookingList = MutableLiveData()
-        makeApiCall(mContext, email)
-        return mBookingList!!
-    }
-
-
-    /**
-     * make api call to backend
-     */
-    fun makeApiCall(mContext: Context, email: String) {
-
+    fun getBookingList(email: String, listener: ResponseListener) {
         /**
-         * getting Progress Dialog
-         */
-        val progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.progress_message), mContext)
-        progressDialog.show()
-
-        /**
-         * api call using retorfit
+         * API call using retrofit
          */
         val service = Servicebuilder.getObject()
         val requestCall: Call<List<Dashboard>> = service.getDashboard(email)
         requestCall.enqueue(object : Callback<List<Dashboard>> {
             override fun onFailure(call: Call<List<Dashboard>>, t: Throwable) {
-                progressDialog.dismiss()
-                Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
+                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
             }
+
             override fun onResponse(call: Call<List<Dashboard>>, response: Response<List<Dashboard>>) {
-                progressDialog.dismiss()
-                if(response.code() == Constants.OK_RESPONSE) {
-                    mBookingList!!.value = response.body()
+                if (response.code() == Constants.OK_RESPONSE) {
+                    listener.onSuccess(response.body()!!)
                 } else {
-                    Toast.makeText(mContext, mContext.getString(R.string.server_error), Toast.LENGTH_SHORT).show()
+                    listener.onFailure(response.code())
                 }
             }
         })
+
     }
+
 }
+
 
 
 

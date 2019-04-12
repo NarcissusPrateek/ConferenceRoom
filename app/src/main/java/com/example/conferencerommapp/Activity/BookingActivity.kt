@@ -19,16 +19,12 @@ import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.example.conferencerommapp.Helper.CheckBoxAdapter
-import com.example.conferencerommapp.Helper.ColorOfDialogButton
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetAleretDialog
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.Model.Booking
 import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BookingViewModel
-import com.example.conferencerommapp.ViewModel.EmployeeViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import kotlinx.android.synthetic.main.activity_alertdialog_members.view.*
 import java.util.*
@@ -50,12 +46,12 @@ class BookingActivity : AppCompatActivity() {
     lateinit var buildingNameTextView: TextView
     @BindView(R.id.editText_person)
     lateinit var addPersonEditText: EditText
-    private lateinit var mEmployeeViewModel: EmployeeViewModel
     private lateinit var mBookingViewModel: BookingViewModel
     private var names = ArrayList<EmployeeList>()
     private var customAdapter: CheckBoxAdapter? = null
     private var checkedEmployee = ArrayList<EmployeeList>()
     private var mBooking = Booking()
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -67,6 +63,9 @@ class BookingActivity : AppCompatActivity() {
 
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         val mIntentDataFromActivity = getIntentData()
+
+        mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
+
         setDataToTextView(mIntentDataFromActivity, acct!!.displayName.toString())
         setDialogForSelectingMeetingMembers()
         setDialog(mIntentDataFromActivity)
@@ -154,13 +153,16 @@ class BookingActivity : AppCompatActivity() {
      * function will make a api call whcih will get all the employee list from backend
      */
     private fun setDialogForSelectingMeetingMembers() {
-        mEmployeeViewModel = ViewModelProviders.of(this).get(EmployeeViewModel::class.java)
-        mEmployeeViewModel.getEmployeeList(this).observe(this, Observer {
+        mBookingViewModel.getEmployeeList()
+        mBookingViewModel.returnSuccessForEmployeeList().observe(this, Observer {
             names.clear()
             for (item in it!!) {
                 item.isSelected = false
                 names.add(item)
             }
+        })
+        mBookingViewModel.returnFailureForEmployeeList().observe(this, Observer {
+            //for error code for employeeList
         })
     }
 
@@ -180,11 +182,7 @@ class BookingActivity : AppCompatActivity() {
             view.editTextSearch.onRightDrawableClicked {
                 it.text.clear()
             }
-
-//            view.clear_Text.setOnClickListener {
-//                view.editTextSearch.setText("")
-//            }
-            setClickListnerOnEditText(view)
+            setClickListenerOnEditText(view)
             mBuilder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                 var email = ""
                 var name = ""
@@ -218,7 +216,7 @@ class BookingActivity : AppCompatActivity() {
     /**
      * attach a addTextChangedListener which will search data into the list
      */
-    private fun setClickListnerOnEditText(view: View) {
+    private fun setClickListenerOnEditText(view: View) {
         view.editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 /**
@@ -242,10 +240,19 @@ class BookingActivity : AppCompatActivity() {
      * function sets a observer which will observe the data from backend and add the booking details to the database
      */
     private fun addBooking(mBooking: Booking) {
+        /**
+         * getting Progress Dialog
+         */
+        val progressDialog =
+            GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mBooking.purpose = purposeEditText.text.toString()
-        mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
-        mBookingViewModel.addBookingDetails(this, mBooking).observe(this, Observer {
+        progressDialog.show()
+        mBookingViewModel.addBookingDetails(mBooking)
+        mBookingViewModel.returnSuccessForBooking().observe(this, Observer {
             goToBookingDashboard()
+        })
+        mBookingViewModel.returnFailureForBooking().observe(this, Observer {
+            // based on some error code
         })
     }
 

@@ -25,8 +25,8 @@ class BuildingDashboard : AppCompatActivity() {
      */
     @BindView(R.id.buidingRecyclerView)
     lateinit var recyclerView: RecyclerView
-    lateinit var buildingAdapter: BuildingAdapter
-    lateinit var mBuildingsViewModel: BuildingViewModel
+    private lateinit var buildingAdapter: BuildingAdapter
+    private lateinit var mBuildingsViewModel: BuildingViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,17 +55,18 @@ class BuildingDashboard : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        mBuildingsViewModel.mBuildingsRepository!!.makeApiCall()
+        mBuildingsViewModel.getBuildingList()
     }
 
     /**
      * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
      */
-    private fun getViewModel() {
+     private fun getViewModel() {
         val mProgressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
         mProgressDialog.show()
-        mBuildingsViewModel.getBuildingList().observe(this, Observer {
+        mBuildingsViewModel.getBuildingList()
+        mBuildingsViewModel.returnMBuildingSuccess().observe(this, Observer {
             mProgressDialog.dismiss()
             when(it){
                 null->{
@@ -84,7 +85,10 @@ class BuildingDashboard : AppCompatActivity() {
                     }
                 }
             }
-
+        })
+        mBuildingsViewModel.returnMBuildingFailure().observe(this, Observer {
+            mProgressDialog.dismiss()
+            //some message goes here
         })
     }
 }

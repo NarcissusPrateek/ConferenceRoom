@@ -3,6 +3,7 @@ package com.example.conferencerommapp.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -12,6 +13,7 @@ import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetAleretDialog
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.FetchConferenceRoom
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
@@ -21,7 +23,7 @@ import com.example.conferencerommapp.ViewModel.ConferenceRoomViewModel
 class ConferenceRoomActivity : AppCompatActivity() {
 
     private lateinit var mConferenceRoomViewModel: ConferenceRoomViewModel
-    lateinit var mCustomAdapter: ConferenceRoomAdapter
+    private lateinit var mCustomAdapter: ConferenceRoomAdapter
     @BindView(R.id.conference_recycler_view)
     lateinit var mRecyclerView: RecyclerView
     private lateinit var mIntentDataFromActivity: GetIntentDataFromActvity
@@ -49,24 +51,35 @@ class ConferenceRoomActivity : AppCompatActivity() {
     /**
      * get the object of ViewModel class and by using this object we call the api and set the observer on the function
      */
-    private fun getViewModel(mIntentDataFromActvity: GetIntentDataFromActvity, mFetchRoom: FetchConferenceRoom) {
+    private fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity, mFetchRoom: FetchConferenceRoom) {
+        /**
+         * get progress dialog
+         */
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         mConferenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
-        mConferenceRoomViewModel.getConferenceRoomList(this, mFetchRoom).observe(this, Observer {
+        progressDialog.show()
+        mConferenceRoomViewModel.getConferenceRoomList(mFetchRoom)
+        progressDialog.dismiss()
+        mConferenceRoomViewModel.returnSuccess().observe(this, Observer {
             if(it.isEmpty()) {
-                showDialog()
+                showAlertDialog()
             }else {
                 mCustomAdapter = ConferenceRoomAdapter(
                     it!!,
                     object : ConferenceRoomAdapter.BtnClickListener {
                         override fun onBtnClick(roomId: String?, roomname: String?) {
-                            mIntentDataFromActvity.roomId = roomId
-                            mIntentDataFromActvity.roomName = roomname
-                            goToNextActivity(mIntentDataFromActvity)
+                            mIntentDataFromActivity.roomId = roomId
+                            mIntentDataFromActivity.roomName = roomname
+                            goToNextActivity(mIntentDataFromActivity)
                         }
                     })
                 mRecyclerView.adapter = mCustomAdapter
             }
-
+        })
+        mConferenceRoomViewModel.returnFailure().observe(this, Observer {
+            // according to the code
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
+            finish()
         })
     }
 
@@ -85,26 +98,26 @@ class ConferenceRoomActivity : AppCompatActivity() {
      */
     override fun onRestart() {
         super.onRestart()
-        mConferenceRoomViewModel.getConferenceRoomList(this, setDataToObjectForApiCall(mIntentDataFromActivity))
+        mConferenceRoomViewModel.getConferenceRoomList(setDataToObjectForApiCall(mIntentDataFromActivity))
     }
 
     /**
      * function will set data for different properties of object of FetchConferenceRoom class
      * and it will return that object which is used as a parameter for api call
      */
-    private fun setDataToObjectForApiCall(mIntentDataFromActvity: GetIntentDataFromActvity): FetchConferenceRoom {
+    private fun setDataToObjectForApiCall(mIntentDataFromActivity: GetIntentDataFromActvity): FetchConferenceRoom {
         val mFetchRoom = FetchConferenceRoom()
-        mFetchRoom.fromTime = mIntentDataFromActvity.fromTime
-        mFetchRoom.toTime = mIntentDataFromActvity.toTime
-        mFetchRoom.capacity = mIntentDataFromActvity.capacity!!.toInt()
-        mFetchRoom.buildingId = mIntentDataFromActvity.buildingId!!.toInt()
+        mFetchRoom.fromTime = mIntentDataFromActivity.fromTime
+        mFetchRoom.toTime = mIntentDataFromActivity.toTime
+        mFetchRoom.capacity = mIntentDataFromActivity.capacity!!.toInt()
+        mFetchRoom.buildingId = mIntentDataFromActivity.buildingId!!.toInt()
         return mFetchRoom
     }
 
     /**
      * show alert dialog when rooms are not available
      */
-    fun showDialog() {
+    fun showAlertDialog() {
         val mDialog = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_not_available))
         mDialog.setPositiveButton(getString(R.string.ok)) {_,_->
             finish()

@@ -4,26 +4,42 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.conferencerommapp.AddConferenceRoom
+import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Repository.AddConferenceRepository
 
-class AddConferenceRoomViewModel: ViewModel()  {
+class AddConferenceRoomViewModel : ViewModel() {
     /**
      * a object which will hold the reference to the corrosponding repository class
      */
-    var mAddConferenceRepository : AddConferenceRepository? = null
+    var mAddConferenceRepository: AddConferenceRepository? = null
     /**
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
-    var mStatus: MutableLiveData<Int>? = null
+    var mSuccessForAddingRoom = MutableLiveData<Int>()
+    var mFailureForAddingRoom = MutableLiveData<Int>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun addConferenceDetails(mAddConference: AddConferenceRoom): MutableLiveData<Int>{
+    fun addConferenceDetails(mAddConference: AddConferenceRoom) {
         mAddConferenceRepository = AddConferenceRepository.getInstance()
-        mStatus = mAddConferenceRepository!!.addConferenceDetails(mAddConference)
-        return mStatus!!
+        mAddConferenceRepository!!.addConferenceDetails(mAddConference, object : ResponseListener {
+            override fun onSuccess(success: Any) {
+                mSuccessForAddingRoom.value = success as Int
+            }
+
+            override fun onFailure(failure: Int) {
+                mFailureForAddingRoom.value = failure
+            }
+        })
+    }
+
+    fun returnSuccessForAddingRoom(): MutableLiveData<Int> {
+        return mSuccessForAddingRoom
+    }
+    fun returnFailureForAddingRoom(): MutableLiveData<Int> {
+        return mFailureForAddingRoom
     }
 
 }

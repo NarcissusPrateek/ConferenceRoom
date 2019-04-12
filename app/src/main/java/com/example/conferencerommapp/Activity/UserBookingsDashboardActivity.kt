@@ -1,11 +1,11 @@
 package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -17,13 +17,14 @@ import androidx.lifecycle.ViewModelProviders
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.bumptech.glide.Glide
-import com.example.conferencerommapp.Helper.DashBoardAdapter
-import com.example.conferencerommapp.Helper.GoogleGSO
+import com.example.conferencerommapp.Helper.*
+import com.example.conferencerommapp.Model.CancelBooking
 import com.example.conferencerommapp.Model.Dashboard
 import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.BookingDashboardViewModel
+import com.example.conferencerommapp.ViewModel.CancelBookingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.material.navigation.NavigationView
@@ -31,19 +32,21 @@ import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
 import kotlinx.android.synthetic.main.content_main2.*
 import kotlinx.android.synthetic.main.nav_header_main2.view.*
+import java.text.SimpleDateFormat
 
 class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var finalList = ArrayList<Manager>()
-    lateinit var mBookingDashboardViewModel: BookingDashboardViewModel
+    private lateinit var mBookingDashBoardViewModel: BookingDashboardViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         ButterKnife.bind(this)
         setNavigationViewItem()
 
-        mBookingDashboardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
+        mBookingDashBoardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
         loadDashboard()
     }
 
@@ -130,9 +133,17 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      * else it will call another function for filtering the data
      */
     private fun loadDashboard() {
+
         val acct = GoogleSignIn.getLastSignedInAccount(application)
         val email = acct!!.email.toString()
-        mBookingDashboardViewModel.getBookingList(this, email).observe(this, Observer {
+
+        /**
+         * getting Progress Dialog
+         */
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        progressDialog.show()
+        mBookingDashBoardViewModel.getBookingList(email)
+        mBookingDashBoardViewModel.returnSuccess().observe(this, Observer {
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
                 textView_no_events.visibility = View.VISIBLE
@@ -146,6 +157,9 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             }
             setFilteredDataToAdapter(it)
         })
+        mBookingDashBoardViewModel.returnFailure().observe(this, Observer {
+            // message according to the backend response
+        })
     }
 
     /**
@@ -154,7 +168,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     override fun onRestart() {
         super.onRestart()
         val acct = GoogleSignIn.getLastSignedInAccount(application)
-        mBookingDashboardViewModel.mBookingDashboardRepository!!.makeApiCall(this, acct!!.email.toString())
+        mBookingDashBoardViewModel.getBookingList(acct!!.email.toString())
     }
 
     /**
@@ -166,15 +180,172 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         dashBord_recyclerView1.adapter =
             DashBoardAdapter(
                 finalList,
-                this@UserBookingsDashboardActivity
+                this@UserBookingsDashboardActivity,
+                object : DashBoardAdapter.CancelBtnClickListener {
+                    override fun onCLick(position: Int) {
+                        showConfirmDialogForCancelMeeting(position)
+                    }
+                },
+
+                object: DashBoardAdapter.ShowMembersListener {
+                    override fun showMembers(mEmployeeList: List<String>) {
+                        showMeetingMembers(mEmployeeList)
+                    }
+
+                },
+
+                object: DashBoardAdapter.ShowDatesForRecurringMeeting {
+                    override fun showDates(position: Int) {
+                        setDataToAlertDialogForShowDates(position)
+                    }
+
+                }
             )
+    }
+
+    /**
+     * show a dialog to confirm cancel of booking
+     * if ok button is pressed than cancelBooking function is called
+     */
+    fun showConfirmDialogForCancelMeeting(position: Int) {
+        val mBuilder =
+            GetAleretDialog.getDialog(
+                this@UserBookingsDashboardActivity,
+                getString(R.string.cancel),
+                getString(R.string.sure_cancel_meeting)
+            )
+        mBuilder.setPositiveButton(getString(R.string.yes)) { _, _ ->
+            /**
+             * object which is required for the API call
+             */
+            val mCancel = CancelBooking()
+            mCancel.roomId = finalList[position].CId
+            mCancel.toTime = finalList[position].ToTime
+            mCancel.fromTime = finalList[position].FromTime
+            mCancel.email = finalList[position].Email
+            cancelBooking(mCancel)
+        }
+        mBuilder.setNegativeButton(getString(R.string.no)) { _, _ ->
+        }
+        val dialog = GetAleretDialog.showDialog(mBuilder)
+        ColorOfDialogButton.setColorOfDialogButton(dialog)
+    }
+
+    fun setDataToAlertDialogForShowDates(position: Int) {
+        val list = finalList[position].fromlist
+        val arrayList = ArrayList<String>()
+        for (item in list) {
+            arrayList.add(formatDate(item))
+        }
+        val listItems = arrayOfNulls<String>(arrayList.size)
+        arrayList.toArray(listItems)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.dates_of_meeting))
+        builder.setItems(listItems) { _, which ->
+            if (finalList[position].Status[which] == "Cancelled") {
+                Toast.makeText(this, getString(R.string.cancelled_by_hr), Toast.LENGTH_LONG).show()
+            } else {
+                val builder = GetAleretDialog.getDialog(
+                    this,
+                    getString(R.string.cancel),
+                    "Press ok to Cancel the booking for the date '${listItems.get(index = which).toString()}'"
+                )
+                builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    val mCancel = CancelBooking()
+                    val date = reverseDateFormat(listItems[which].toString())
+                    mCancel.roomId = finalList[position].CId
+                    mCancel.email = finalList[position].Email
+                    mCancel.fromTime =
+                        date + "T" + finalList[position].FromTime!!.split("T")[1]
+                    mCancel.toTime =
+                        date + "T" + finalList[position].ToTime!!.split("T")[1]
+                        cancelBooking(mCancel)
+                }
+                builder.setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                }
+                builder.setNeutralButton("Update") { _, _ ->
+                    //editAlert(position, context)
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.setCancelable(false)
+                dialog.show()
+                ColorOfDialogButton.setColorOfDialogButton(dialog)
+            }
+
+        }
+        val mDialog = builder.create()
+        mDialog.show()
+    }
+    /**
+     * format date from yyyy-MM-dd to dd-MM-yyyy
+     */
+    @SuppressLint("SimpleDateFormat")
+    private fun formatDate(date: String): String {
+        val simpleDateFormatInput = SimpleDateFormat(getString(R.string.input_date_format_for_booking_dashboard))
+        val simpleDateFormatOutput = SimpleDateFormat(getString(R.string.ount_date_format_for_booking_dashboard))
+        return simpleDateFormatOutput.format(simpleDateFormatInput.parse(date.split("T")[0]))
+    }
+
+    /**
+     * format date from dd-MM-yyyy to yyyy-MM-dd
+     */
+    @SuppressLint("SimpleDateFormat")
+    private fun reverseDateFormat(date: String): String {
+        val simpleDateFormatInput = SimpleDateFormat("yyyy-MM-dd")
+        val simpleDateFormatOutput = SimpleDateFormat("dd MMMM yyyy")
+        return simpleDateFormatInput.format(simpleDateFormatOutput.parse(date))
+    }
+
+
+    /**
+     * Display the list of employee names in the alert dialog
+     */
+    fun showMeetingMembers(mEmployeeList: List<String>) {
+        val arrayListOfNames = ArrayList<String>()
+        for (item in mEmployeeList!!) {
+            arrayListOfNames.add(item)
+        }
+        val listItems = arrayOfNulls<String>(arrayListOfNames.size)
+        arrayListOfNames.toArray(listItems)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.meeting_members))
+        builder.setItems(listItems
+        ) { _, _ -> }
+        val mDialog = builder.create()
+        mDialog.show()
+    }
+    /**
+     * A function for cancel a booking
+     */
+    private fun cancelBooking(mCancel: CancelBooking) {
+
+
+        /**
+         * setting the observer for making the api call for cancelling the booking
+         */
+        val mCancelBookingViewModel =
+            ViewModelProviders.of(this).get(CancelBookingViewModel::class.java)
+
+        /**
+         * getting Progress Dialog
+         */
+        var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        progressDialog.show()
+        mCancelBookingViewModel.cancelBooking(mCancel)
+        progressDialog.dismiss()
+        mCancelBookingViewModel.returnBookingCancelled().observe(this, Observer {
+            Toast.makeText(this, getString(R.string.cancelled_successful), Toast.LENGTH_SHORT).show()
+            // make api call for referehing data
+        })
+        mCancelBookingViewModel.returnCancelFailed().observe(this, Observer {
+            // shoe some message according to the response code from backend
+        })
     }
 
     /**
      * perform filter task on List of all booking whether they are of recurring type of not
      */
     private fun getFilteredList(dashboardItemList: List<Dashboard>) {
-
         for (item in dashboardItemList) {
             var flag = 0
             for (i in finalList) {

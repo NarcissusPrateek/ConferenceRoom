@@ -1,9 +1,8 @@
 package com.example.conferencerommapp.ViewModel
 
-import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Repository.CheckRegistrationRepository
 
 class CheckRegistrationViewModel : ViewModel() {
@@ -16,15 +15,31 @@ class CheckRegistrationViewModel : ViewModel() {
     /**
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
-    var mCode: MutableLiveData<Int>? = null
+    var mSuccessCode =  MutableLiveData<Int>()
+    var mFailureCode =  MutableLiveData<Int>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun checkRegistration(mContext: Context, email: String): LiveData<Int> {
+    fun checkRegistration(mEmail: String) {
         mCheckRegistrationRepository = CheckRegistrationRepository.getInstance()
-        mCode = mCheckRegistrationRepository!!.checkRegistration(mContext, email) as MutableLiveData<Int>
-        return mCode!!
+        mCheckRegistrationRepository!!.checkRegistration(mEmail, object: ResponseListener {
+            override fun onSuccess(success: Any) {
+                mSuccessCode.value = success as Int
+            }
+
+            override fun onFailure(failure: Int) {
+                mFailureCode.value = failure
+            }
+
+        })
+    }
+
+    fun returnSuccessCode(): MutableLiveData<Int> {
+        return mSuccessCode
+    }
+    fun returnFailureCode(): MutableLiveData<Int> {
+        return mFailureCode
     }
 }

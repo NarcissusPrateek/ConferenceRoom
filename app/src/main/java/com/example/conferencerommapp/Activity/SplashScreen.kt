@@ -9,6 +9,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.RegistrationActivity
 import com.example.conferencerommapp.SignIn
@@ -43,9 +44,19 @@ class SplashScreen : AppCompatActivity() {
      * function make a request to backend for checking whether the user is registered or not
      */
     private fun checkRegistration(email: String) {
+
+        /**
+         * getting Progress Dialog
+         */
+        var progressDialog =  GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        progressDialog.show()
         val mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
-        mCheckRegistrationViewModel.checkRegistration(this, email).observe(this, Observer {
+        mCheckRegistrationViewModel.checkRegistration(email)
+        mCheckRegistrationViewModel.returnSuccessCode().observe(this, Observer {
             setValueForSharedPreference(it)
+        })
+        mCheckRegistrationViewModel.returnFailureCode().observe(this, Observer {
+            //some message according to error code form server
         })
     }
 

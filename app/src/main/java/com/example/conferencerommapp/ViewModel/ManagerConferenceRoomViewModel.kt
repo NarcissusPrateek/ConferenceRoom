@@ -1,8 +1,8 @@
 package com.example.conferencerommapp.ViewModel
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.Model.ManagerConference
 import com.example.conferencerommapp.Repository.ManagerConferenceRoomRepository
@@ -17,20 +17,41 @@ class ManagerConferenceRoomViewModel : ViewModel() {
     /**
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
-    var mConferenceRoomList: MutableLiveData<List<ConferenceRoom>>? = null
-
+    var mConferenceRoomList =  MutableLiveData<List<ConferenceRoom>>()
+    var mFailureCode =  MutableLiveData<Int>()
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
-     * and function will return the value for MutableLivedata
      */
-    fun getConferenceRoomList(context: Context, room: ManagerConference): MutableLiveData<List<ConferenceRoom>> {
-        if (mConferenceRoomList == null) {
-            mManagerConferenceRoomRepository = ManagerConferenceRoomRepository.getInstance()
-            mConferenceRoomList = mManagerConferenceRoomRepository!!.getConferenceRoomList(
-                context,
-                room
-            ) as MutableLiveData<List<ConferenceRoom>>
-        }
-        return mConferenceRoomList!!
+    fun getConferenceRoomList(mRoom: ManagerConference) {
+        mManagerConferenceRoomRepository = ManagerConferenceRoomRepository.getInstance()
+        mManagerConferenceRoomRepository!!.getConferenceRoomList(
+            mRoom,
+            object : ResponseListener {
+                override fun onSuccess(success: Any) {
+                    mConferenceRoomList.value = success as List<ConferenceRoom>
+                }
+
+                override fun onFailure(failure: Int) {
+                    mFailureCode.value = failure
+                }
+
+            }
+        )
     }
+
+    /**
+     * function will return the MutableLiveData of List of buildings
+     */
+    fun returnSuccess(): MutableLiveData<List<ConferenceRoom>> {
+        return mConferenceRoomList
+    }
+
+    /**
+     * function will return the MutableLiveData of Int if something went wrong at server
+     */
+    fun returnFailure(): MutableLiveData<Int> {
+        return mFailureCode
+    }
+
+
 }

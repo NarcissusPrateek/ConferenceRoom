@@ -5,13 +5,13 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Html.fromHtml
 import android.text.TextUtils.isEmpty
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -19,11 +19,10 @@ import butterknife.OnClick
 import com.example.conferencerommapp.BuildingConference
 import com.example.conferencerommapp.Helper.ConvertTimeInMillis
 import com.example.conferencerommapp.Helper.DateAndTimePicker
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.BlockRoom
 import com.example.conferencerommapp.Model.Building
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.ViewModel.BlockConferenceRoomListViewModel
-import com.example.conferencerommapp.ViewModel.BlockConfirmationViewModel
 import com.example.conferencerommapp.ViewModel.BlockRoomViewModel
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -40,7 +39,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     lateinit var dateEditText: EditText
     @BindView(R.id.Purpose)
     lateinit var purposeEditText: EditText
-
+    lateinit var mBlockRoomViewModel: BlockRoomViewModel
     var room = BlockRoom()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +49,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Block) + "</font>")
         ButterKnife.bind(this)
 
+        mBlockRoomViewModel = ViewModelProviders.of(this).get(BlockRoomViewModel::class.java)
         setDialogsToInputFields()
         getBuilding()//setting spinner
 
@@ -62,7 +62,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         }
     }
 
-    private fun addDataToobject() {
+    private fun addDataToObject() {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         room.email = acct!!.email
         room.purpose = purposeEditText.text.toString()
@@ -89,16 +89,41 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     }
 
     private fun getBuilding() {
+
+        /**
+         * get progress dialog
+         */
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         val mBuildingViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
-        mBuildingViewModel.getBuildingList().observe(this, androidx.lifecycle.Observer {
-            buildingListFromBackend(it)
+        progressDialog.show()
+        mBuildingViewModel.getBuildingList()
+
+        mBuildingViewModel.returnMBuildingSuccess().observe(this, Observer {
+            progressDialog.dismiss()
+            if(it.isEmpty()) {
+
+            }else {
+                buildingListFromBackend(it)
+            }
+        })
+
+        mBuildingViewModel.returnMBuildingFailure().observe(this, Observer {
+            progressDialog.dismiss()
+            // some message according to the error code from backend
         })
     }
 
     private fun blocking(room: BlockRoom) {
-        val mBlockConfirmationViewModel = ViewModelProviders.of(this).get(BlockConfirmationViewModel::class.java)
-        mBlockConfirmationViewModel.blockingStatus(this, room)!!.observe(this, androidx.lifecycle.Observer {
-            Log.i("@@@", it.toString())
+
+        /**
+         * get progress Dialog
+         */
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        progressDialog.show()
+        mBlockRoomViewModel.blockingStatus(room)
+
+        mBlockRoomViewModel.returnSuccessForConfirmation().observe(this, Observer {
+            progressDialog.dismiss()
             if (it.mStatus == 0) {
                 blockConfirmed(room)
             } else {
@@ -116,11 +141,24 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
                 dialog.show()
             }
         })
+
+        mBlockRoomViewModel.returnResponseErrorForConfirmation().observe(this, Observer {
+            progressDialog.dismiss()
+            // some message according to the error code from server
+        })
     }
 
-    private fun blockConfirmed(room: BlockRoom) {
-        val mBlockRoomViewModel = ViewModelProviders.of(this).get(BlockRoomViewModel::class.java)
-        mBlockRoomViewModel.blockRoom(this, room).observe(this, androidx.lifecycle.Observer {
+    private fun blockConfirmed(mRoom: BlockRoom) {
+
+        /**
+         * get progress dialog
+         */
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        progressDialog.show()
+        mBlockRoomViewModel.blockRoom(mRoom)
+
+        mBlockRoomViewModel.returnSuccessForBlockRoom().observe(this, Observer {
+            progressDialog.dismiss()
             val builder =
                 AlertDialog.Builder(this@BlockConferenceRoomActivity)
             builder.setTitle(getString(R.string.blockingStatus))
@@ -131,6 +169,11 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             val dialog: AlertDialog = builder.create()
             dialog.show()
         })
+
+        mBlockRoomViewModel.returnResponseErrorForBlockRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            // some message according to the error code
+        })
     }
 
     private fun buildingListFromBackend(it: List<Building>) {
@@ -139,10 +182,10 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
     private fun sendDataForSpinner(it: List<Building>) {
         val items = mutableListOf<String>()
-        val itemsid = mutableListOf<Int>()
+        val itemsId = mutableListOf<Int>()
         for (item in it) {
             items.add(item.buildingName!!)
-            itemsid.add(item.buildingId!!.toInt())
+            itemsId.add(item.buildingId!!.toInt())
         }
         buiding_Spinner.adapter =
             ArrayAdapter<String>(this@BlockConferenceRoomActivity, android.R.layout.simple_list_item_1, items)
@@ -154,17 +197,23 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                room.bId = itemsid[position]
-                conferenceRoomListFromBackend(itemsid[position])
+                room.bId = itemsId[position]
+                conferenceRoomListFromBackend(itemsId[position])
             }
         }
     }
 
     fun conferenceRoomListFromBackend(buildingId: Int) {
-        val mBlockConferenceRoomListViewModel =
-            ViewModelProviders.of(this).get(BlockConferenceRoomListViewModel::class.java)
-        mBlockConferenceRoomListViewModel.getRoomList(this, buildingId)!!.observe(this, androidx.lifecycle.Observer {
-            setSpinnerToConferenceList(it)
+        mBlockRoomViewModel.getRoomList(buildingId)
+        mBlockRoomViewModel.returnConferenceRoomList().observe(this, Observer {
+            if (it.isEmpty()) {
+                // do something
+            }else {
+                setSpinnerToConferenceList(it)
+            }
+        })
+        mBlockRoomViewModel.returnResponseErrorForConferenceRoom().observe(this, Observer {
+            // some message according to the error code from backend
         })
     }
 
@@ -192,7 +241,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
     }
 
-   private fun validateInput(): Boolean {
+    private fun validateInput(): Boolean {
        when {
            isEmpty(fromTime_b.text.trim()) -> {
                Toast.makeText(
@@ -275,7 +324,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     }
 
     private fun blockRoom() {
-        addDataToobject()
+        addDataToObject()
         blocking(room)
     }
 }

@@ -102,6 +102,13 @@
     <string name="internal_server_error">Some internal error occurred!!!</string>
     <string name="missing_building_name">Enter the Building name</string>
     <string name="missing_building_place">Enter the Building place</string>
+    <string name="sure_cancel_meeting">Are you sure you want to cancel the meeting?</string>
+    <string name="cancelled_successful">Booking Cancelled Successfully</string>
+    <string name="meeting_members">Meeting Members</string>
+    <string name="input_date_format_for_booking_dashboard">yyyy-MM-dd</string>
+    <string name="ount_date_format_for_booking_dashboard">dd MMMM yyyy</string>
+    <string name="asdfghjk">MMMM</string>
+    <string name="room_unblocked">Room unBlocked!</string>
 
 
     <string-array name="role">

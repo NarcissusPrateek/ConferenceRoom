@@ -1,8 +1,8 @@
 package com.example.conferencerommapp.ViewModel
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.AddBuilding
 import com.example.conferencerommapp.Repository.AddBuildingRepository
 
@@ -16,16 +16,31 @@ open class AddBuildingViewModel : ViewModel() {
     /**
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
-    var mStatus: MutableLiveData<Int>? = null
-
+    var mSuccessForAddBuilding = MutableLiveData<Int>()
+    var mFailureForAddBuilding = MutableLiveData<Int>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun addBuildingDetails(mAddBuilding: AddBuilding): MutableLiveData<Int>? {
+    fun addBuildingDetails(mAddBuilding: AddBuilding) {
         mAddBuildingRepository = AddBuildingRepository.getInstance()
-        mStatus = mAddBuildingRepository!!.addBuildingDetails(mAddBuilding) as MutableLiveData<Int>
-        return mStatus
+        mAddBuildingRepository!!.addBuildingDetails(mAddBuilding, object : ResponseListener {
+            override fun onSuccess(success: Any) {
+                mSuccessForAddBuilding.value = success as Int
+            }
+
+            override fun onFailure(failure: Int) {
+                mFailureForAddBuilding.value = failure
+            }
+
+        })
+    }
+
+    fun returnSuccessForAddBuilding(): MutableLiveData<Int> {
+        return mSuccessForAddBuilding
+    }
+    fun returnFailureForAddBuilding(): MutableLiveData<Int> {
+        return mFailureForAddBuilding
     }
 }

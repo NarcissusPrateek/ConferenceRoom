@@ -4,10 +4,15 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.conferencerommapp.BuildingConference
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.BlockRoom
+import com.example.conferencerommapp.Model.BlockingConfirmation
+import com.example.conferencerommapp.Model.ConferenceRoom
+import com.example.conferencerommapp.Model.FetchConferenceRoom
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
@@ -31,42 +36,96 @@ class BlockRoomRepository {
     }
 
     /**
-     * function will initialize the MutableLivedata Object and than call a function for api call
-     * Passing the Context and model and call API, In return sends the status of LiveData
+     *  function will make API call
      */
-    fun blockRoom(mContext: Context, room: BlockRoom): LiveData<Int> {
-        mStatus = MutableLiveData()
-        makeCallToApi(mContext, room)
-        return mStatus!!
-    }
-
-    fun makeCallToApi(mContext: Context, room: BlockRoom) {
+    fun blockRoom(mRoom: BlockRoom, listener: ResponseListener) {
 
         /**
-         * get progress dialog
+         * make API call usnig retrofit
          */
-        val progressDialog = GetProgress.getProgressDialog(mContext.getString(R.string.status), mContext)
-        progressDialog.show()
         val blockRoomApi = Servicebuilder.buildService(ConferenceService::class.java)
-        val requestCall: Call<ResponseBody> = blockRoomApi.blockconference(room)
+        val requestCall: Call<ResponseBody> = blockRoomApi.blockconference(mRoom)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Toast.makeText(mContext, mContext.getString(R.string.server_not_found), Toast.LENGTH_SHORT).show()
+                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == Constants.OK_RESPONSE) {
-                    mStatus!!.value = response.code()
+                   listener.onSuccess(response.body()!!)
                 } else {
-                    var mBuilder = GetAleretDialog.getDialog(
-                        mContext,
-                        mContext.getString(R.string.status),
-                        "${JSONObject(response.errorBody()!!.string()).getString("Message")} "
-                    )
-                    GetAleretDialog.showDialog(mBuilder)
+                    listener.onFailure(response.code())
                 }
             }
 
+        })
+    }
+
+
+
+    /**
+     * ---------------------------------------------------------------------------------------------------------------------------
+     */
+
+    /**
+     * function will initialize the MutableLivedata Object and than make API Call
+     * Passing the Context and model and call API, In return sends the status of LiveData
+     */
+    fun getRoomList(buildingId: Int, listener: ResponseListener) {
+
+        /**
+         *  api call using retrofit
+         */
+        val requestCall: Call<List<BuildingConference>> = Servicebuilder.getObject().getBuildingsConference(buildingId)
+        requestCall.enqueue(object : Callback<List<BuildingConference>> {
+            override fun onFailure(call: Call<List<BuildingConference>>, t: Throwable) {
+                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+            }
+
+            override fun onResponse(
+                call: Call<List<BuildingConference>>,
+                response: Response<List<BuildingConference>>
+            ) {
+                if (response.code() == Constants.OK_RESPONSE) {
+                    listener.onSuccess(response.body()!!)
+                } else {
+                    listener.onFailure(response.code())
+                }
+            }
+        })
+    }
+
+    /**
+     * ---------------------------------------------------------------------------------------------------------------------------
+     */
+
+    fun blockingStatus(mRoom: BlockRoom, listener: ResponseListener) {
+        /**
+         * API call using retrofit
+         */
+        var blockRoomApi = Servicebuilder.getObject()
+        val requestCall: Call<BlockingConfirmation> = blockRoomApi.blockConfirmation(mRoom)
+        requestCall.enqueue(object : Callback<BlockingConfirmation> {
+            override fun onFailure(call: Call<BlockingConfirmation>, t: Throwable) {
+                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+            }
+
+            override fun onResponse(call: Call<BlockingConfirmation>, response: Response<BlockingConfirmation>) {
+                if (response.code() == Constants.OK_RESPONSE) {
+                    if (response.body() == null) {
+                        val blockingConfirmation = BlockingConfirmation()
+                        blockingConfirmation.mStatus = 0
+                        listener.onSuccess(blockingConfirmation)
+
+                    } else {
+                        val blockingConfirmation = response.body()
+                        blockingConfirmation!!.mStatus = 1
+                        listener.onSuccess(blockingConfirmation)
+                    }
+                }else {
+                    listener.onFailure(response.code())
+                }
+            }
         })
     }
 }

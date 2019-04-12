@@ -17,10 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.example.conferencerommapp.Helper.CheckBoxAdapter
-import com.example.conferencerommapp.Helper.ColorOfDialogButton
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetAleretDialog
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.ManagerBooking
@@ -51,7 +48,6 @@ class ManagerBookingActivity : AppCompatActivity() {
     lateinit var buildingNameTextView: TextView
     @BindView(R.id.editText_person)
     lateinit var addPersonEditText: EditText
-    private lateinit var mEmployeeViewModel: EmployeeViewModel
     private lateinit var mManagerBookingViewModel: ManagerBookingViewModel
 
     private lateinit var acct: GoogleSignInAccount
@@ -70,8 +66,9 @@ class ManagerBookingActivity : AppCompatActivity() {
 
         val mGetIntentDataFromActvity = getIntentData()
 
+        mManagerBookingViewModel = ViewModelProviders.of(this).get(ManagerBookingViewModel::class.java)
         setDataToTextview(mGetIntentDataFromActvity, acct.displayName.toString())
-        setDialogForSelectingMeetingMembers()
+        getDateForSelectingMeetingMembers()
         setDialog()
         addDataToObject(mGetIntentDataFromActvity)
     }
@@ -135,14 +132,22 @@ class ManagerBookingActivity : AppCompatActivity() {
     /**
      * function will make a api call whcih will get all the employee list from backend
      */
-    private fun setDialogForSelectingMeetingMembers() {
-        mEmployeeViewModel = ViewModelProviders.of(this).get(EmployeeViewModel::class.java)
-        mEmployeeViewModel.getEmployeeList(this).observe(this, Observer {
+    private fun getDateForSelectingMeetingMembers() {
+        /**
+         * get Progress Dialog
+         */
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        progressDialog.show()
+        mManagerBookingViewModel.getEmployeeList()
+        mManagerBookingViewModel.returnSuccessForEmployeeList().observe(this, Observer {
             names.clear()
             for (item in it!!) {
                 item.isSelected = false
                 names.add(item)
             }
+        })
+        mManagerBookingViewModel.returnSuccessForEmployeeList().observe(this, Observer {
+            //some message according to the error code
         })
     }
 
@@ -233,9 +238,17 @@ class ManagerBookingActivity : AppCompatActivity() {
      * function sets a observer which will observe the data from backend and add the booking details to the database
      */
     private fun addBooking() {
-        mManagerBookingViewModel = ViewModelProviders.of(this).get(ManagerBookingViewModel::class.java)
-        mManagerBookingViewModel.addBookingDetails(this, mManagerBooking).observe(this, Observer {
+        /**
+         * get Progress Dialog
+         */
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        progressDialog.show()
+        mManagerBookingViewModel.addBookingDetails(mManagerBooking)
+        mManagerBookingViewModel.returnSuccessForBooking().observe(this, Observer {
             goToBookingDashboard()
+        })
+        mManagerBookingViewModel.returnFailureForBooking().observe(this, Observer {
+            // some messae according to the error code
         })
     }
 

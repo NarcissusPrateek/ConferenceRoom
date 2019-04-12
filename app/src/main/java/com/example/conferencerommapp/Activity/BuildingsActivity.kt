@@ -3,6 +3,7 @@ package com.example.conferencerommapp.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -11,6 +12,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.BuildingAdapter
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
@@ -44,26 +46,62 @@ class BuildingsActivity : AppCompatActivity() {
         return intent.extras!!.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
     }
 
+    /**
+     * get the object of ViewModel using ViewModelProviders and observers the data from backend
+     */
     private fun getViewModel() {
+
+        /**
+         * get progress dialog
+         */
+
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         val mIntentDataFromActivity = getIntentData()
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
-        mBuildingsViewModel.getBuildingList().observe(this, Observer {
+        progressDialog.show()
+        mBuildingsViewModel.getBuildingList()
 
+        mBuildingsViewModel.returnMBuildingSuccess().observe(this, Observer {
+            progressDialog.dismiss()
             /**
-             * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
+             * different cases for different result from api call
+             * if the response is NULL than some iternal error is there
+             * if response is empty than
+             * if response is ok than we can set data into the adapter
              */
-            customAdapter = BuildingAdapter(this,
-                it!!,
-                object : BuildingAdapter.BtnClickListener {
-                    override fun onBtnClick(buildingId: String?, buildingname: String?) {
-                        mIntentDataFromActivity.buildingId = buildingId
-                        mIntentDataFromActivity.buildingName = buildingname
-                        goToConferenceRoomActivity(mIntentDataFromActivity)
+            when (it) {
+                null -> {
+                    Toast.makeText(this, getString(R.string.internal_server_error), Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                else -> {
+                    if (it.isEmpty()) {
+                        Toast.makeText(this, "Some messgae from backend", Toast.LENGTH_SHORT).show()
+                    } else {
+                        /**
+                         * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
+                         */
+                        customAdapter = BuildingAdapter(this,
+                            it!!,
+                            object : BuildingAdapter.BtnClickListener {
+                                override fun onBtnClick(buildingId: String?, buildingname: String?) {
+                                    mIntentDataFromActivity.buildingId = buildingId
+                                    mIntentDataFromActivity.buildingName = buildingname
+                                    goToConferenceRoomActivity(mIntentDataFromActivity)
+                                }
+                            }
+                        )
+                        mRecyclerView.adapter = customAdapter
                     }
                 }
-            )
-            mRecyclerView.adapter = customAdapter
+            }
         })
+
+        mBuildingsViewModel.returnMBuildingFailure().observe(this, Observer {
+            progressDialog.dismiss()
+            // some message goes here for error code
+        })
+
     }
 
     /**
@@ -71,7 +109,7 @@ class BuildingsActivity : AppCompatActivity() {
      */
     override fun onRestart() {
         super.onRestart()
-        mBuildingsViewModel.mBuildingsRepository!!.makeApiCall()
+        mBuildingsViewModel.getBuildingList()
     }
 
     /**

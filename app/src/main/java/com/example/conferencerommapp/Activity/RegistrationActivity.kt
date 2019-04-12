@@ -18,6 +18,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.Employee
 import com.example.conferencerommapp.ViewModel.RegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -163,12 +164,21 @@ class RegistrationActivity : AppCompatActivity() {
      * this function will call some other viewmodel function which will make a request to backend for adding the employee
      */
     private fun addEmployee() {
+        /**
+         * get progress dialog
+         */
+        var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        progressDialog.show()
         mRegistrationViewModel = ViewModelProviders.of(this).get(RegistrationViewModel::class.java)
-        mRegistrationViewModel.addEmployee(this, mEmployee)!!.observe(this, Observer {
-            if (it == 200) {
-                setValueInSharedPreference()
-                startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
-            }
+        mRegistrationViewModel.addEmployee(mEmployee)
+        mRegistrationViewModel.returnSuccessForRegistration().observe(this, Observer {
+            progressDialog.dismiss()
+            setValueInSharedPreference()
+            startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
+        })
+        mRegistrationViewModel.returnFailureForRegistration().observe(this, Observer {
+            progressDialog.dismiss()
+            // some error message according to the error code from backend
         })
     }
 

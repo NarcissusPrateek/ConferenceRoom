@@ -23,11 +23,10 @@ import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.UnBlockRoomViewModel
 
 
-class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<BlockedDashboardNew.ViewHolder>() {
+class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: Context, val listener: UnblockRoomListener) : androidx.recyclerview.widget.RecyclerView.Adapter<BlockedDashboardNew.ViewHolder>() {
 
     private var currentPosition = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         val view = LayoutInflater.from(parent.context).inflate(R.layout.block_dashboard_list, parent, false)
         return ViewHolder(view)
     }
@@ -104,13 +103,8 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
         }
     }
 
-    private fun unBlockRoom(mContext: Context, room: Unblock){
-        val mUnBlockRoomViewModel= ViewModelProviders.of(mContext as BlockedDashboard).get(UnBlockRoomViewModel::class.java)
-
-        mUnBlockRoomViewModel.unBlockRoom(mContext,room).observe(mContext, Observer {
-            Toast.makeText(mContext, "UnBlock Room Successfully", Toast.LENGTH_SHORT).show()
-            (mContext).mBlockedDashboardViewModel.mBlockDashboardRepository!!.makeApiCall(mContext)
-        })
+    private fun unBlockRoom(mContext: Context, mRoom: Unblock){
+        listener.onClickOfUnblock(mRoom)
     }
 
     private fun setFunctionOnButton(holder: ViewHolder, position: Int){
@@ -133,6 +127,10 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
             dialog.show()
             ColorOfDialogButton.setColorOfDialogButton(dialog)
         }
+    }
+
+    interface UnblockRoomListener {
+        fun onClickOfUnblock(mRoom: Unblock)
     }
 
 

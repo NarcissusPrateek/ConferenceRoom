@@ -15,6 +15,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Helper.GetAleretDialog
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.ViewModel.CheckRegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -120,9 +121,18 @@ class SignIn : AppCompatActivity() {
      * if not registered than make an intent to registration activity
      */
     private fun checkRegistration(email: String) {
+        /**
+         * getting Progress Dialog
+         */
+        var progressDialog =  GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        progressDialog.show()
         val mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
-        mCheckRegistrationViewModel.checkRegistration(this, email).observe(this, Observer {
+        mCheckRegistrationViewModel.checkRegistration(email)
+        mCheckRegistrationViewModel.returnSuccessCode().observe(this, Observer {
             setValueForSharedPreference(it)
+        })
+        mCheckRegistrationViewModel.returnFailureCode().observe(this, Observer {
+            //some message according to error code form server
         })
     }
 

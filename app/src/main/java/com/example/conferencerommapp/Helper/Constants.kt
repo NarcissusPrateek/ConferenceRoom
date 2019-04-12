@@ -32,5 +32,7 @@ class Constants {
         var IP_ADDRESS = "http://192.168.1.192/CRB/"
 
         const val INTERNAL_SERVER_ERROR = 555
+
+        const val SOME_EXCEPTION = 400
     }
 }

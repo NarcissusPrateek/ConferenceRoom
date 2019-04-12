@@ -1,21 +1,61 @@
 package com.example.conferencerommapp.ViewModel
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.conferencerommapp.Blocked
+import com.example.conferencerommapp.Helper.ResponseListener
+import com.example.conferencerommapp.Helper.Unblock
 import com.example.conferencerommapp.Repository.BlockDashboardRepository
 
 class BlockedDashboardViewModel : ViewModel() {
 
-    var mBlockDashboardRepository : BlockDashboardRepository? =null
-    var mBlockedList : MutableLiveData<List<Blocked>>? = null
+    var mBlockDashboardRepository: BlockDashboardRepository? = null
+    var mBlockedRoomList = MutableLiveData<List<Blocked>>()
+    var mFailureCodeForBlockedRoomList = MutableLiveData<Int>()
+    var mSuccessCodeForBlockRoom =  MutableLiveData<Int>()
+    var mFailureCodeForBlockRoom =  MutableLiveData<Int>()
 
-    fun getBlockedList(mContext: Context):MutableLiveData<List<Blocked>>{
-        if (mBlockedList == null) {
-            mBlockDashboardRepository = BlockDashboardRepository.getInstance()
-        }
-        mBlockedList = mBlockDashboardRepository!!.getBlockedList(mContext) as MutableLiveData<List<Blocked>>
-        return mBlockedList!!
+    fun getBlockedList() {
+        mBlockDashboardRepository = BlockDashboardRepository.getInstance()
+        mBlockDashboardRepository!!.getBlockedList(object : ResponseListener {
+            override fun onSuccess(success: Any) {
+                mBlockedRoomList.value = success as List<Blocked>
+            }
+
+            override fun onFailure(failure: Int) {
+                mFailureCodeForBlockedRoomList.value = failure
+            }
+
+        })
+
+    }
+    fun returnBlockedRoomList(): MutableLiveData<List<Blocked>> {
+        return mBlockedRoomList
+    }
+
+    fun returnFailureCodeFromBlockedApi(): MutableLiveData<Int> {
+        return mFailureCodeForBlockedRoomList
+    }
+    //-----------------------------------------------------------------------------------------------------------
+
+    fun unBlockRoom(mRoom: Unblock) {
+        mBlockDashboardRepository = BlockDashboardRepository.getInstance()
+        mBlockDashboardRepository!!.unblockRoom(mRoom, object: ResponseListener {
+            override fun onSuccess(success: Any) {
+                mSuccessCodeForBlockRoom.value = success as Int
+            }
+
+            override fun onFailure(failure: Int) {
+                mFailureCodeForBlockRoom.value = failure
+            }
+
+        })
+    }
+
+    fun returnSuccessCodeForUnBlockRoom(): MutableLiveData<Int> {
+        return mSuccessCodeForBlockRoom
+    }
+    fun returnFailureCodeForUnBlockRoom(): MutableLiveData<Int> {
+        return mFailureCodeForBlockRoom
     }
 }

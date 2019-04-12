@@ -1,11 +1,9 @@
 package com.example.conferencerommapp.Helper
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,90 +12,68 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.conferencerommapp.Activity.UpdateBookingActivity
-import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Model.CancelBooking
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.ViewModel.CancelBookingViewModel
 import java.text.SimpleDateFormat
 
 @Suppress("NAME_SHADOWING")
 class DashBoardAdapter(
     private val dashboardItemList: ArrayList<Manager>,
-    val mContext: Context
+    val mContext: Context,
+    private val btnListener: DashBoardAdapter.CancelBtnClickListener,
+    private val mShowMembers: DashBoardAdapter.ShowMembersListener,
+    private val mShowDates: DashBoardAdapter.ShowDatesForRecurringMeeting
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<DashBoardAdapter.ViewHolder>() {
+
+    /**
+     * a variable which will hold the 'Instance' of interface
+     */
+    companion object {
+        var mCancelBookingClickListener: CancelBtnClickListener? = null
+        var mShowMembersListener: ShowMembersListener? = null
+        var mShowDateListener: ShowDatesForRecurringMeeting? = null
+    }
 
     private var currentPosition = 0
 
+    /**
+     * this override function will set a view for the recyclerview items
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.dashboard_list, parent, false)
         return ViewHolder(view)
     }
 
+    /**
+     * bind data with the view
+     */
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        setAnimationToTheRecyclerViewItem(holder, position)
-
-        setDataToFields(holder, position)
+        mCancelBookingClickListener = btnListener
+        mShowMembersListener = mShowMembers
+        mShowDateListener = mShowDates
 
         val fromTime = dashboardItemList[position].FromTime
         val toTime = dashboardItemList[position].ToTime
         val fromDate = fromTime!!.split("T")
         val toDate = toTime!!.split("T")
 
+        setAnimationToTheRecyclerViewItem(holder, position)
+        setDataToFields(holder, position)
+
         holder.fromtimetextview.text = fromDate[1] + " - " + toDate[1]
         setButtonFunctionalityAccordingToStatus(holder, position)
         setFunctionOnButton(holder, position, mContext)
-        editActivity(holder,position,mContext)
+        editActivity(holder, position, mContext)
     }
 
-    private fun editActivity(holder: ViewHolder, position: Int, mContext: Context) {
-        holder.updateTextView.setOnClickListener {
-            val mGetIntentDataFromActivity = GetIntentDataFromActvity()
-            val fromTime = dashboardItemList[position].FromTime
-            val fromDate = fromTime!!.split("T")
-            mGetIntentDataFromActivity.purpose = dashboardItemList[position].Purpose
-            mGetIntentDataFromActivity.buildingName = dashboardItemList[position].BName
-            mGetIntentDataFromActivity.roomName = dashboardItemList[position].CName
-            mGetIntentDataFromActivity.roomId = dashboardItemList[position].CId.toString()
-            mGetIntentDataFromActivity.date = fromDate[0]
-            mGetIntentDataFromActivity.fromTime = dashboardItemList[position].FromTime
-            mGetIntentDataFromActivity.toTime = dashboardItemList[position].ToTime
-            mGetIntentDataFromActivity.cCMail =dashboardItemList[position].cCMail
-            val updateActivity = Intent(mContext,UpdateBookingActivity::class.java)
-            updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActivity)
-            mContext.startActivity(updateActivity)
-        }
-    }
-
-    /**
-     * A function for cancel a booking
-     */
-    private fun cancelBooking(mCancel: CancelBooking, mContext: Context) {
-
-        /**
-         * setting the observer for making the api call for cancelling the booking
-         */
-        val mCancelBookingViewModel =
-            ViewModelProviders.of(mContext as UserBookingsDashboardActivity).get(CancelBookingViewModel::class.java)
-        mCancelBookingViewModel.cancelBooking(mContext, mCancel).observe(mContext, Observer {
-            Toast.makeText(mContext, "Booking Cancelled Successfully", Toast.LENGTH_SHORT).show()
-            (mContext).mBookingDashboardViewModel.mBookingDashboardRepository!!.makeApiCall(
-                mContext,
-                mCancel.email!!
-            )
-        })
-    }
 
     /**
      * it will return number of items contains in recyclerview view
@@ -110,6 +86,7 @@ class DashBoardAdapter(
         init {
             ButterKnife.bind(this, itemView)
         }
+
         @Nullable
         @BindView(R.id.building_name)
         lateinit var buildingNameTextview: TextView
@@ -142,7 +119,6 @@ class DashBoardAdapter(
         holder.card.setOnClickListener {
             currentPosition = position
             notifyDataSetChanged()
-
         }
         if (currentPosition == position) {
             if (holder.linearLayout.visibility == View.GONE) {
@@ -176,22 +152,10 @@ class DashBoardAdapter(
     }
 
     /**
-     * set data for the dialog items
+     * send employee List to the activity using interface which will display the list of employee names in the alert dialog
      */
     private fun setMeetingMembers(position: Int) {
-        val list = dashboardItemList[position].Name
-        val arrayList = ArrayList<String>()
-        for (item in list!!) {
-            arrayList.add(item)
-        }
-        val listItems = arrayOfNulls<String>(arrayList.size)
-        arrayList.toArray(listItems)
-        val builder = AlertDialog.Builder(mContext)
-        builder.setTitle("Members of meeting.")
-        builder.setItems(listItems
-        ) { _, _ -> }
-        val mDialog = builder.create()
-        mDialog.show()
+        mShowMembersListener!!.showMembers(dashboardItemList[position].Name!!)
     }
 
     /**
@@ -209,82 +173,20 @@ class DashBoardAdapter(
      * if the meeting is recurring then add dates of meeting to the data field
      */
     @SuppressLint("SimpleDateFormat")
+
     private fun setDataToDialogShowDates(
         holder: ViewHolder,
         position: Int,
         context: Context
     ) {
-
         holder.dateTextView.text = context.getString(R.string.show_dates)
         holder.dateTextView.setTextColor(Color.parseColor("#0072BC"))
         holder.cancelButton.visibility = View.INVISIBLE
         holder.dateTextView.setOnClickListener {
-            val list = dashboardItemList[position].fromlist
-            val arrayList = ArrayList<String>()
-            val simpleDateFormate = SimpleDateFormat("yyyy-MM-dd")
-            val simpleDateFormat2 = SimpleDateFormat("dd MMMM yyyy")
-            for (item in list) {
-                arrayList.add(simpleDateFormat2.format(simpleDateFormate.parse(item.split("T")[0])))
-            }
-            val listItems = arrayOfNulls<String>(arrayList.size)
-            arrayList.toArray(listItems)
-            val builder = AlertDialog.Builder(mContext)
-            builder.setTitle(context.getString(R.string.dates_of_meeting))
-            builder.setItems(listItems) { _, which ->
-                if (dashboardItemList[position].Status[which] == "Cancelled") {
-                    Toast.makeText(mContext, context.getString(R.string.cancelled_by_hr), Toast.LENGTH_LONG).show()
-                } else {
-                    val builder = GetAleretDialog.getDialog(
-                        mContext,
-                        context.getString(R.string.confirm),
-                        "Press ok to Cancel the booking for the date '${listItems.get(index = which).toString()}'"
-                    )
-                    builder.setPositiveButton(mContext.getString(R.string.ok)) { _, _ ->
-                        val mCancel = CancelBooking()
-                        val date = simpleDateFormate.format(simpleDateFormat2.parse(listItems[which].toString()))
-                        mCancel.roomId = dashboardItemList[position].CId
-                        mCancel.email = dashboardItemList[position].Email
-                        mCancel.fromTime =
-                            date + "T" + dashboardItemList[position].FromTime!!.split("T")[1]
-                        mCancel.toTime =
-                            date + "T" + dashboardItemList[position].ToTime!!.split("T")[1]
-                        cancelBooking(mCancel, mContext)
-                    }
-                    builder.setNegativeButton(mContext.getString(R.string.cancel)) { _, _ ->
-                    }
-                    builder.setNeutralButton("Update"){_,_->
-                        Log.i("----",position.toString())
-                        editAlert(position,context)
-                    }
-                    val dialog: AlertDialog = builder.create()
-                    dialog.setCancelable(false)
-                    dialog.show()
-                    ColorOfDialogButton.setColorOfDialogButton(dialog)
-                }
-
-            }
-            val mDialog = builder.create()
-            mDialog.show()
+            mShowDates.showDates(position)
         }
     }
 
-    private fun editAlert(position: Int, context: Context) {
-
-        val mGetIntentDataFromActvity = GetIntentDataFromActvity()
-        val fromtime = dashboardItemList[position].FromTime
-        val datefrom = fromtime!!.split("T")
-        mGetIntentDataFromActvity.purpose = dashboardItemList[position].Purpose
-        mGetIntentDataFromActvity.buildingName = dashboardItemList[position].BName
-        mGetIntentDataFromActvity.roomName = dashboardItemList[position].CName
-        mGetIntentDataFromActvity.roomId = dashboardItemList[position].CId.toString()
-        mGetIntentDataFromActvity.date = datefrom[0]
-        mGetIntentDataFromActvity.fromTime = dashboardItemList[position].FromTime
-        mGetIntentDataFromActvity.toTime = dashboardItemList[position].ToTime
-        mGetIntentDataFromActvity.cCMail =dashboardItemList[position].cCMail
-        val updateActvity = Intent(mContext,UpdateBookingActivity::class.java)
-        updateActvity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
-        mContext.startActivity(updateActvity)
-    }
 
     /**
      * if the booking is cancelled by HR than do nothing and set clickable property to false
@@ -302,23 +204,67 @@ class DashBoardAdapter(
             holder.cancelButton.text = context.getString(R.string.cancel)
             holder.cancelButton.isEnabled = true
             holder.cancelButton.setOnClickListener {
-                val mBuilder =
-                    GetAleretDialog.getDialog(mContext, "Confirm", "Are you sure you want to cancel the meeting?")
-                mBuilder.setPositiveButton(mContext.getString(R.string.yes)) { _, _ ->
-                    val cancel = CancelBooking()
-                    cancel.roomId = dashboardItemList[position].CId
-                    cancel.toTime = dashboardItemList[position].ToTime
-                    cancel.fromTime = dashboardItemList[position].FromTime
-                    cancel.email = dashboardItemList[position].Email
-                    cancelBooking(cancel, mContext)
-                }
-                mBuilder.setNegativeButton(mContext.getString(R.string.no)) { _, _ ->
-                }
-                val dialog = GetAleretDialog.showDialog(mBuilder)
-                ColorOfDialogButton.setColorOfDialogButton(dialog)
+                mCancelBookingClickListener!!.onCLick(position)
             }
         }
     }
 
+    private fun editActivity(holder: ViewHolder, position: Int, mContext: Context) {
+        holder.updateTextView.setOnClickListener {
+            val mGetIntentDataFromActivity = GetIntentDataFromActvity()
+            val fromTime = dashboardItemList[position].FromTime
+            val fromDate = fromTime!!.split("T")
+            mGetIntentDataFromActivity.purpose = dashboardItemList[position].Purpose
+            mGetIntentDataFromActivity.buildingName = dashboardItemList[position].BName
+            mGetIntentDataFromActivity.roomName = dashboardItemList[position].CName
+            mGetIntentDataFromActivity.roomId = dashboardItemList[position].CId.toString()
+            mGetIntentDataFromActivity.date = fromDate[0]
+            mGetIntentDataFromActivity.fromTime = dashboardItemList[position].FromTime
+            mGetIntentDataFromActivity.toTime = dashboardItemList[position].ToTime
+            mGetIntentDataFromActivity.cCMail = dashboardItemList[position].cCMail
+            val updateActivity = Intent(mContext, UpdateBookingActivity::class.java)
+            updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActivity)
+            mContext.startActivity(updateActivity)
+        }
+    }
 
+    private fun editAlert(position: Int, context: Context) {
+
+        val mGetIntentDataFromActvity = GetIntentDataFromActvity()
+        val fromTime = dashboardItemList[position].FromTime
+        val fromDate = fromTime!!.split("T")
+        mGetIntentDataFromActvity.purpose = dashboardItemList[position].Purpose
+        mGetIntentDataFromActvity.buildingName = dashboardItemList[position].BName
+        mGetIntentDataFromActvity.roomName = dashboardItemList[position].CName
+        mGetIntentDataFromActvity.roomId = dashboardItemList[position].CId.toString()
+        mGetIntentDataFromActvity.date = fromDate[0]
+        mGetIntentDataFromActvity.fromTime = dashboardItemList[position].FromTime
+        mGetIntentDataFromActvity.toTime = dashboardItemList[position].ToTime
+        mGetIntentDataFromActvity.cCMail = dashboardItemList[position].cCMail
+        val updateActivity = Intent(mContext, UpdateBookingActivity::class.java)
+        updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
+        mContext.startActivity(updateActivity)
+    }
+
+    /**
+     * An interface which will be implemented by UserDashboardBookingActivity activity
+     */
+    interface CancelBtnClickListener {
+        fun onCLick(position: Int)
+    }
+
+    /**
+     * An interface which will be implemented by UserDashboardBookingActivity activity to pass employeeList to the activity
+     */
+    interface ShowMembersListener {
+        fun showMembers(mEmployeeList: List<String>)
+    }
+
+
+    /**
+     * An interface which will be implemented by UserDashboardBookingActivity activity to pass position of item which user wants to delete to the activity
+     */
+    interface ShowDatesForRecurringMeeting {
+        fun showDates(position: Int)
+    }
 }

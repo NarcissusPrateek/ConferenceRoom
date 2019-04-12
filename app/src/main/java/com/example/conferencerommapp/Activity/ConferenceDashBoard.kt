@@ -15,6 +15,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Helper.ConferenceRecyclerAdapter
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.HrConferenceRoomViewModel
 import kotlinx.android.synthetic.main.activity_conference_dash_board.*
@@ -50,14 +51,14 @@ class ConferenceDashBoard : AppCompatActivity() {
         super.onRestart()
         val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
         val buildingId = pref.getInt(Constants.EXTRA_BUILDING_ID, 0)
-        mHrConferenceRoomViewModel.mHrConferenceRoomRepository!!.makeApiCall(this, buildingId)
+        mHrConferenceRoomViewModel.getConferenceRoomList(buildingId)
     }
 
     /**
      * onClick on this button goes to AddingConference Activity
      */
     @OnClick(R.id.add_conferenece)
-    fun addConfereceRoomFloatingActionButton() {
+    fun addConfereeRoomFloatingActionButton() {
         goToNextActivity(buildingId)
 
     }
@@ -91,7 +92,14 @@ class ConferenceDashBoard : AppCompatActivity() {
      * function calls the ViewModel of ConferecenceRoom and observe data from the database
      */
     private fun getConference(buildingId: Int) {
-        mHrConferenceRoomViewModel.getConferenceRoomList(this, buildingId).observe(this, Observer {
+        /**
+         * getting Progress Dialog
+         */
+        var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message),this)
+        progressDialog.show()
+        mHrConferenceRoomViewModel.getConferenceRoomList(buildingId)
+        mHrConferenceRoomViewModel.returnConferenceRoomList().observe(this, Observer {
+            progressDialog.dismiss()
             conferenceRoomAdapter = ConferenceRecyclerAdapter(it!!)
             if (it.isEmpty()) {
                 empty_view_blocked1.visibility = View.VISIBLE
@@ -100,6 +108,10 @@ class ConferenceDashBoard : AppCompatActivity() {
                 empty_view_blocked1.visibility = View.GONE
                 recyclerView.adapter = conferenceRoomAdapter
             }
+        })
+        mHrConferenceRoomViewModel.returnFailureForConferenceRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            // some message goes here
         })
     }
 }

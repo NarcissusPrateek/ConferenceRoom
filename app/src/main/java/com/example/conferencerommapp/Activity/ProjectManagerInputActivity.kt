@@ -176,8 +176,8 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      *  if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
      */
     private fun applyValidationOnDateAndTime() {
-        val minmilliseconds: Long = 900000
-        val maxmilliseconds: Long = 14400000
+        val minMilliseconds: Long = 900000
+        val maxMilliseconds: Long = 14400000
 
         /**
          * Get the start and end time of meeting from the input fields
@@ -213,7 +213,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                 builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
                 }
                 GetAleretDialog.showDialog(builder)
-            } else if ((minmilliseconds <= elapsed) && (maxmilliseconds >= elapsed)) {
+            } else if ((minMilliseconds <= elapsed) && (maxMilliseconds >= elapsed)) {
                 if (ConvertTimeInMillis.calculateDateInMilliseconds(
                         dateFromEditText.text.toString(),
                         dateToEditText.text.toString()
@@ -252,8 +252,8 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         mSetIntentData.listOfDays.clear()
         mSetIntentData.listOfDays.addAll(listOfDays)
 
-        val buildingintent = Intent(this@ProjectManagerInputActivity, ManagerBuildingsActivity::class.java)
-        buildingintent.putExtra(Constants.EXTRA_INTENT_DATA, mSetIntentData)
-        startActivity(buildingintent)
+        val buildingIntent = Intent(this@ProjectManagerInputActivity, ManagerBuildingsActivity::class.java)
+        buildingIntent.putExtra(Constants.EXTRA_INTENT_DATA, mSetIntentData)
+        startActivity(buildingIntent)
     }
 }

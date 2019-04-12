@@ -41,7 +41,6 @@ class AddingBuilding : AppCompatActivity() {
         ButterKnife.bind(this)
     }
 
-
     /**
      * function will invoke whenever the add button is clicked
      */
@@ -78,32 +77,28 @@ class AddingBuilding : AppCompatActivity() {
     /**
      * function calls the ViewModel of addingBuilding and send data to the backend
      */
-    private fun addBuild(building: AddBuilding) {
+    fun addBuild(mBuilding: AddBuilding) {
+
         /**
          * Get the progress dialog from GetProgress Helper class
          */
         val mProgressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddBuildingViewModel = ViewModelProviders.of(this).get(AddBuildingViewModel::class.java)
         mProgressDialog.show()
-        mAddBuildingViewModel.addBuildingDetails(building)!!.observe(this, Observer {
+        mAddBuildingViewModel.addBuildingDetails(mAddBuilding)
+        mAddBuildingViewModel.returnSuccessForAddBuilding().observe(this, Observer {
             mProgressDialog.dismiss()
-            when (it) {
-                Constants.OK_RESPONSE -> {
-                    val dialog =
-                        GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_added))
-                    dialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
-                        finish()
-                    }
-                    GetAleretDialog.showDialog(dialog)
-                }
-                Constants.INTERNAL_SERVER_ERROR -> {
-                    Toast.makeText(this, getString(R.string.internal_server_error), Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    val dialog = GetAleretDialog.getDialog(this, getString(R.string.status), "Bla Bla Bla")
-                    GetAleretDialog.showDialog(dialog)
-                }
+            val dialog =
+                GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_added))
+            dialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                finish()
             }
+            GetAleretDialog.showDialog(dialog)
+        })
+        mAddBuildingViewModel.returnFailureForAddBuilding().observe(this, Observer {
+            mProgressDialog.dismiss()
+            // some message goes here
+
         })
     }
 }

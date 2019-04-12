@@ -11,6 +11,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
 import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.ManagerConference
 import com.example.conferencerommapp.R
@@ -53,21 +54,31 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      * get the object of ViewModel class and by using this object we call the api and set the observer on the function
      */
     private fun getViewModel(mGetIntentDataFromActvity: GetIntentDataFromActvity) {
+        /**
+         * get progress dialog
+         */
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         mManagerConferenceRoomViewModel = ViewModelProviders.of(this).get(ManagerConferenceRoomViewModel::class.java)
-        mManagerConferenceRoomViewModel.getConferenceRoomList(
-            this,
-            setDataToObjectForApiCall(mGetIntentDataFromActvity)
-        ).observe(this, Observer {
-            mCustomAdapter = ConferenceRoomAdapter(
-                it!!,
-                object : ConferenceRoomAdapter.BtnClickListener {
-                    override fun onBtnClick(roomId: String?, roomname: String?) {
-                        mGetIntentDataFromActvity.roomName = roomname
-                        mGetIntentDataFromActvity.roomId = roomId
-                        goToNextActivity(mGetIntentDataFromActvity)
-                    }
-                })
-            mRecyclerView.adapter = mCustomAdapter
+        progressDialog.show()
+        mManagerConferenceRoomViewModel.getConferenceRoomList(setDataToObjectForApiCall(mGetIntentDataFromActvity))
+        mManagerConferenceRoomViewModel.returnSuccess().observe(this, Observer {
+            if(it.isEmpty()) {
+                //some messages
+            }else {
+                mCustomAdapter = ConferenceRoomAdapter(
+                    it!!,
+                    object : ConferenceRoomAdapter.BtnClickListener {
+                        override fun onBtnClick(roomId: String?, roomname: String?) {
+                            mGetIntentDataFromActvity.roomName = roomname
+                            mGetIntentDataFromActvity.roomId = roomId
+                            goToNextActivity(mGetIntentDataFromActvity)
+                        }
+                    })
+                mRecyclerView.adapter = mCustomAdapter
+            }
+        })
+        mManagerConferenceRoomViewModel.returnFailure().observe(this, Observer {
+            // message according to the error code
         })
     }
 
@@ -88,7 +99,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      */
     override fun onRestart() {
         super.onRestart()
-        mManagerConferenceRoomViewModel.mManagerConferenceRoomRepository!!.makeApiCall(this, setDataToObjectForApiCall(mGetIntentDataFromActivity))
+        mManagerConferenceRoomViewModel.getConferenceRoomList(setDataToObjectForApiCall(mGetIntentDataFromActivity))
     }
 
     /**

@@ -1,22 +1,16 @@
 package com.example.conferencerommapp.Repository
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.Building
-import com.example.conferencerommapp.R
-import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class BuildingsRepository {
-    var mBuildinglist: MutableLiveData<List<Building>>? = null
 
     /**
      * this block provides a static method which will return the object of repository
@@ -34,33 +28,33 @@ class BuildingsRepository {
     }
 
     /**
-     * function will initialize the MutableLivedata Object and than call a function for api call
-     * Passing the Context and model and call API, In return sends the status of LiveData
+     * function will initialize the MutableLiveData Object and than  make API Call
+     * if the response is positive than we will call onSuccess method with response data from server
+     * for negative response, we will call onFailure method with response code from server
      */
-    fun getBuildingList(): LiveData<List<Building>> {
-        mBuildinglist = MutableLiveData()
-        makeApiCall()
-        return mBuildinglist!!
-    }
-
-    /**
-     * function will call the api which will return some data and we store the data in MutableLivedata Object
-     */
-    fun makeApiCall() {
-       /**
-         * api call using retorfit
-         */
+    fun getBuildingList(listener: ResponseListener) {
         val service = Servicebuilder.getObject()
         val requestCall: Call<List<Building>> = service.getBuildingList()
         requestCall.enqueue(object : Callback<List<Building>> {
             override fun onFailure(call: Call<List<Building>>, t: Throwable) {
-                 mBuildinglist!!.value = null
+                /**
+                 * call interface method which is implemented in ViewModel
+                 */
+                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
             }
-
             override fun onResponse(call: Call<List<Building>>, response: Response<List<Building>>) {
                 if (response.code() == Constants.OK_RESPONSE) {
-                    mBuildinglist!!.value = response.body()!!
+                    /**
+                     * call interface method which is implemented in ViewModel
+                     */
+                    listener.onSuccess(response.body()!!)
+                }else {
+                    /**
+                     * call interface method which is implemented in ViewModel
+                     */
+                    listener.onFailure(response.code())
                 }
+
             }
 
         })

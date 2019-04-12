@@ -114,27 +114,19 @@ class AddingConference : AppCompatActivity() {
         val mProgressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddConferenceRoomViewModel = ViewModelProviders.of(this).get(AddConferenceRoomViewModel::class.java)
         mProgressDialog.show()
-
-        mAddConferenceRoomViewModel.addConferenceDetails(mConferenceRoom).observe(this, Observer {
+        mAddConferenceRoomViewModel.returnSuccessForAddingRoom().observe(this, Observer {
             mProgressDialog.dismiss()
-            when (it) {
-                Constants.OK_RESPONSE -> {
-                    val dialog
-                            =
-                        GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_added))
-                    dialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
-                        finish()
-                    }
-                    GetAleretDialog.showDialog(dialog)
-                }
-                Constants.INTERNAL_SERVER_ERROR -> {
-                    Toast.makeText(this, getString(R.string.internal_server_error), Toast.LENGTH_SHORT).show()
-                }
-                else -> {
-                    val dialog = GetAleretDialog.getDialog(this, getString(R.string.status), "Error Occured")
-                    GetAleretDialog.showDialog(dialog)
-                }
+            val dialog
+                    =
+                GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_added))
+            dialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                finish()
             }
+            GetAleretDialog.showDialog(dialog)
+        })
+        mAddConferenceRoomViewModel.returnFailureForAddingRoom().observe(this, Observer {
+            mProgressDialog.dismiss()
+            // some message
         })
     }
 }
