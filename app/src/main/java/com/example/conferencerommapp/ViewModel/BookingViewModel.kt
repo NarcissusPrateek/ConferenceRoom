@@ -8,6 +8,7 @@ import com.example.conferencerommapp.Model.Employee
 import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.Repository.BookingRepository
 import com.example.conferencerommapp.Repository.EmployeeRepository
+import java.util.*
 
 class BookingViewModel: ViewModel() {
 
@@ -23,11 +24,11 @@ class BookingViewModel: ViewModel() {
      */
     var mSuccessForBooking =  MutableLiveData<Int>()
 
-    var mErrorCodeFromServerFromBooking =  MutableLiveData<Int>()
+    var mErrorCodeFromServerFromBooking =  MutableLiveData<String>()
 
     var mEmployeeList =  MutableLiveData<List<EmployeeList>>()
 
-    var mErrorCodeFromServerForEmployees =  MutableLiveData<Int>()
+    var mErrorCodeFromServerForEmployees =  MutableLiveData<String>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
@@ -36,7 +37,7 @@ class BookingViewModel: ViewModel() {
     fun addBookingDetails(mBooking: Booking) {
         mBookingRepository = BookingRepository.getInstance()
         mBookingRepository!!.addBookingDetails(mBooking, object: ResponseListener {
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mErrorCodeFromServerFromBooking.value = failure
             }
             override fun onSuccess(success: Any) {
@@ -52,7 +53,7 @@ class BookingViewModel: ViewModel() {
     fun getEmployeeList() {
         mEmployeeRepository = EmployeeRepository.getInstance()
         mEmployeeRepository!!.getEmployeeList(object: ResponseListener {
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mErrorCodeFromServerForEmployees.value = failure
             }
             override fun onSuccess(success: Any) {
@@ -75,7 +76,7 @@ class BookingViewModel: ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnFailureForBooking(): MutableLiveData<Int> {
+    fun returnFailureForBooking(): MutableLiveData<String> {
         return mErrorCodeFromServerFromBooking
     }
 
@@ -86,7 +87,7 @@ class BookingViewModel: ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnFailureForEmployeeList(): MutableLiveData<Int> {
+    fun returnFailureForEmployeeList(): MutableLiveData<String> {
         return mErrorCodeFromServerForEmployees
     }
 }

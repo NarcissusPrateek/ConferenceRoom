@@ -11,9 +11,9 @@ class BlockedDashboardViewModel : ViewModel() {
 
     var mBlockDashboardRepository: BlockDashboardRepository? = null
     var mBlockedRoomList = MutableLiveData<List<Blocked>>()
-    var mFailureCodeForBlockedRoomList = MutableLiveData<Int>()
+    var mFailureCodeForBlockedRoomList = MutableLiveData<String>()
     var mSuccessCodeForBlockRoom =  MutableLiveData<Int>()
-    var mFailureCodeForBlockRoom =  MutableLiveData<Int>()
+    var mFailureCodeForBlockRoom =  MutableLiveData<String>()
 
     fun getBlockedList() {
         mBlockDashboardRepository = BlockDashboardRepository.getInstance()
@@ -22,7 +22,7 @@ class BlockedDashboardViewModel : ViewModel() {
                 mBlockedRoomList.value = success as List<Blocked>
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureCodeForBlockedRoomList.value = failure
             }
 
@@ -33,7 +33,7 @@ class BlockedDashboardViewModel : ViewModel() {
         return mBlockedRoomList
     }
 
-    fun returnFailureCodeFromBlockedApi(): MutableLiveData<Int> {
+    fun returnFailureCodeFromBlockedApi(): MutableLiveData<String> {
         return mFailureCodeForBlockedRoomList
     }
     //-----------------------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ class BlockedDashboardViewModel : ViewModel() {
                 mSuccessCodeForBlockRoom.value = success as Int
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureCodeForBlockRoom.value = failure
             }
 
@@ -55,7 +55,7 @@ class BlockedDashboardViewModel : ViewModel() {
     fun returnSuccessCodeForUnBlockRoom(): MutableLiveData<Int> {
         return mSuccessCodeForBlockRoom
     }
-    fun returnFailureCodeForUnBlockRoom(): MutableLiveData<Int> {
+    fun returnFailureCodeForUnBlockRoom(): MutableLiveData<String> {
         return mFailureCodeForBlockRoom
     }
 }

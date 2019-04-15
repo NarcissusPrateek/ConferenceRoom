@@ -10,5 +10,5 @@ interface ResponseListener {
     /**
      * interface method for negative response from server which will take response code as argument
      */
-    fun onFailure(failure : Int)
+    fun onFailure(failure : String)
 }

@@ -44,14 +44,14 @@ class BookingDashboardRepository {
         val requestCall: Call<List<Dashboard>> = service.getDashboard(email)
         requestCall.enqueue(object : Callback<List<Dashboard>> {
             override fun onFailure(call: Call<List<Dashboard>>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Error!!")
             }
 
             override fun onResponse(call: Call<List<Dashboard>>, response: Response<List<Dashboard>>) {
                 if (response.code() == Constants.OK_RESPONSE) {
                     listener.onSuccess(response.body()!!)
                 } else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
         })
@@ -69,14 +69,14 @@ class BookingDashboardRepository {
         var requestCall: Call<ResponseBody> = service.cancelBooking(mCancel)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Error!!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == Constants.OK_RESPONSE) {
                     listener.onSuccess(response.code())
                 } else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
         })

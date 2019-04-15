@@ -17,7 +17,7 @@ class ConferenceRoomViewModel : ViewModel() {
     /**
      * A MutableLiveData variable which will hold the Value for negative response from repository
      */
-    private var errorCodeFromServer =  MutableLiveData<Int>()
+    private var errorCodeFromServer =  MutableLiveData<String>()
 
     /**
      * a MutableLiveData variable which will hold the positive response for repository
@@ -37,7 +37,7 @@ class ConferenceRoomViewModel : ViewModel() {
                 mConferenceRoomList.value = success as List<ConferenceRoom>
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 errorCodeFromServer.value = failure
             }
 
@@ -55,7 +55,7 @@ class ConferenceRoomViewModel : ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnFailure(): MutableLiveData<Int> {
+    fun returnFailure(): MutableLiveData<String> {
         return errorCodeFromServer
     }
 

@@ -166,8 +166,8 @@ class ManagerBuildingsActivity : AppCompatActivity() {
     /**
      * this function will handle the positive response from server
      */
-    private fun handleNegativeResponse(mResponseCode: Int) {
-        if (mResponseCode == Constants.INTERNAL_SERVER_ERROR) {
+    private fun handleNegativeResponse(mResponseCode: String) {
+        if (mResponseCode == "Internal Server Code!") {
 
         } else {
             // messgae according to the response code from server

@@ -17,7 +17,7 @@ class ManagerBuildingViewModel : ViewModel() {
      */
     var mBuildingList =  MutableLiveData<List<Building>>()
 
-    var mFailureCode = MutableLiveData<Int>()
+    var mFailureCode = MutableLiveData<String>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
@@ -29,7 +29,7 @@ class ManagerBuildingViewModel : ViewModel() {
               mBuildingList.value = success as List<Building>
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureCode.value = failure
             }
 
@@ -45,7 +45,7 @@ class ManagerBuildingViewModel : ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnBuildingFailure(): MutableLiveData<Int> {
+    fun returnBuildingFailure(): MutableLiveData<String> {
         return mFailureCode
     }
 

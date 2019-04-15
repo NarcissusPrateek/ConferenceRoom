@@ -33,17 +33,17 @@ class BlockRoomViewModel : ViewModel() {
     /**
      * a variable to hold failure code from backend whenever unable to fetch the list of room from server
      */
-    var mFailureCodeForRoom = MutableLiveData<Int>()
+    var mFailureCodeForRoom = MutableLiveData<String>()
 
     /**
      * a variable to hold failure code from backend whenever unable to fetch the confirmation details from server
      */
-    var mFailureCodeForConfirmaationOfBlocking = MutableLiveData<Int>()
+    var mFailureCodeForConfirmaationOfBlocking = MutableLiveData<String>()
 
     /**
      * a variable to hold failure code from backend whenever unable to block the room
      */
-    var mFailureCodeForBlockRoom = MutableLiveData<Int>()
+    var mFailureCodeForBlockRoom = MutableLiveData<String>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
@@ -56,7 +56,7 @@ class BlockRoomViewModel : ViewModel() {
                 mSuccessForBlockRoom.value = success as Int
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureCodeForBlockRoom.value = failure
             }
 
@@ -67,7 +67,7 @@ class BlockRoomViewModel : ViewModel() {
         return mSuccessForBlockRoom
     }
 
-    fun returnResponseErrorForBlockRoom():MutableLiveData<Int> {
+    fun returnResponseErrorForBlockRoom():MutableLiveData<String> {
         return mFailureCodeForBlockRoom
     }
 
@@ -85,7 +85,7 @@ class BlockRoomViewModel : ViewModel() {
             override fun onSuccess(success: Any) {
                 mConferenceRoomList.value = success as List<BuildingConference>
             }
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureCodeForRoom.value = failure
             }
 
@@ -96,7 +96,7 @@ class BlockRoomViewModel : ViewModel() {
         return mConferenceRoomList
     }
 
-    fun returnResponseErrorForConferenceRoom():MutableLiveData<Int> {
+    fun returnResponseErrorForConferenceRoom():MutableLiveData<String> {
         return mFailureCodeForRoom
     }
 
@@ -117,7 +117,7 @@ class BlockRoomViewModel : ViewModel() {
                 mConfirmation.value = success as BlockingConfirmation
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureCodeForConfirmaationOfBlocking.value = failure
             }
 
@@ -128,7 +128,7 @@ class BlockRoomViewModel : ViewModel() {
         return mConfirmation
     }
 
-    fun returnResponseErrorForConfirmation():MutableLiveData<Int> {
+    fun returnResponseErrorForConfirmation():MutableLiveData<String> {
         return mFailureCodeForConfirmaationOfBlocking
     }
 

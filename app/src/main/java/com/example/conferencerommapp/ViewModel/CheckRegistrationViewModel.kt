@@ -16,7 +16,7 @@ class CheckRegistrationViewModel : ViewModel() {
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
     var mSuccessCode =  MutableLiveData<Int>()
-    var mFailureCode =  MutableLiveData<Int>()
+    var mFailureCode =  MutableLiveData<String>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
@@ -29,7 +29,7 @@ class CheckRegistrationViewModel : ViewModel() {
                 mSuccessCode.value = success as Int
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureCode.value = failure
             }
 
@@ -39,7 +39,7 @@ class CheckRegistrationViewModel : ViewModel() {
     fun returnSuccessCode(): MutableLiveData<Int> {
         return mSuccessCode
     }
-    fun returnFailureCode(): MutableLiveData<Int> {
+    fun returnFailureCode(): MutableLiveData<String> {
         return mFailureCode
     }
 }

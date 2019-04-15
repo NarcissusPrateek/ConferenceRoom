@@ -22,9 +22,9 @@ class ManagerBookingViewModel: ViewModel() {
      */
     var mSuccessCode =  MutableLiveData<Int>()
 
-    var mErrorCode =  MutableLiveData<Int>()
+    var mErrorCode =  MutableLiveData<String>()
 
-    var mErrorCodeFromServerForEmployees = MutableLiveData<Int>()
+    var mErrorCodeFromServerForEmployees = MutableLiveData<String>()
 
     private var mEmployeeList = MutableLiveData<List<EmployeeList>>()
     /**
@@ -38,7 +38,7 @@ class ManagerBookingViewModel: ViewModel() {
                 mSuccessCode.value = success as Int
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mErrorCode.value = failure
             }
 
@@ -52,7 +52,7 @@ class ManagerBookingViewModel: ViewModel() {
                 mEmployeeList.value = success as List<EmployeeList>
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mErrorCodeFromServerForEmployees.value = failure
             }
 
@@ -68,7 +68,7 @@ class ManagerBookingViewModel: ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnFailureForBooking(): MutableLiveData<Int> {
+    fun returnFailureForBooking(): MutableLiveData<String> {
         return mErrorCode
     }
 
@@ -79,7 +79,7 @@ class ManagerBookingViewModel: ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnFailureForEmployeeList(): MutableLiveData<Int> {
+    fun returnFailureForEmployeeList(): MutableLiveData<String> {
         return mErrorCodeFromServerForEmployees
     }
 }

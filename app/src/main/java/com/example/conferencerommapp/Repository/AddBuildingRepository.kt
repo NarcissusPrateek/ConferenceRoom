@@ -1,12 +1,12 @@
 package com.example.conferencerommapp.Repository
 
-import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.AddBuilding
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,14 +37,14 @@ class AddBuildingRepository {
         val addBuildingRequestCall: Call<ResponseBody> = addBuildingService.addBuilding(mAddBuilding)
         addBuildingRequestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
-                    listener.onSuccess(response.body()!!)
+                    listener.onSuccess(response.code())
                 } else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
         })

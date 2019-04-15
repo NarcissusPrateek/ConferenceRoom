@@ -6,6 +6,7 @@ import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.Building
 import com.example.globofly.services.Servicebuilder
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,7 +41,7 @@ class BuildingsRepository {
                 /**
                  * call interface method which is implemented in ViewModel
                  */
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
             override fun onResponse(call: Call<List<Building>>, response: Response<List<Building>>) {
                 if (response.code() == Constants.OK_RESPONSE) {
@@ -52,7 +53,7 @@ class BuildingsRepository {
                     /**
                      * call interface method which is implemented in ViewModel
                      */
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
 
             }

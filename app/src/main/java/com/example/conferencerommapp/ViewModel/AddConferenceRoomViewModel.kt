@@ -16,7 +16,7 @@ class AddConferenceRoomViewModel : ViewModel() {
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
     var mSuccessForAddingRoom = MutableLiveData<Int>()
-    var mFailureForAddingRoom = MutableLiveData<Int>()
+    var mFailureForAddingRoom = MutableLiveData<String>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
@@ -29,7 +29,7 @@ class AddConferenceRoomViewModel : ViewModel() {
                 mSuccessForAddingRoom.value = success as Int
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureForAddingRoom.value = failure
             }
         })
@@ -38,7 +38,7 @@ class AddConferenceRoomViewModel : ViewModel() {
     fun returnSuccessForAddingRoom(): MutableLiveData<Int> {
         return mSuccessForAddingRoom
     }
-    fun returnFailureForAddingRoom(): MutableLiveData<Int> {
+    fun returnFailureForAddingRoom(): MutableLiveData<String> {
         return mFailureForAddingRoom
     }
 

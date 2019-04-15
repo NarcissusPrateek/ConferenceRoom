@@ -39,14 +39,14 @@ class AddConferenceRepository {
 
         addConferenceRequestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Error!!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if(response.isSuccessful) {
                     listener.onSuccess(response.code())
                 }else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
         })

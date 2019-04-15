@@ -2,9 +2,11 @@
 package com.example.conferencerommapp.Activity
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.Html.fromHtml
 import android.text.TextUtils.isEmpty
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -41,7 +43,8 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     lateinit var purposeEditText: EditText
     lateinit var mBlockRoomViewModel: BlockRoomViewModel
     var room = BlockRoom()
-
+    private lateinit var mBuildingViewModel: BuildingViewModel
+    private lateinit var progressDialog: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_spinner)
@@ -49,55 +52,23 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Block) + "</font>")
         ButterKnife.bind(this)
 
-        mBlockRoomViewModel = ViewModelProviders.of(this).get(BlockRoomViewModel::class.java)
+
+        init()
+        observeData()
         setDialogsToInputFields()
         getBuilding()//setting spinner
 
     }
 
-    @OnClick(R.id.block_conference)
-    fun blockButton() {
-        if (validateInput()) {
-            validationOnDataEnteredByUser()
-        }
-    }
-
-    private fun addDataToObject() {
-        val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
-        room.email = acct!!.email
-        room.purpose = purposeEditText.text.toString()
-        room.fromTime = dateEditText.text.toString() + " " + fromTimeEditText.text.toString()
-        room.toTime = dateEditText.text.toString() + " " + toTimeEditText.text.toString()
-        room.status = "abc"
-    }
-
-    private fun setDialogsToInputFields() {
-
-        fromTimeEditText.setOnClickListener {
-            DateAndTimePicker.getTimePickerDialog(this, fromTimeEditText)
-        }
-
-        toTimeEditText.setOnClickListener {
-            DateAndTimePicker.getTimePickerDialog(this, toTimeEditText)
-        }
-
-        dateEditText.setOnClickListener {
-            DateAndTimePicker.getDatePickerDialog(this, dateEditText)
-        }
-
+    fun init() {
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        mBuildingViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
+        mBlockRoomViewModel = ViewModelProviders.of(this).get(BlockRoomViewModel::class.java)
 
     }
 
-    private fun getBuilding() {
-
-        /**
-         * get progress dialog
-         */
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
-        val mBuildingViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
-        progressDialog.show()
-        mBuildingViewModel.getBuildingList()
-
+    fun observeData() {
+        // observe data for building list
         mBuildingViewModel.returnMBuildingSuccess().observe(this, Observer {
             progressDialog.dismiss()
             if(it.isEmpty()) {
@@ -111,17 +82,28 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             progressDialog.dismiss()
             // some message according to the error code from backend
         })
-    }
 
-    private fun blocking(room: BlockRoom) {
+        // observer for Block room
 
-        /**
-         * get progress Dialog
-         */
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
-        progressDialog.show()
-        mBlockRoomViewModel.blockingStatus(room)
+        mBlockRoomViewModel.returnSuccessForBlockRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            val builder =
+                AlertDialog.Builder(this@BlockConferenceRoomActivity)
+            builder.setTitle(getString(R.string.blockingStatus))
+            builder.setMessage(getString(R.string.room_is_blocked))
+            builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
+                finish()
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        })
 
+        mBlockRoomViewModel.returnResponseErrorForBlockRoom().observe(this, Observer {
+            //progressDialog.dismiss()
+            // some message according to the error code
+        })
+
+        // observer for block confirmation
         mBlockRoomViewModel.returnSuccessForConfirmation().observe(this, Observer {
             progressDialog.dismiss()
             if (it.mStatus == 0) {
@@ -146,34 +128,71 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             progressDialog.dismiss()
             // some message according to the error code from server
         })
+
+        // observer for conference room list
+
+        mBlockRoomViewModel.returnConferenceRoomList().observe(this, Observer {
+            progressDialog.dismiss()
+            setSpinnerToConferenceList(it)
+
+        })
+
+        mBlockRoomViewModel.returnResponseErrorForConferenceRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            // some message according to the error code from backend
+        })
+
+    }
+
+    @OnClick(R.id.block_conference)
+    fun blockButton() {
+        if (validateInput()) {
+            validationOnDataEnteredByUser()
+        }
+    }
+
+    private fun addDataToObject() {
+        val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
+        room.email = acct!!.email
+        room.purpose = purposeEditText.text.toString()
+        room.fromTime = dateEditText.text.toString() + " " + fromTimeEditText.text.toString()
+        room.toTime = dateEditText.text.toString() + " " + toTimeEditText.text.toString()
+        room.status = "abc"
+
+    }
+
+    private fun setDialogsToInputFields() {
+
+        fromTimeEditText.setOnClickListener {
+            DateAndTimePicker.getTimePickerDialog(this, fromTimeEditText)
+        }
+
+        toTimeEditText.setOnClickListener {
+            DateAndTimePicker.getTimePickerDialog(this, toTimeEditText)
+        }
+
+        dateEditText.setOnClickListener {
+            DateAndTimePicker.getDatePickerDialog(this, dateEditText)
+        }
+
+
+    }
+
+    private fun getBuilding() {
+        progressDialog.show()
+
+        // make api call
+        mBuildingViewModel.getBuildingList()
+    }
+
+    private fun blocking(room: BlockRoom) {
+        progressDialog.show()
+        mBlockRoomViewModel.blockingStatus(room)
     }
 
     private fun blockConfirmed(mRoom: BlockRoom) {
-
-        /**
-         * get progress dialog
-         */
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         progressDialog.show()
         mBlockRoomViewModel.blockRoom(mRoom)
-
-        mBlockRoomViewModel.returnSuccessForBlockRoom().observe(this, Observer {
-            progressDialog.dismiss()
-            val builder =
-                AlertDialog.Builder(this@BlockConferenceRoomActivity)
-            builder.setTitle(getString(R.string.blockingStatus))
-            builder.setMessage(getString(R.string.room_is_blocked))
-            builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
-                finish()
-            }
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
-        })
-
-        mBlockRoomViewModel.returnResponseErrorForBlockRoom().observe(this, Observer {
-            progressDialog.dismiss()
-            // some message according to the error code
-        })
     }
 
     private fun buildingListFromBackend(it: List<Building>) {
@@ -204,26 +223,17 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     }
 
     fun conferenceRoomListFromBackend(buildingId: Int) {
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        progressDialog.show()
         mBlockRoomViewModel.getRoomList(buildingId)
-        progressDialog.dismiss()
-        mBlockRoomViewModel.returnConferenceRoomList().observe(this, Observer {
-            progressDialog.dismiss()
-            if (it.isEmpty()) {
-                // do something
-            }else {
-                setSpinnerToConferenceList(it)
-            }
-        })
-        mBlockRoomViewModel.returnResponseErrorForConferenceRoom().observe(this, Observer {
-            progressDialog.dismiss()
-            // some message according to the error code from backend
-        })
     }
 
     private fun setSpinnerToConferenceList(it: List<BuildingConference>) {
         val conferencename = mutableListOf<String>()
         val conferenceid = mutableListOf<Int>()
+        if(it.isEmpty()){
+            conferencename.add("No Room in the Buildings")
+            conferenceid.add(-1)
+        }
 
         for (item in it) {
             conferencename.add(item.roomName!!)
@@ -240,48 +250,49 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 room.cId = conferenceid[position]
+
             }
         }
 
     }
 
     private fun validateInput(): Boolean {
-       when {
-           isEmpty(fromTime_b.text.trim()) -> {
-               Toast.makeText(
-                   applicationContext,
-                   getString(R.string.please_enter_fromtime),
-                   Toast.LENGTH_SHORT
-               ).show()
-               return false
+        when {
+            isEmpty(fromTime_b.text.trim()) -> {
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.please_enter_fromtime),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return false
 
-           }
-           isEmpty(toTime_b.text.trim()) -> {
-               Toast.makeText(
-                   applicationContext,
-                   getString(R.string.please_enter_totime),
-                   Toast.LENGTH_SHORT
-               ).show()
-               return false
-           }
-           isEmpty(date_block.text.trim()) -> {
-               Toast.makeText(
-                   applicationContext,
-                   getString(R.string.please_enter_date),
-                   Toast.LENGTH_SHORT
-               ).show()
-               return false
-           }
-           Purpose.text.toString().trim().isEmpty() -> {
-               Toast.makeText(
-                   applicationContext,
-                   getString(R.string.enter_purpose),
-                   Toast.LENGTH_SHORT
-               ).show()
-               return false
-           }
-           else -> return true
-       }
+            }
+            isEmpty(toTime_b.text.trim()) -> {
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.please_enter_totime),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return false
+            }
+            isEmpty(date_block.text.trim()) -> {
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.please_enter_date),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return false
+            }
+            Purpose.text.toString().trim().isEmpty() -> {
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.enter_purpose),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return false
+            }
+            else -> return true
+        }
     }
 
     private fun validationOnDataEnteredByUser() {
@@ -306,8 +317,13 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
                 val dialog: AlertDialog = builder.create()
                 dialog.setCanceledOnTouchOutside(false)
                 dialog.show()
-            } else {
-                if ((minmilliseconds <= elapsed) && (maxmilliseconds >= elapsed)) {
+
+            }
+            if (room.cId!!.compareTo(-1)==0){
+                Toast.makeText(this,R.string.invalid_conference_room,Toast.LENGTH_SHORT).show()
+            }
+            else {
+                if ((minmilliseconds <= elapsed) && (maxmilliseconds >= elapsed) ) {
                     blockRoom()
                 } else {
                     val builder = AlertDialog.Builder(this@BlockConferenceRoomActivity).also {

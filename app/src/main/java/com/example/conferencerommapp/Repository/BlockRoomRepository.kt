@@ -47,14 +47,14 @@ class BlockRoomRepository {
         val requestCall: Call<ResponseBody> = blockRoomApi.blockconference(mRoom)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == Constants.OK_RESPONSE) {
-                   listener.onSuccess(response.body()!!)
+                   listener.onSuccess(response.code())
                 } else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
 
@@ -79,7 +79,7 @@ class BlockRoomRepository {
         val requestCall: Call<List<BuildingConference>> = Servicebuilder.getObject().getBuildingsConference(buildingId)
         requestCall.enqueue(object : Callback<List<BuildingConference>> {
             override fun onFailure(call: Call<List<BuildingConference>>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
 
             override fun onResponse(
@@ -89,7 +89,7 @@ class BlockRoomRepository {
                 if (response.code() == Constants.OK_RESPONSE) {
                     listener.onSuccess(response.body()!!)
                 } else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
         })
@@ -107,7 +107,7 @@ class BlockRoomRepository {
         val requestCall: Call<BlockingConfirmation> = blockRoomApi.blockConfirmation(mRoom)
         requestCall.enqueue(object : Callback<BlockingConfirmation> {
             override fun onFailure(call: Call<BlockingConfirmation>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
 
             override fun onResponse(call: Call<BlockingConfirmation>, response: Response<BlockingConfirmation>) {
@@ -123,7 +123,7 @@ class BlockRoomRepository {
                         listener.onSuccess(blockingConfirmation)
                     }
                 }else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
         })

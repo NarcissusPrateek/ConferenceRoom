@@ -3,6 +3,7 @@ package com.example.conferencerommapp.Repository
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.globofly.services.Servicebuilder
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,14 +36,14 @@ class CheckRegistrationRepository {
         val requestCall: Call<Int> = service.getRequestCode(mEmail)
         requestCall.enqueue(object : Callback<Int> {
             override fun onFailure(call: Call<Int>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
 
             override fun onResponse(call: Call<Int>, response: Response<Int>) {
                 if (response.code() == Constants.OK_RESPONSE) {
                     listener.onSuccess(response.body()!!)
                 } else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
         })

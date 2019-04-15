@@ -43,14 +43,14 @@ class RegistrationRepository {
         val requestCall: Call<ResponseBody> = service.addEmployee(mEmployee)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == Constants.OK_RESPONSE) {
                     listener.onSuccess(response.code())
                 } else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
         })

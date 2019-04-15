@@ -21,7 +21,7 @@ class BuildingViewModel : ViewModel() {
     /**
      * A MutableLiveData variable which will hold the Value for negative response from repository
      */
-    var errorCodeFromServer =  MutableLiveData<Int>()
+    var errorCodeFromServer =  MutableLiveData<String>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
@@ -30,7 +30,7 @@ class BuildingViewModel : ViewModel() {
     fun getBuildingList() {
         mBuildingsRepository = BuildingsRepository.getInstance()
         mBuildingsRepository!!.getBuildingList(object: ResponseListener {
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                     errorCodeFromServer.value = failure
             }
             override fun onSuccess(success: Any) {
@@ -50,7 +50,7 @@ class BuildingViewModel : ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnMBuildingFailure(): MutableLiveData<Int> {
+    fun returnMBuildingFailure(): MutableLiveData<String> {
         return errorCodeFromServer
     }
 }

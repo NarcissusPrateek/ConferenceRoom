@@ -11,9 +11,11 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.Nullable
 import androidx.cardview.widget.CardView
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.Optional
 import com.example.conferencerommapp.Blocked
 import com.example.conferencerommapp.R
 
@@ -57,7 +59,9 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
         lateinit var date : TextView
         @BindView(R.id.card_block)
         lateinit var card: CardView
+
         @BindView(R.id.linearlayout_blocked)
+        @Nullable
         lateinit var linearLayout:LinearLayout
         val unblock :Button = itemView.findViewById(R.id.unblock)
         var blocked: Blocked? = null

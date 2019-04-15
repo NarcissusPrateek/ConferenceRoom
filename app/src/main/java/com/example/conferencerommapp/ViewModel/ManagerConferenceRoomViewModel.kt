@@ -18,7 +18,7 @@ class ManagerConferenceRoomViewModel : ViewModel() {
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
     var mConferenceRoomList =  MutableLiveData<List<ConferenceRoom>>()
-    var mFailureCode =  MutableLiveData<Int>()
+    var mFailureCode =  MutableLiveData<String>()
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
      */
@@ -31,7 +31,7 @@ class ManagerConferenceRoomViewModel : ViewModel() {
                     mConferenceRoomList.value = success as List<ConferenceRoom>
                 }
 
-                override fun onFailure(failure: Int) {
+                override fun onFailure(failure: String) {
                     mFailureCode.value = failure
                 }
 
@@ -49,7 +49,7 @@ class ManagerConferenceRoomViewModel : ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnFailure(): MutableLiveData<Int> {
+    fun returnFailure(): MutableLiveData<String> {
         return mFailureCode
     }
 

@@ -22,13 +22,13 @@ class BookingDashboardViewModel : ViewModel() {
      */
     private var mBookingList = MutableLiveData<List<Dashboard>>()
 
-    private var mFailureCodeForBookingList = MutableLiveData<Int>()
+    private var mFailureCodeForBookingList = MutableLiveData<String>()
 
     /**
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
     var mSuccessForCancelBooking = MutableLiveData<Int>()
-    var mFailureForCancelBooking = MutableLiveData<Int>()
+    var mFailureForCancelBooking = MutableLiveData<String>()
 
 
     /**
@@ -42,7 +42,7 @@ class BookingDashboardViewModel : ViewModel() {
                 mBookingList.value = success as List<Dashboard>
             }
 
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureCodeForBookingList.value = failure
             }
 
@@ -59,7 +59,7 @@ class BookingDashboardViewModel : ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnFailure(): MutableLiveData<Int> {
+    fun returnFailure(): MutableLiveData<String> {
         return mFailureCodeForBookingList
     }
 
@@ -73,7 +73,7 @@ class BookingDashboardViewModel : ViewModel() {
     fun cancelBooking(mCancel: CancelBooking) {
         mBookingDashboardRepository = BookingDashboardRepository.getInstance()
         mBookingDashboardRepository!!.cancelBooking(mCancel, object : ResponseListener {
-            override fun onFailure(failure: Int) {
+            override fun onFailure(failure: String) {
                 mFailureForCancelBooking.value = failure
             }
 
@@ -94,7 +94,7 @@ class BookingDashboardViewModel : ViewModel() {
     /**
      * function will return the MutableLiveData of Int if something went wrong at server
      */
-    fun returnCancelFailed(): MutableLiveData<Int> {
+    fun returnCancelFailed(): MutableLiveData<String> {
         return mFailureForCancelBooking
     }
 

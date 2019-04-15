@@ -13,6 +13,7 @@ import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
 import com.example.globofly.services.Servicebuilder
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,13 +35,13 @@ class BlockDashboardRepository {
         val requestCall: Call<List<Blocked>> = blockServices.getBlockedConference()
         requestCall.enqueue(object : Callback<List<Blocked>> {
             override fun onFailure(call: Call<List<Blocked>>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
             override fun onResponse(call: Call<List<Blocked>>, response: Response<List<Blocked>>) {
                 if (response.code() == Constants.OK_RESPONSE) {
                     listener.onSuccess(response.body()!!)
                 } else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
             }
 
@@ -55,13 +56,13 @@ class BlockDashboardRepository {
         val requestCall: Call<ResponseBody> = unBlockApi.unBlockingConferenceRoom(mRoom)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == Constants.OK_RESPONSE) {
                     listener.onSuccess(response.code()!!)
                 } else {
-                    listener.onFailure(response.code())
+                    listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
                 }
 
             }

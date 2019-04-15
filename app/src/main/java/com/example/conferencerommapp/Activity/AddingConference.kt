@@ -3,10 +3,7 @@ package com.example.conferencerommapp.Activity
 import android.os.Bundle
 import android.text.Html
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -67,7 +64,7 @@ class AddingConference : AppCompatActivity() {
     fun setSpinnerForCapacity() {
         val capacitySpinnerOptions = arrayOf(2, 4, 6, 8, 10, 12, 14)
         capacitySpinner.adapter =
-            ArrayAdapter<Int>(this@AddingConference, android.R.layout.simple_list_item_1, capacitySpinnerOptions)
+            ArrayAdapter<Int>(this@AddingConference, android.R.layout.simple_list_item_1, capacitySpinnerOptions) as SpinnerAdapter?
         capacitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 capacity = "2"
@@ -127,6 +124,9 @@ class AddingConference : AppCompatActivity() {
         })
         mAddConferenceRoomViewModel.returnFailureForAddingRoom().observe(this, Observer {
             mProgressDialog.dismiss()
+            val dialog = GetAleretDialog.getDialog(this, getString(R.string.status), it)
+            dialog.setCancelable(true)
+            GetAleretDialog.showDialog(dialog)
             // some message
         })
     }

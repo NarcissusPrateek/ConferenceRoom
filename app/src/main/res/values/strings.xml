@@ -116,6 +116,7 @@
     <string name="to_time">To-Time</string>
     <string name="from_date">From-Date</string>
     <string name="to_date">To-Date</string>
+    <string name="invalid_conference_room">Invalid Room</string>
 
 
     <string-array name="role">

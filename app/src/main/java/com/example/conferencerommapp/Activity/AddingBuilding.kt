@@ -85,7 +85,7 @@ class AddingBuilding : AppCompatActivity() {
         val mProgressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddBuildingViewModel = ViewModelProviders.of(this).get(AddBuildingViewModel::class.java)
         mProgressDialog.show()
-        mAddBuildingViewModel.addBuildingDetails(mAddBuilding)
+        mAddBuildingViewModel.addBuildingDetails(mBuilding)
         mAddBuildingViewModel.returnSuccessForAddBuilding().observe(this, Observer {
             mProgressDialog.dismiss()
             val dialog =
@@ -97,8 +97,9 @@ class AddingBuilding : AppCompatActivity() {
         })
         mAddBuildingViewModel.returnFailureForAddBuilding().observe(this, Observer {
             mProgressDialog.dismiss()
-            // some message goes here
-
+            val dialog = GetAleretDialog.getDialog(this, getString(R.string.status), it)
+            dialog.setCancelable(true)
+            GetAleretDialog.showDialog(dialog)
         })
     }
 }

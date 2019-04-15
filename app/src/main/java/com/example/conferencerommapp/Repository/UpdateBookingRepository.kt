@@ -31,7 +31,7 @@ class UpdateBookingRepository{
         val requestCall: Call<ResponseBody> = service.update(mUpdateBooking)
         requestCall.enqueue(object :Callback<ResponseBody>{
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+                listener.onFailure("Internal Server Code!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
@@ -41,14 +41,8 @@ class UpdateBookingRepository{
                 }
                 else {
                     try {
-                        listener.onFailure(response.code())
-                        Log.i("----------", " " + JSONObject(response.errorBody()!!.string()).getString("Message"))
-//                        val dialog = GetAleretDialog.getDialog(mContext, mContext.getString(R.string.status),
-//                            JSONObject(response.errorBody()!!.string()).getString("Message")
-//                        )
-//                        dialog.setPositiveButton(mContext.getString(R.string.ok)) { _, _ ->
-//                        }
-//                        GetAleretDialog.showDialog(dialog)
+                        listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
+
                     }catch (e: Exception) {
 
                     }
