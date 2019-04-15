@@ -11,7 +11,7 @@ class GetIntentDataFromActvity(
     var roomName: String? = null,
     var roomId: String? = null,
     var buildingId: String? = null,
-    var listOfDays: ArrayList<Int> = ArrayList(),
+    var listOfDays: ArrayList<String> = ArrayList(),
     var toDate: String? = null,
     var fromTimeList: ArrayList<String> = ArrayList(),
     var toTimeList: ArrayList<String> = ArrayList(),

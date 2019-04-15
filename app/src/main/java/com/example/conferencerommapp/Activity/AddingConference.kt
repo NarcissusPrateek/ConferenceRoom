@@ -114,6 +114,7 @@ class AddingConference : AppCompatActivity() {
         val mProgressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddConferenceRoomViewModel = ViewModelProviders.of(this).get(AddConferenceRoomViewModel::class.java)
         mProgressDialog.show()
+        mAddConferenceRoomViewModel.addConferenceDetails(mConferenceRoom)
         mAddConferenceRoomViewModel.returnSuccessForAddingRoom().observe(this, Observer {
             mProgressDialog.dismiss()
             val dialog

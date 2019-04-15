@@ -38,7 +38,6 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
     }
 
     private fun loadConferenceRoom() {
-
         mGetIntentDataFromActivity = getIntentData()
         getViewModel(mGetIntentDataFromActivity)
     }
@@ -62,6 +61,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
         progressDialog.show()
         mManagerConferenceRoomViewModel.getConferenceRoomList(setDataToObjectForApiCall(mGetIntentDataFromActvity))
         mManagerConferenceRoomViewModel.returnSuccess().observe(this, Observer {
+            progressDialog.dismiss()
             if(it.isEmpty()) {
                 //some messages
             }else {
@@ -78,6 +78,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
             }
         })
         mManagerConferenceRoomViewModel.returnFailure().observe(this, Observer {
+            progressDialog.dismiss()
             // message according to the error code
         })
     }

@@ -17,11 +17,9 @@ import androidx.cardview.widget.CardView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.conferencerommapp.Activity.UpdateBookingActivity
-import com.example.conferencerommapp.Model.CancelBooking
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
-import java.text.SimpleDateFormat
 
 @Suppress("NAME_SHADOWING")
 class DashBoardAdapter(
@@ -29,7 +27,8 @@ class DashBoardAdapter(
     val mContext: Context,
     private val btnListener: DashBoardAdapter.CancelBtnClickListener,
     private val mShowMembers: DashBoardAdapter.ShowMembersListener,
-    private val mShowDates: DashBoardAdapter.ShowDatesForRecurringMeeting
+    private val mShowDates: DashBoardAdapter.ShowDatesForRecurringMeeting,
+    private val mEditBooking: DashBoardAdapter.EditBookingListener
 ) : androidx.recyclerview.widget.RecyclerView.Adapter<DashBoardAdapter.ViewHolder>() {
 
     /**
@@ -39,6 +38,7 @@ class DashBoardAdapter(
         var mCancelBookingClickListener: CancelBtnClickListener? = null
         var mShowMembersListener: ShowMembersListener? = null
         var mShowDateListener: ShowDatesForRecurringMeeting? = null
+        var mEditBookingListener: EditBookingListener? = null
     }
 
     private var currentPosition = 0
@@ -59,6 +59,7 @@ class DashBoardAdapter(
         mCancelBookingClickListener = btnListener
         mShowMembersListener = mShowMembers
         mShowDateListener = mShowDates
+        mEditBookingListener = mEditBooking
 
         val fromTime = dashboardItemList[position].FromTime
         val toTime = dashboardItemList[position].ToTime
@@ -68,10 +69,13 @@ class DashBoardAdapter(
         setAnimationToTheRecyclerViewItem(holder, position)
         setDataToFields(holder, position)
 
-        holder.fromtimetextview.text = fromDate[1] + " - " + toDate[1]
+        holder.fromTimeTextView.text = fromDate[1] + " - " + toDate[1]
         setButtonFunctionalityAccordingToStatus(holder, position)
         setFunctionOnButton(holder, position, mContext)
-        editActivity(holder, position, mContext)
+
+        holder.updateTextView.setOnClickListener {
+            editActivity(position, mContext)
+        }
     }
 
 
@@ -89,14 +93,15 @@ class DashBoardAdapter(
 
         @Nullable
         @BindView(R.id.building_name)
-        lateinit var buildingNameTextview: TextView
+        lateinit var buildingNameTextView: TextView
         @BindView(R.id.conferenceRoomName)
         lateinit var roomNameTextView: TextView
         @Nullable
         @BindView(R.id.from_time)
-        lateinit var fromtimetextview: TextView
+        lateinit var fromTimeTextView: TextView
         @BindView(R.id.date)
         lateinit var dateTextView: TextView
+        @Nullable
         @BindView(R.id.purpose)
         lateinit var purposeTextView: TextView
         @BindView(R.id.btnCancel)
@@ -143,7 +148,7 @@ class DashBoardAdapter(
      */
     private fun setDataToFields(holder: ViewHolder, position: Int) {
         holder.dashboard = dashboardItemList[position]
-        holder.buildingNameTextview.text = dashboardItemList[position].BName
+        holder.buildingNameTextView.text = dashboardItemList[position].BName
         holder.roomNameTextView.text = dashboardItemList[position].CName
         holder.purposeTextView.text = dashboardItemList[position].Purpose
         holder.showButton.setOnClickListener {
@@ -209,27 +214,25 @@ class DashBoardAdapter(
         }
     }
 
-    private fun editActivity(holder: ViewHolder, position: Int, mContext: Context) {
-        holder.updateTextView.setOnClickListener {
-            val mGetIntentDataFromActivity = GetIntentDataFromActvity()
-            val fromTime = dashboardItemList[position].FromTime
-            val fromDate = fromTime!!.split("T")
-            mGetIntentDataFromActivity.purpose = dashboardItemList[position].Purpose
-            mGetIntentDataFromActivity.buildingName = dashboardItemList[position].BName
-            mGetIntentDataFromActivity.roomName = dashboardItemList[position].CName
-            mGetIntentDataFromActivity.roomId = dashboardItemList[position].CId.toString()
-            mGetIntentDataFromActivity.date = fromDate[0]
-            mGetIntentDataFromActivity.fromTime = dashboardItemList[position].FromTime
-            mGetIntentDataFromActivity.toTime = dashboardItemList[position].ToTime
-            mGetIntentDataFromActivity.cCMail = dashboardItemList[position].cCMail
-            val updateActivity = Intent(mContext, UpdateBookingActivity::class.java)
-            updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActivity)
-            mContext.startActivity(updateActivity)
-        }
+    private fun editActivity(position: Int, mContext: Context) {
+        val mGetIntentDataFromActivity = GetIntentDataFromActvity()
+        val fromTime = dashboardItemList[position].FromTime
+        val fromDate = fromTime!!.split("T")
+        mGetIntentDataFromActivity.purpose = dashboardItemList[position].Purpose
+        mGetIntentDataFromActivity.buildingName = dashboardItemList[position].BName
+        mGetIntentDataFromActivity.roomName = dashboardItemList[position].CName
+        mGetIntentDataFromActivity.roomId = dashboardItemList[position].CId.toString()
+        mGetIntentDataFromActivity.date = fromDate[0]
+        mGetIntentDataFromActivity.fromTime = dashboardItemList[position].FromTime
+        mGetIntentDataFromActivity.toTime = dashboardItemList[position].ToTime
+        mGetIntentDataFromActivity.cCMail = dashboardItemList[position].cCMail
+        mEditBookingListener!!.editBooking(mGetIntentDataFromActivity)
+//        val updateActivity = Intent(mContext, UpdateBookingActivity::class.java)
+//        updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActivity)
+//        mContext.startActivity(updateActivity)
     }
 
     private fun editAlert(position: Int, context: Context) {
-
         val mGetIntentDataFromActvity = GetIntentDataFromActvity()
         val fromTime = dashboardItemList[position].FromTime
         val fromDate = fromTime!!.split("T")
@@ -241,9 +244,10 @@ class DashBoardAdapter(
         mGetIntentDataFromActvity.fromTime = dashboardItemList[position].FromTime
         mGetIntentDataFromActvity.toTime = dashboardItemList[position].ToTime
         mGetIntentDataFromActvity.cCMail = dashboardItemList[position].cCMail
-        val updateActivity = Intent(mContext, UpdateBookingActivity::class.java)
-        updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
-        mContext.startActivity(updateActivity)
+        //mEditBookingListener!!.editBooking(position)
+//        val updateActivity = Intent(mContext, UpdateBookingActivity::class.java)
+//        updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
+//        mContext.startActivity(updateActivity)
     }
 
     /**
@@ -266,5 +270,10 @@ class DashBoardAdapter(
      */
     interface ShowDatesForRecurringMeeting {
         fun showDates(position: Int)
+    }
+
+
+    interface EditBookingListener {
+        fun editBooking(mGetIntentDataFromActvity: GetIntentDataFromActvity)
     }
 }

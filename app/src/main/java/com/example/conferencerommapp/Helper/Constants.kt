@@ -29,7 +29,7 @@ class Constants {
         /**
          * ip address for api call
          */
-        var IP_ADDRESS = "http://192.168.1.192/CRB/"
+        var IP_ADDRESS = "http://192.168.1.190/CRB/"
 
         const val INTERNAL_SERVER_ERROR = 555
 

@@ -3,7 +3,9 @@ package com.example.conferencerommapp.ViewModel
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.UpdateBooking
+import com.example.conferencerommapp.Repository.BookingDashboardRepository
 import com.example.conferencerommapp.Repository.UpdateBookingRepository
 
 
@@ -15,17 +17,44 @@ class UpdateBookingViewModel: ViewModel() {
     var mUpdateBookingRepository: UpdateBookingRepository? = null
 
     /**
-     * a MutableLivedata variable which will hold the Value for the Livedata
+     * a MutableLivedata variable which will hold the positive response from repository
      */
-    var mStatus: MutableLiveData<Int>? = null
+    var mSuccessForUpdate =  MutableLiveData<Int>()
+
+    /**
+     * a MutableLivedata variable which will hold the positive response from repository
+     */
+    var mFailureForUpdate =  MutableLiveData<Int>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun updateBookingDetails(context: Context, mUpdateBooking: UpdateBooking): MutableLiveData<Int> {
+    fun updateBookingDetails(mUpdateBooking: UpdateBooking) {
         mUpdateBookingRepository = UpdateBookingRepository.getInstance()
-        mStatus = mUpdateBookingRepository!!.updateBookingDetails(context, mUpdateBooking) as MutableLiveData<Int>
-        return mStatus!!
+        mUpdateBookingRepository!!.updateBookingDetails(mUpdateBooking, object: ResponseListener {
+            override fun onSuccess(success: Any) {
+                mSuccessForUpdate.value = success as Int
+            }
+
+            override fun onFailure(failure: Int) {
+                mFailureForUpdate.value = failure
+            }
+
+        })
+    }
+
+    /**
+     * function will return the MutableLiveData of Int
+     */
+    fun returnBookingUpdated(): MutableLiveData<Int> {
+        return mSuccessForUpdate
+    }
+
+    /**
+     * function will return the MutableLiveData of Int if something went wrong at server
+     */
+    fun returnUpdateFailed(): MutableLiveData<Int> {
+        return mFailureForUpdate
     }
 }

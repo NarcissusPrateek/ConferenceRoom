@@ -2,6 +2,7 @@ package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -51,6 +52,7 @@ class BookingActivity : AppCompatActivity() {
     private var customAdapter: CheckBoxAdapter? = null
     private var checkedEmployee = ArrayList<EmployeeList>()
     private var mBooking = Booking()
+    lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -61,9 +63,12 @@ class BookingActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Confirm_Details) + "</font>")
 
+        progressDialog =
+            GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         val mIntentDataFromActivity = getIntentData()
 
+        // getting view model object
         mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
 
         setDataToTextView(mIntentDataFromActivity, acct!!.displayName.toString())
@@ -243,15 +248,16 @@ class BookingActivity : AppCompatActivity() {
         /**
          * getting Progress Dialog
          */
-        val progressDialog =
-            GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+
         mBooking.purpose = purposeEditText.text.toString()
         progressDialog.show()
         mBookingViewModel.addBookingDetails(mBooking)
         mBookingViewModel.returnSuccessForBooking().observe(this, Observer {
+            progressDialog.dismiss()
             goToBookingDashboard()
         })
         mBookingViewModel.returnFailureForBooking().observe(this, Observer {
+            progressDialog.dismiss()
             // based on some error code
         })
     }

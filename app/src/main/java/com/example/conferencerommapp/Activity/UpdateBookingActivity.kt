@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.Html
 import android.text.TextUtils
+import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -22,27 +23,28 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 class UpdateBookingActivity : AppCompatActivity() {
 
-    lateinit var mUpdateBookingViewModel:UpdateBookingViewModel
+    private lateinit var mUpdateBookingViewModel: UpdateBookingViewModel
     private var mUpdateBooking = UpdateBooking()
-    var oldfromtime : String? = null
-    var oldtotime: String? = null
+    private var oldFromTime: String? = null
+    private var oldToTime: String? = null
+
     @BindView(R.id.Purpose)
     lateinit var purpose: EditText
 
     @BindView(R.id.fromTime_update)
-    lateinit var newfromtime: EditText
+    lateinit var newFromTime: EditText
 
     @BindView(R.id.toTime_update)
-    lateinit var newtotime: EditText
+    lateinit var newToTime: EditText
 
     @BindView(R.id.date_update)
     lateinit var date: EditText
 
     @BindView(R.id.buildingname)
-    lateinit var buildingname: EditText
+    lateinit var buildingName: EditText
 
     @BindView(R.id.conferenceRoomName)
-    lateinit var roomname: EditText
+    lateinit var roomName: EditText
 
     private lateinit var mIntentDataFromActivity: GetIntentDataFromActvity
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,18 +61,18 @@ class UpdateBookingActivity : AppCompatActivity() {
 
     private fun addDataToObjects(mIntentDataFromActivity: GetIntentDataFromActvity) {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
-        mUpdateBooking.email=acct!!.email
+        mUpdateBooking.email = acct!!.email
         mUpdateBooking.cCMail = mIntentDataFromActivity.cCMail!!.joinToString()
         mUpdateBooking.roomId = mIntentDataFromActivity.roomId!!.toInt()
         mUpdateBooking.roomName = mIntentDataFromActivity.roomName!!
-        mUpdateBooking.newfromTime = (date.text.toString() + " " + newfromtime.text.toString()).trim()
-        mUpdateBooking.newtotime = (date.text.toString() + " " + newtotime.text.toString()).trim()
-        mUpdateBooking.fromTime = (date.text.toString() + " " + oldfromtime.toString()).trim()
-        mUpdateBooking.toTime = (date.text.toString() + " " + oldtotime.toString()).trim()
+        mUpdateBooking.newfromTime = (date.text.toString() + " " + newFromTime.text.toString()).trim()
+        mUpdateBooking.newtotime = (date.text.toString() + " " + newToTime.text.toString()).trim()
+        mUpdateBooking.fromTime = (date.text.toString() + " " + oldFromTime.toString()).trim()
+        mUpdateBooking.toTime = (date.text.toString() + " " + oldToTime.toString()).trim()
     }
 
     @OnClick(R.id.update)
-    fun updateMeeting(){
+    fun updateMeeting() {
         addDataToObjects(mIntentDataFromActivity)
         validationOnDataEnteredByUser()
     }
@@ -87,8 +89,8 @@ class UpdateBookingActivity : AppCompatActivity() {
             /**
              * Get the start and end time of meeting from the input fields
              */
-            val startTime = newfromtime.text.toString()
-            val endTime = newtotime.text.toString()
+            val startTime = newFromTime.text.toString()
+            val endTime = newToTime.text.toString()
 
             /**
              * setting a aalert dialog instance for the current context
@@ -139,30 +141,41 @@ class UpdateBookingActivity : AppCompatActivity() {
                     GetAleretDialog.showDialog(builder)
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@UpdateBookingActivity, getString(R.string.details_invalid), Toast.LENGTH_LONG).show()
+                Toast.makeText(this@UpdateBookingActivity, getString(R.string.details_invalid), Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }
 
     private fun updateMeetingDetails() {
-        mUpdateBookingViewModel = ViewModelProviders.of(this).get(UpdateBookingViewModel::class.java)
 
-        mUpdateBookingViewModel.updateBookingDetails(this, mUpdateBooking).observe(this, Observer {
-            if(it == Constants.OK_RESPONSE) {
-                var builder = GetAleretDialog.getDialog(this,getString(R.string.status),"Successfully updated")
-                builder.setPositiveButton(getString(R.string.ok)){_, _ ->
-                    finish()
-                }
-                GetAleretDialog.showDialog(builder)
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        progressDialog.show()
+        mUpdateBookingViewModel = ViewModelProviders.of(this).get(UpdateBookingViewModel::class.java)
+        mUpdateBookingViewModel.updateBookingDetails(mUpdateBooking)
+        mUpdateBookingViewModel.returnBookingUpdated().observe(this, Observer {
+            progressDialog.dismiss()
+            var builder = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booking_updated))
+            builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                finish()
             }
+            GetAleretDialog.showDialog(builder)
+
         })
+        mUpdateBookingViewModel.returnUpdateFailed().observe(this, Observer {
+            progressDialog.dismiss()
+            Log.i("-------", " " + it)
+            // some message goes here on failure and error
+        })
+
     }
+
     private fun validate(): Boolean {
 
-        if (TextUtils.isEmpty(newfromtime.text.trim())) {
+        if (TextUtils.isEmpty(newFromTime.text.trim())) {
             Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
             return false
-        } else if (TextUtils.isEmpty(newtotime.text.trim())) {
+        } else if (TextUtils.isEmpty(newToTime.text.trim())) {
             Toast.makeText(applicationContext, getString(R.string.invalid_to_time), Toast.LENGTH_SHORT).show()
             return false
         }
@@ -170,15 +183,15 @@ class UpdateBookingActivity : AppCompatActivity() {
     }
 
     private fun setEditTextPicker() {
-        newfromtime.setOnClickListener {
-            DateAndTimePicker.getTimePickerDialog(this, newfromtime)
+        newFromTime.setOnClickListener {
+            DateAndTimePicker.getTimePickerDialog(this, newFromTime)
         }
 
         /**
          * set Time picker for the edittext toTime
          */
-        newtotime.setOnClickListener {
-            DateAndTimePicker.getTimePickerDialog(this, newtotime)
+        newToTime.setOnClickListener {
+            DateAndTimePicker.getTimePickerDialog(this, newToTime)
         }
     }
 
@@ -188,19 +201,20 @@ class UpdateBookingActivity : AppCompatActivity() {
         val simpleDateFormatForTime1 = java.text.SimpleDateFormat("HH:mm")
         val mdate = mIntentDataFromActivity.date!!
         val mfromtime = mIntentDataFromActivity.fromTime!!.split("T")
-        oldfromtime = mfromtime[1]
+        oldFromTime = mfromtime[1]
         val mtotime = mIntentDataFromActivity.toTime!!.split("T")
-        oldtotime = mtotime[1]
+        oldToTime = mtotime[1]
         purpose.text = mIntentDataFromActivity.purpose!!.toEditable()
-        newfromtime.text = simpleDateFormatForTime1.format(simpleDateFormatForTime.parse(mfromtime[1])).toEditable()//oldfromtime.toString().toEditable()
-        newtotime.text = simpleDateFormatForTime1.format(simpleDateFormatForTime.parse(mtotime[1])).toEditable()
+        newFromTime.text = simpleDateFormatForTime1.format(simpleDateFormatForTime.parse(mfromtime[1]))
+            .toEditable()//oldFromTime.toString().toEditable()
+        newToTime.text = simpleDateFormatForTime1.format(simpleDateFormatForTime.parse(mtotime[1])).toEditable()
         date.text = mdate.toEditable()
-        buildingname.text = mIntentDataFromActivity.buildingName!!.toEditable()
-        roomname.text = mIntentDataFromActivity.roomName!!.toEditable()
+        buildingName.text = mIntentDataFromActivity.buildingName!!.toEditable()
+        roomName.text = mIntentDataFromActivity.roomName!!.toEditable()
     }
 
 
-    private fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
+    private fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
 
 
     private fun getIntentData(): GetIntentDataFromActvity {

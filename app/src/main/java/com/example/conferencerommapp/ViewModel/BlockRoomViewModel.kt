@@ -1,16 +1,11 @@
 package com.example.conferencerommapp.ViewModel
 
-import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.conferencerommapp.BuildingConference
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.BlockRoom
 import com.example.conferencerommapp.Model.BlockingConfirmation
-import com.example.conferencerommapp.Model.ConferenceRoom
-import com.example.conferencerommapp.Repository.BlockConferenceRoomListRepository
-import com.example.conferencerommapp.Repository.BlockConfirmationRepository
 import com.example.conferencerommapp.Repository.BlockRoomRepository
 
 
@@ -90,7 +85,6 @@ class BlockRoomViewModel : ViewModel() {
             override fun onSuccess(success: Any) {
                 mConferenceRoomList.value = success as List<BuildingConference>
             }
-
             override fun onFailure(failure: Int) {
                 mFailureCodeForRoom.value = failure
             }

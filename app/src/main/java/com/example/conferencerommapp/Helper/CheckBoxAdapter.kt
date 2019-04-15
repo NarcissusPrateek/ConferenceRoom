@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -14,22 +15,32 @@ import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.R
 
 
-class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee: ArrayList<EmployeeList>, var context: Context) : RecyclerView.Adapter<CheckBoxAdapter.ViewHolder>() {
+class CheckBoxAdapter(
+    var employee: ArrayList<EmployeeList>,
+    var checkedEmployee: ArrayList<EmployeeList>,
+    var context: Context
+) : RecyclerView.Adapter<CheckBoxAdapter.ViewHolder>() {
+
+    companion object {
+        var count = 0
+    }
 
     /**
      * attach a view for the recyclerview items
      */
     @SuppressLint("InflateParams")
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_alertdialog, null)
         return ViewHolder(v)
     }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val employee = employee[position]
         holder.myCheckBox.text = employee.name
         holder.myCheckBox.isChecked = employee.isSelected!!
-        if(employee.isSelected!! && !checkedEmployee.contains(employee)) {
+        if (employee.isSelected!! && !checkedEmployee.contains(employee)) {
             checkedEmployee.add(employee)
         }
 
@@ -39,13 +50,18 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
         holder.setItemClickListener(object : ViewHolder.ItemClickListener {
             override fun onItemClick(v: View, pos: Int) {
                 val myCheckBox = v as CheckBox
-                val currentTeacher = this@CheckBoxAdapter.employee[pos]
+                val currentEmployee = this@CheckBoxAdapter.employee[pos]
                 if (myCheckBox.isChecked) {
-                    currentTeacher.isSelected = true
-                    checkedEmployee.add(currentTeacher)
+                    if(count < 5) {
+                        currentEmployee.isSelected = true
+                        checkedEmployee.add(currentEmployee)
+                    }
+                    else {
+                        Toast.makeText(context, "you can not select more than capacity", Toast.LENGTH_SHORT).show()
+                    }
                 } else if (!myCheckBox.isChecked) {
-                    currentTeacher.isSelected = false
-                    checkedEmployee.remove(currentTeacher)
+                    currentEmployee.isSelected = false
+                    checkedEmployee.remove(currentEmployee)
                 }
             }
         })
@@ -66,9 +82,9 @@ class CheckBoxAdapter(var employee: ArrayList<EmployeeList>,var checkedEmployee:
             ButterKnife.bind(this, itemView)
             myCheckBox.setOnClickListener(this)
         }
+
         @BindView(R.id.checkBox)
         lateinit var myCheckBox: CheckBox
-
 
 
         fun setItemClickListener(ic: ItemClickListener) {

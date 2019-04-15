@@ -28,9 +28,7 @@ class BuildingViewModel : ViewModel() {
      * and function will update the values of MutableLiveData objects according to the response from server
      */
     fun getBuildingList() {
-        if (mBuildingList == null) {
-            mBuildingsRepository = BuildingsRepository.getInstance()
-        }
+        mBuildingsRepository = BuildingsRepository.getInstance()
         mBuildingsRepository!!.getBuildingList(object: ResponseListener {
             override fun onFailure(failure: Int) {
                     errorCodeFromServer.value = failure

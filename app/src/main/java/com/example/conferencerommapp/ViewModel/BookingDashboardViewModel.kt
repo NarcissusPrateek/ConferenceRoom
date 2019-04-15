@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.conferencerommapp.Helper.ResponseListener
-import com.example.conferencerommapp.Model.Building
+import com.example.conferencerommapp.Model.CancelBooking
 import com.example.conferencerommapp.Model.Dashboard
+import com.example.conferencerommapp.Model.UpdateBooking
 import com.example.conferencerommapp.Repository.BookingDashboardRepository
+import com.example.conferencerommapp.Repository.UpdateBookingRepository
 
 class BookingDashboardViewModel : ViewModel() {
 
@@ -20,7 +22,14 @@ class BookingDashboardViewModel : ViewModel() {
      */
     private var mBookingList = MutableLiveData<List<Dashboard>>()
 
-    private var mFailureCode = MutableLiveData<Int>()
+    private var mFailureCodeForBookingList = MutableLiveData<Int>()
+
+    /**
+     * a MutableLivedata variable which will hold the Value for the Livedata
+     */
+    var mSuccessForCancelBooking = MutableLiveData<Int>()
+    var mFailureForCancelBooking = MutableLiveData<Int>()
+
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
@@ -34,7 +43,7 @@ class BookingDashboardViewModel : ViewModel() {
             }
 
             override fun onFailure(failure: Int) {
-                mFailureCode.value = failure
+                mFailureCodeForBookingList.value = failure
             }
 
         })
@@ -51,8 +60,46 @@ class BookingDashboardViewModel : ViewModel() {
      * function will return the MutableLiveData of Int if something went wrong at server
      */
     fun returnFailure(): MutableLiveData<Int> {
-        return mFailureCode
+        return mFailureCodeForBookingList
     }
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * function will initialize the repository object and calls the method of repository which will make the api call
+     * and function will return the value for MutableLivedata
+     */
+    fun cancelBooking(mCancel: CancelBooking) {
+        mBookingDashboardRepository = BookingDashboardRepository.getInstance()
+        mBookingDashboardRepository!!.cancelBooking(mCancel, object : ResponseListener {
+            override fun onFailure(failure: Int) {
+                mFailureForCancelBooking.value = failure
+            }
+
+            override fun onSuccess(success: Any) {
+                mSuccessForCancelBooking.value = success as Int
+            }
+
+        })
+    }
+
+    /**
+     * function will return the MutableLiveData of Int
+     */
+    fun returnBookingCancelled(): MutableLiveData<Int> {
+        return mSuccessForCancelBooking
+    }
+
+    /**
+     * function will return the MutableLiveData of Int if something went wrong at server
+     */
+    fun returnCancelFailed(): MutableLiveData<Int> {
+        return mFailureForCancelBooking
+    }
+
+
+    //--------------------------------------------------------------------------------------------------------------
 
 
 }

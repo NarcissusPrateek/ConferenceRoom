@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 class SplashScreen : AppCompatActivity() {
 
     private lateinit var prefs: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
@@ -53,9 +54,11 @@ class SplashScreen : AppCompatActivity() {
         val mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
         mCheckRegistrationViewModel.checkRegistration(email)
         mCheckRegistrationViewModel.returnSuccessCode().observe(this, Observer {
+            progressDialog.dismiss()
             setValueForSharedPreference(it)
         })
         mCheckRegistrationViewModel.returnFailureCode().observe(this, Observer {
+            progressDialog.dismiss()
             //some message according to error code form server
         })
     }
@@ -67,7 +70,6 @@ class SplashScreen : AppCompatActivity() {
         startActivity(Intent(applicationContext, SignIn::class.java))
         finish()
     }
-
 
     /**
      * according to the backend status function will redirect control to some other activity

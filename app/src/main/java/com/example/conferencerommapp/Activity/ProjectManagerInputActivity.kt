@@ -11,9 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.example.conferencerommapp.Helper.*
+import com.example.conferencerommapp.Helper.Constants
+import com.example.conferencerommapp.Helper.ConvertTimeInMillis
+import com.example.conferencerommapp.Helper.DateAndTimePicker
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
+import kotlinx.android.synthetic.main.activity_project_manager_input.*
 
 @Suppress("NAME_SHADOWING", "DEPRECATION")
 class ProjectManagerInputActivity : AppCompatActivity() {
@@ -26,8 +30,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
     lateinit var dateToEditText: EditText
     @BindView(R.id.date_manager)
     lateinit var dateFromEditText: EditText
-    private var listOfDays = ArrayList<Int>()
-    private var mUserItems = ArrayList<Int>()
+    private var listOfDays = ArrayList<String>()
     private lateinit var listItems: Array<String>
     private lateinit var checkedItems: BooleanArray
 
@@ -55,16 +58,13 @@ class ProjectManagerInputActivity : AppCompatActivity() {
     /**
      * on Button click
      */
-    @OnClick(R.id.next_manager, R.id.select_days)
+    @OnClick(R.id.next_manager)
     fun onViewClicked(view: View) {
         when (view.id) {
             R.id.next_manager -> {
                 if (validate()) {
                     applyValidationOnDateAndTime()
                 }
-            }
-            R.id.select_days -> {
-                getDays()
             }
         }
     }
@@ -101,43 +101,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * this function will select and store the days selected by user for recurring meeting
-     */
-    private fun getDays() {
-        val mBuilder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
-        mBuilder.setMultiChoiceItems(listItems, checkedItems
-        ) { _, position, isChecked ->
-            if (isChecked) {
-                mUserItems.add(position)
-
-            } else {
-                mUserItems.remove(Integer.valueOf(position))
-            }
-        }
-
-        mBuilder.setCancelable(false)
-        mBuilder.setPositiveButton(getString(R.string.ok)) { _,_ ->
-            listOfDays.clear()
-            for (i in mUserItems.indices) {
-                listOfDays.add(mUserItems[i] + 1)
-            }
-        }
-        mBuilder.setNegativeButton(
-            getString(R.string.dismiss_label)
-        ) { dialogInterface, _ ->
-            dialogInterface.dismiss()
-        }
-        mBuilder.setNeutralButton(getString(R.string.clear_all)) { _, _ ->
-            for (i in checkedItems.indices) {
-                checkedItems[i] = false
-                mUserItems.clear()
-            }
-        }
-        val mDialog = mBuilder.create()
-        mDialog.show()
-        ColorOfDialogButton.setColorOfDialogButton(mDialog)
-    }
 
     /**
      * this function ensures that user entered values for all editable fields
@@ -160,7 +123,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, getString(R.string.invalid_to_date), Toast.LENGTH_SHORT).show()
                 return false
             }
-            listOfDays.isEmpty() -> {
+            day_picker.selectedDays.isEmpty() -> {
                 Toast.makeText(applicationContext, getString(R.string.select_days), Toast.LENGTH_SHORT).show()
                 return false
             }
@@ -210,7 +173,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             if (elapsed2 < 0) {
                 val builder =
                     GetAleretDialog.getDialog(this, getString(R.string.invalid), getString(R.string.invalid_fromtime))
-                builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
+                builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                 }
                 GetAleretDialog.showDialog(builder)
             } else if ((minMilliseconds <= elapsed) && (maxMilliseconds >= elapsed)) {
@@ -231,7 +194,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                     getString(R.string.time_validation_message)
                 )
 
-                builder.setPositiveButton(getString(R.string.ok)) {_,_ ->
+                builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                 }
                 GetAleretDialog.showDialog(builder)
             }
@@ -250,10 +213,20 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         mSetIntentData.date = dateFromEditText.text.toString().trim()
         mSetIntentData.toDate = dateToEditText.text.toString().trim()
         mSetIntentData.listOfDays.clear()
+        getListOfSelectedDays()
         mSetIntentData.listOfDays.addAll(listOfDays)
-
         val buildingIntent = Intent(this@ProjectManagerInputActivity, ManagerBuildingsActivity::class.java)
         buildingIntent.putExtra(Constants.EXTRA_INTENT_DATA, mSetIntentData)
         startActivity(buildingIntent)
+    }
+
+    /**
+     * get all the selected days and add all days to another list listOfDays
+     */
+    private fun getListOfSelectedDays() {
+        listOfDays.clear()
+        for (day in day_picker.selectedDays) {
+            listOfDays.add("${day}")
+        }
     }
 }

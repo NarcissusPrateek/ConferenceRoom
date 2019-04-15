@@ -11,16 +11,11 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.example.conferencerommapp.Activity.BlockedDashboard
 import com.example.conferencerommapp.Blocked
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.ViewModel.UnBlockRoomViewModel
 
 
 class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: Context, val listener: UnblockRoomListener) : androidx.recyclerview.widget.RecyclerView.Adapter<BlockedDashboardNew.ViewHolder>() {

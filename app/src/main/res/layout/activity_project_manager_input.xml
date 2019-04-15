@@ -1,47 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        android:padding="10dp"
-        tools:context=".Activity.ProjectManagerInputActivity">
 
-    <LinearLayout
+<LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_gravity="center"
-            android:paddingLeft="20dp"
+            android:paddingLeft="10dp"
             android:layout_marginTop="10dp"
-            android:paddingRight="20dp" >
+            android:paddingRight="10dp" >
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="100">
+
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/sign_up_input_layout_name"
                     android:layout_width="0dp"
                     android:layout_weight="50"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp">
                 <EditText
                         android:id="@+id/fromTime_manager"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:editable="false"
                         android:maxLines="1"
                         android:focusable="false"
                         android:drawableStart="@drawable/ic_schedule_black_24dp"
-                        android:drawableLeft="@drawable/ic_schedule_black_24dp"
                         android:drawablePadding="5dp"
                         android:maxLength="50"
-                        android:hint="From-Time"/>
+                        android:hint="@string/from_time"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/sign_up_input_layout_email"
@@ -50,18 +42,17 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:layout_marginLeft="20dp"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp">
                 <EditText
                         android:id="@+id/toTime_manager"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:editable="false"
                         android:focusable="false"
                         android:inputType="text"
-                        android:hint="To-Time"
+                        android:hint="@string/to_time"
                         android:drawableStart="@drawable/ic_schedule_black_24dp"
-                        android:drawableLeft="@drawable/ic_schedule_black_24dp"
                         android:drawablePadding="5dp"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -76,16 +67,15 @@
                     android:layout_weight="50"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp">
                 <EditText android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:ems="10"
+                          android:editable="false"
                           android:focusable="false"
                           android:id="@+id/date_manager"
-                          android:hint="From-Date"
+                          android:hint="@string/from_date"
                           android:drawableStart="@drawable/ic_today_black_24dp"
-                          android:drawableLeft="@drawable/ic_today_black_24dp"
                           android:drawablePadding="5dp"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -94,30 +84,38 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:layout_marginLeft="20dp"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp">
                 <EditText android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:ems="10"
                           android:focusable="false"
+                          android:editable="false"
                           android:id="@+id/to_date_manager"
-                          android:hint="To-Date"
+                          android:hint="@string/to_date"
                           android:drawableStart="@drawable/ic_today_black_24dp"
-                          android:drawableLeft="@drawable/ic_today_black_24dp"
                           android:drawablePadding="5dp"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
-
-        <Button android:id="@+id/select_days"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Select Week Days"
-                android:layout_margin="50dp"
-                android:background="@color/colorPrimary"
-                android:layout_marginTop="40dp"
-                android:textColor="@android:color/white"/>
-
-        <Button android:id="@+id/next_manager"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_day"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/grey"/>
+        <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:padding="5dp"
+                app:cardCornerRadius="5dp">
+            <ca.antonious.materialdaypicker.MaterialDayPicker
+                    android:id="@+id/day_picker"
+                    android:layout_width="match_parent"
+                    android:padding="5dp"
+                    android:layout_height="wrap_content"/>
+        </com.google.android.material.card.MaterialCardView>
+    <Button android:id="@+id/next_manager"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="NEXT"
@@ -125,4 +123,4 @@
                 android:layout_marginTop="40dp"
                 android:textColor="@android:color/white"/>
     </LinearLayout>
-</LinearLayout>
+

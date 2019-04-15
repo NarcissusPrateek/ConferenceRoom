@@ -41,7 +41,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
     }
 
     /**
-     * on restart of activity the function will make a call to viewmodel method that will get the updated data from backend
+     * on restart of activity the function will make a call to ViewModel method that will get the updated data from backend
      */
     override fun onRestart() {
         super.onRestart()
@@ -72,7 +72,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
         end: String,
         fromDate: String,
         toDate: String,
-        listOfDays: ArrayList<Int>
+        listOfDays: ArrayList<String>
     ) {
         dataList.clear()
         try {
@@ -84,10 +84,27 @@ class ManagerBuildingsActivity : AppCompatActivity() {
             c1.time = d1
             c2.time = d2
             while (c2.after(c1)) {
-                if (listOfDays.contains(c1.get(Calendar.DAY_OF_WEEK))) {
+                if (listOfDays.contains(
+                        c1.getDisplayName(
+                            Calendar.DAY_OF_WEEK,
+                            Calendar.LONG_FORMAT,
+                            Locale.US
+                        ).toUpperCase()
+                    )
+                ) {
                     dataList.add(simpleDateFormat.format(c1.time).toString())
                 }
                 c1.add(Calendar.DATE, 1)
+            }
+            if (listOfDays.contains(
+                    c2.getDisplayName(
+                        Calendar.DAY_OF_WEEK,
+                        Calendar.LONG_FORMAT,
+                        Locale.US
+                    ).toUpperCase()
+                )
+            ) {
+                dataList.add(simpleDateFormat.format(c1.time).toString())
             }
             getLists(start, end)
         } catch (e: Exception) {
@@ -117,11 +134,11 @@ class ManagerBuildingsActivity : AppCompatActivity() {
         var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
         mManagerBuildingViewModel.getBuildingList()
-        progressDialog.dismiss()
         mManagerBuildingViewModel.returnBuildingSuccess().observe(this, androidx.lifecycle.Observer {
-            if(it.isEmpty()) {
+            progressDialog.dismiss()
+            if (it.isEmpty()) {
                 // some message
-            }else {
+            } else {
                 mCustomAdapter = BuildingAdapter(this,
                     it!!,
                     object : BuildingAdapter.BtnClickListener {
@@ -140,9 +157,21 @@ class ManagerBuildingsActivity : AppCompatActivity() {
             }
         })
         mManagerBuildingViewModel.returnBuildingFailure().observe(this, androidx.lifecycle.Observer {
-            // messgae according to the response code from server
+            progressDialog.dismiss()
+            handleNegativeResponse(it)
         })
 
+    }
+
+    /**
+     * this function will handle the positive response from server
+     */
+    private fun handleNegativeResponse(mResponseCode: Int) {
+        if (mResponseCode == Constants.INTERNAL_SERVER_ERROR) {
+
+        } else {
+            // messgae according to the response code from server
+        }
     }
 
     /**

@@ -59,8 +59,8 @@ class ConferenceRoomActivity : AppCompatActivity() {
         mConferenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
         progressDialog.show()
         mConferenceRoomViewModel.getConferenceRoomList(mFetchRoom)
-        progressDialog.dismiss()
         mConferenceRoomViewModel.returnSuccess().observe(this, Observer {
+            progressDialog.dismiss()
             if(it.isEmpty()) {
                 showAlertDialog()
             }else {
@@ -77,6 +77,7 @@ class ConferenceRoomActivity : AppCompatActivity() {
             }
         })
         mConferenceRoomViewModel.returnFailure().observe(this, Observer {
+            progressDialog.dismiss()
             // according to the code
             Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
             finish()

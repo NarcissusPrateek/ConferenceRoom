@@ -46,6 +46,10 @@ class BlockDashboardRepository {
 
         })
     }
+
+    /**
+     * make request to server for unblock room
+     */
     fun unblockRoom(mRoom: Unblock, listener: ResponseListener) {
         val unBlockApi = Servicebuilder.buildService(ConferenceService::class.java)
         val requestCall: Call<ResponseBody> = unBlockApi.unBlockingConferenceRoom(mRoom)
@@ -55,7 +59,7 @@ class BlockDashboardRepository {
             }
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == Constants.OK_RESPONSE) {
-                    listener.onSuccess(response.body()!!)
+                    listener.onSuccess(response.code()!!)
                 } else {
                     listener.onFailure(response.code())
                 }

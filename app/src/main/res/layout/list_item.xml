@@ -23,7 +23,7 @@
         <TextView
                 android:drawablePadding="5dp"
                 android:drawableStart="@drawable/ic_building_black_24dp"
-                android:id="@+id/textviewBuilding"
+                android:id="@+id/text_view_building"
                 android:textStyle="normal"
                 android:maxLines="1"
                 android:ellipsize="end"

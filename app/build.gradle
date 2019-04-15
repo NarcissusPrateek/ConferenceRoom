@@ -105,6 +105,12 @@ dependencies {
 
     androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
 
+    // select weekdays
+    implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
+
+    //select days materail
+    implementation 'ca.antonious:materialdaypicker:0.4.0'
+
 /**
  *
  androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'

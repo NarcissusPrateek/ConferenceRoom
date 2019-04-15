@@ -22,7 +22,6 @@ import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.ManagerBooking
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.ViewModel.EmployeeViewModel
 import com.example.conferencerommapp.ViewModel.ManagerBookingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -140,6 +139,7 @@ class ManagerBookingActivity : AppCompatActivity() {
         progressDialog.show()
         mManagerBookingViewModel.getEmployeeList()
         mManagerBookingViewModel.returnSuccessForEmployeeList().observe(this, Observer {
+            progressDialog.dismiss()
             names.clear()
             for (item in it!!) {
                 item.isSelected = false
@@ -147,6 +147,7 @@ class ManagerBookingActivity : AppCompatActivity() {
             }
         })
         mManagerBookingViewModel.returnSuccessForEmployeeList().observe(this, Observer {
+            progressDialog.dismiss()
             //some message according to the error code
         })
     }
@@ -245,9 +246,11 @@ class ManagerBookingActivity : AppCompatActivity() {
         progressDialog.show()
         mManagerBookingViewModel.addBookingDetails(mManagerBooking)
         mManagerBookingViewModel.returnSuccessForBooking().observe(this, Observer {
+            progressDialog.dismiss()
             goToBookingDashboard()
         })
         mManagerBookingViewModel.returnFailureForBooking().observe(this, Observer {
+            progressDialog.dismiss()
             // some messae according to the error code
         })
     }

@@ -64,7 +64,7 @@ class BuildingAdapter(var mContext: Context, private val mBuildingList: List<Bui
         init {
             ButterKnife.bind(this, itemView)
         }
-        @BindView(R.id.textviewBuilding)
+        @BindView(R.id.text_view_building)
         lateinit var txvBuilding: TextView
         var building: Building? = null
     }
@@ -73,6 +73,6 @@ class BuildingAdapter(var mContext: Context, private val mBuildingList: List<Bui
      * an Interface which needs to be implemented whenever the adapter is attached to the recyclerview
      */
     interface BtnClickListener {
-        fun onBtnClick(buildingId: String?, buildingname: String?)
+        fun onBtnClick(buildingId: String?, buildingName: String?)
     }
 }

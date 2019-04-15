@@ -109,6 +109,13 @@
     <string name="ount_date_format_for_booking_dashboard">dd MMMM yyyy</string>
     <string name="asdfghjk">MMMM</string>
     <string name="room_unblocked">Room unBlocked!</string>
+    <string name="booking_updated">Successfully updated</string>
+    <string name="select_week_days">Select Week Days</string>
+    <string name="select_day">Select Days</string>
+    <string name="from_time">From-Time</string>
+    <string name="to_time">To-Time</string>
+    <string name="from_date">From-Date</string>
+    <string name="to_date">To-Date</string>
 
 
     <string-array name="role">

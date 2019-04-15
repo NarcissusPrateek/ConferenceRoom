@@ -1,15 +1,15 @@
 package com.example.conferencerommapp.Repository
 
-import android.content.Context
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.ResponseListener
+import com.example.conferencerommapp.Model.CancelBooking
 import com.example.conferencerommapp.Model.Dashboard
+import com.example.conferencerommapp.Model.UpdateBooking
 import com.example.conferencerommapp.R
 import com.example.globofly.services.Servicebuilder
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,8 +33,8 @@ class BookingDashboardRepository {
 
 
     /**
-     * function will initialize the MutableLivedata Object and than call a function for api call
-     * Passing the Context and model and call API, In return sends the status of LiveData
+     * function will make api call for making a booking
+     * and call the interface method with data from server
      */
     fun getBookingList(email: String, listener: ResponseListener) {
         /**
@@ -56,6 +56,30 @@ class BookingDashboardRepository {
             }
         })
 
+    }
+
+    /**
+     * function will make the API Call and call the interface method with data from server
+     */
+    fun cancelBooking(mCancel: CancelBooking, listener: ResponseListener) {
+        /**
+         * api call using retrofit
+         */
+        val service = Servicebuilder.getObject()
+        var requestCall: Call<ResponseBody> = service.cancelBooking(mCancel)
+        requestCall.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                listener.onFailure(Constants.INTERNAL_SERVER_ERROR)
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.code() == Constants.OK_RESPONSE) {
+                    listener.onSuccess(response.code())
+                } else {
+                    listener.onFailure(response.code())
+                }
+            }
+        })
     }
 
 }

@@ -60,7 +60,6 @@ class BuildingsActivity : AppCompatActivity() {
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
         progressDialog.show()
         mBuildingsViewModel.getBuildingList()
-
         mBuildingsViewModel.returnMBuildingSuccess().observe(this, Observer {
             progressDialog.dismiss()
             /**

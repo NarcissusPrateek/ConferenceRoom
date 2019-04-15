@@ -19,7 +19,6 @@ import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.Unblock
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BlockedDashboardViewModel
-import com.example.conferencerommapp.ViewModel.UnBlockRoomViewModel
 import kotlinx.android.synthetic.main.activity_blocked_dashboard.*
 
 @SuppressLint("Registered")

@@ -204,8 +204,11 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     }
 
     fun conferenceRoomListFromBackend(buildingId: Int) {
+        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         mBlockRoomViewModel.getRoomList(buildingId)
+        progressDialog.dismiss()
         mBlockRoomViewModel.returnConferenceRoomList().observe(this, Observer {
+            progressDialog.dismiss()
             if (it.isEmpty()) {
                 // do something
             }else {
@@ -213,6 +216,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             }
         })
         mBlockRoomViewModel.returnResponseErrorForConferenceRoom().observe(this, Observer {
+            progressDialog.dismiss()
             // some message according to the error code from backend
         })
     }
