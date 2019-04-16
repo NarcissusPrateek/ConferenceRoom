@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_alertdialog_members.view.*
+import kotlinx.android.synthetic.main.activity_user_inputs.*
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -85,7 +86,6 @@ class BookingActivity : AppCompatActivity() {
         acct = GoogleSignIn.getLastSignedInAccount(applicationContext)!!
         // getting view model object
         mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
-
     }
 
     /**
@@ -100,7 +100,7 @@ class BookingActivity : AppCompatActivity() {
         })
         mBookingViewModel.returnFailureForBooking().observe(this, Observer {
             progressDialog.dismiss()
-            showToastAccordingToError(it)
+            ShowToast.show(this, it)
         })
 
         // observer for add booking details
@@ -114,7 +114,7 @@ class BookingActivity : AppCompatActivity() {
         })
         mBookingViewModel.returnFailureForEmployeeList().observe(this, Observer {
             progressDialog.dismiss()
-            showToastAccordingToError(it)
+            ShowToast.show(this, it)
         })
     }
 
@@ -151,6 +151,21 @@ class BookingActivity : AppCompatActivity() {
         mBooking.toTime = mBookingDetails.toTime!!
         mBooking.roomName = mBookingDetails.roomName!!
     }
+
+    private fun validatePerposer(): Boolean {
+        var input = purposeEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+
+            false
+        } else {
+            from_time_layout.error = null
+            from_time_layout.isErrorEnabled = false
+            true
+        }
+    }
+
+
+
 
     /**
      * validate all input fields

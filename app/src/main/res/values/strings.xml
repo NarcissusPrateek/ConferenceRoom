@@ -118,6 +118,7 @@
     <string name="to_date">To-Date</string>
     <string name="invalid_conference_room">Invalid Room</string>
     <string name="internal_server">Internal Server Error!</string>
+    <string name="field_cant_be_empty">Field can\'t be empty</string>
 
 
     <string-array name="role">

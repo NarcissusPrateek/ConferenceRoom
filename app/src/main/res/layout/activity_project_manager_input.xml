@@ -16,12 +16,13 @@
                 android:weightSum="100">
 
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/sign_up_input_layout_name"
+                    android:id="@+id/manager_from_time_layout"
                     android:layout_width="0dp"
                     android:layout_weight="50"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    app:errorEnabled="true">
                 <EditText
                         android:id="@+id/fromTime_manager"
                         android:layout_width="match_parent"
@@ -36,13 +37,14 @@
                         android:hint="@string/from_time"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/sign_up_input_layout_email"
+                    android:id="@+id/manager_to_time_layout"
                     android:layout_width="0dp"
                     android:layout_weight="50"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    app:errorEnabled="true">
                 <EditText
                         android:id="@+id/toTime_manager"
                         android:layout_width="match_parent"
@@ -63,11 +65,13 @@
                 android:weightSum="100"
         android:layout_marginTop="10dp">
             <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/manager_from_date_layout"
                     android:layout_width="0dp"
                     android:layout_weight="50"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    app:errorEnabled="true">
                 <EditText android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:ems="10"
@@ -79,12 +83,14 @@
                           android:drawablePadding="5dp"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/manager_to_date_layout"
                     android:layout_width="0dp"
                     android:layout_weight="50"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="10dp"
+                    app:errorEnabled="true">
                 <EditText android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:ems="10"

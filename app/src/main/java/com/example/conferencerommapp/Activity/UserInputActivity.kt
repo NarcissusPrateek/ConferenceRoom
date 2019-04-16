@@ -19,6 +19,7 @@ import com.example.conferencerommapp.Helper.DateAndTimePicker
 import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
+import es.dmoral.toasty.Toasty
 import fr.ganfra.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.android.synthetic.main.activity_user_inputs.*
@@ -110,7 +111,7 @@ class UserInputActivity : AppCompatActivity() {
     private fun validateFromTime(): Boolean {
         var input = fromTimeEditText.text.toString().trim()
         return if (input.isEmpty()) {
-            from_time_layout.error = "Field can't be empty"
+            from_time_layout.error = getString(R.string.field_cant_be_empty)
             false
         } else {
             from_time_layout.error = null
@@ -122,7 +123,7 @@ class UserInputActivity : AppCompatActivity() {
     private fun validateToTime(): Boolean {
         var input = toTimeEditText.text.toString().trim()
         return if (input.isEmpty()) {
-            to_time_layout.error = "Field can't be empty"
+            to_time_layout.error = getString(R.string.field_cant_be_empty)
             false
         } else {
             to_time_layout.error = null
@@ -134,7 +135,7 @@ class UserInputActivity : AppCompatActivity() {
     private fun validateDate(): Boolean {
         var input = dateEditText.text.toString().trim()
         return if (input.isEmpty()) {
-            date_layout.error = "Field can't be empty"
+            date_layout.error = getString(R.string.field_cant_be_empty)
             false
         } else {
             date_layout.error = null
@@ -143,15 +144,15 @@ class UserInputActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * validation for spinner
+     */
     private fun validateSpinner(): Boolean {
-        return if (capacity == "Select Capacity") {
-            spinner_layout.error = "Field can't be empty"
-            false
-        } else {
-            spinner_layout.error = null
-            spinner_layout.isErrorEnabled = false
-            true
-        }
+       if(capacity == "Select Capacity") {
+           Toast.makeText(this, getString(R.string.select_capacity), Toast.LENGTH_SHORT).show()
+           return false
+       }
+        return true
     }
 
     /**

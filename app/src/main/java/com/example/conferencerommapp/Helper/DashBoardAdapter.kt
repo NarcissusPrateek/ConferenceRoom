@@ -101,7 +101,6 @@ class DashBoardAdapter(
         lateinit var fromTimeTextView: TextView
         @BindView(R.id.date)
         lateinit var dateTextView: TextView
-        @Nullable
         @BindView(R.id.purpose)
         lateinit var purposeTextView: TextView
         @BindView(R.id.btnCancel)

@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -20,6 +21,7 @@ import com.example.conferencerommapp.Model.UpdateBooking
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.UpdateBookingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import es.dmoral.toasty.Toasty
 
 class UpdateBookingActivity : AppCompatActivity() {
 
@@ -46,6 +48,8 @@ class UpdateBookingActivity : AppCompatActivity() {
     @BindView(R.id.conferenceRoomName)
     lateinit var roomName: EditText
 
+    private lateinit var progressDialog: ProgressDialog
+
     private lateinit var mIntentDataFromActivity: GetIntentDataFromActvity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,8 +58,10 @@ class UpdateBookingActivity : AppCompatActivity() {
         actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.update) + "</font>")
         mIntentDataFromActivity = getIntentData()
         ButterKnife.bind(this)
-        setValuesInEditText(mIntentDataFromActivity)
 
+        init()
+        observerData()
+        setValuesInEditText(mIntentDataFromActivity)
         setEditTextPicker()
     }
 
@@ -148,29 +154,30 @@ class UpdateBookingActivity : AppCompatActivity() {
     }
 
     private fun updateMeetingDetails() {
-
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         progressDialog.show()
-        mUpdateBookingViewModel = ViewModelProviders.of(this).get(UpdateBookingViewModel::class.java)
         mUpdateBookingViewModel.updateBookingDetails(mUpdateBooking)
+    }
+
+    /**
+     * initialize all lateinit variables
+     */
+    fun init() {
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        mUpdateBookingViewModel = ViewModelProviders.of(this).get(UpdateBookingViewModel::class.java)
+    }
+
+    /**
+     * observing data for update booking
+     */
+    fun observerData() {
         mUpdateBookingViewModel.returnBookingUpdated().observe(this, Observer {
             progressDialog.dismiss()
-            val builder = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booking_updated))
-            builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
-                finish()
-            }
-            GetAleretDialog.showDialog(builder)
-
+            Toasty.success(this, getString(R.string.booking_updated), Toast.LENGTH_SHORT, true).show()
         })
         mUpdateBookingViewModel.returnUpdateFailed().observe(this, Observer {
             progressDialog.dismiss()
-            val builder = GetAleretDialog.getDialog(this,getString(R.string.status),it)
-            builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
-            }
-            GetAleretDialog.showDialog(builder)
-            // some message goes here on failure and error
+            ShowToast.show(this, it)
         })
-
     }
 
     private fun validate(): Boolean {

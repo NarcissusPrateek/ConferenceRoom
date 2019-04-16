@@ -7,17 +7,16 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.RegistrationActivity
 import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.CheckRegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import es.dmoral.toasty.Toasty
 
 
 class SplashScreen : AppCompatActivity() {
@@ -67,12 +66,8 @@ class SplashScreen : AppCompatActivity() {
         })
         mCheckRegistrationViewModel.returnFailureCode().observe(this, Observer {
             progressDialog.dismiss()
-            if(it == getString(R.string.internal_server)) {
-                Toasty.error(this, it, Toast.LENGTH_SHORT, true).show()
-            }else {
-                Toasty.info(this, it, Toast.LENGTH_SHORT, true).show()
-            }
-
+            ShowToast.show(this, it)
+            finish()
         })
     }
     /**

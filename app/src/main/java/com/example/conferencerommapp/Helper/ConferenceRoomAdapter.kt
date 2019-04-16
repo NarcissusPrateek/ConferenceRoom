@@ -76,7 +76,6 @@ class ConferenceRoomAdapter(private val mConferenceRoomList: List<ConferenceRoom
         lateinit var txvRoom: TextView
         @BindView(R.id.txv_room_capacity)
         lateinit var txvRoomCapacity: TextView
-        @Nullable
         @BindView(R.id.status_txv)
         lateinit var txvStatus: TextView
         @BindView(R.id.cardview2)

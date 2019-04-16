@@ -18,6 +18,7 @@ import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import kotlinx.android.synthetic.main.activity_project_manager_input.*
+import kotlinx.android.synthetic.main.activity_user_inputs.*
 
 @Suppress("NAME_SHADOWING", "DEPRECATION")
 class ProjectManagerInputActivity : AppCompatActivity() {
@@ -101,34 +102,96 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         }
     }
 
+    private fun validateFromTime(): Boolean {
+        var input = fromTimeEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            manager_from_time_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        } else {
+            manager_from_time_layout.error = null
+            manager_from_time_layout.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateToTime(): Boolean {
+        var input = toTimeEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            manager_to_time_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        } else {
+            manager_to_time_layout.error = null
+            manager_to_time_layout.isErrorEnabled = false
+            true
+        }
+    }
+    private fun validateToDate(): Boolean {
+        var input = dateFromEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            manager_from_date_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        } else {
+            manager_from_date_layout.error = null
+            manager_from_date_layout.isErrorEnabled = false
+            true
+        }
+    }
+    private fun validateFromDate(): Boolean {
+        var input = dateToEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            manager_to_date_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        } else {
+            manager_to_date_layout.error = null
+            manager_to_date_layout.isErrorEnabled = false
+            true
+        }
+    }
+    fun validateSelectedDayList(): Boolean {
+        if(day_picker.selectedDays.isEmpty()) {
+            Toast.makeText(this, getString(R.string.select_days), Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
+
 
     /**
      * this function ensures that user entered values for all editable fields
      */
     private fun validate(): Boolean {
-        when {
-            TextUtils.isEmpty(fromTimeEditText.text.trim()) -> {
-                Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
-                return false
-            }
-            TextUtils.isEmpty(toTimeEditText.text.trim()) -> {
-                Toast.makeText(applicationContext, getString(R.string.invalid_to_time), Toast.LENGTH_SHORT).show()
-                return false
-            }
-            TextUtils.isEmpty(dateFromEditText.text.trim()) -> {
-                Toast.makeText(applicationContext, getString(R.string.invalid_from_date), Toast.LENGTH_SHORT).show()
-                return false
-            }
-            TextUtils.isEmpty(dateToEditText.text.trim()) -> {
-                Toast.makeText(applicationContext, getString(R.string.invalid_to_date), Toast.LENGTH_SHORT).show()
-                return false
-            }
-            day_picker.selectedDays.isEmpty() -> {
-                Toast.makeText(applicationContext, getString(R.string.select_days), Toast.LENGTH_SHORT).show()
-                return false
-            }
-            else -> return true
+
+        if(!validateFromTime() or !validateToTime() or !validateFromDate() or !validateToDate() or !validateSelectedDayList()) {
+            return false
         }
+        return true
+
+
+
+//        when {
+//            TextUtils.isEmpty(fromTimeEditText.text.trim()) -> {
+//                Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
+//                return false
+//            }
+//            TextUtils.isEmpty(toTimeEditText.text.trim()) -> {
+//                Toast.makeText(applicationContext, getString(R.string.invalid_to_time), Toast.LENGTH_SHORT).show()
+//                return false
+//            }
+//            TextUtils.isEmpty(dateFromEditText.text.trim()) -> {
+//                Toast.makeText(applicationContext, getString(R.string.invalid_from_date), Toast.LENGTH_SHORT).show()
+//                return false
+//            }
+//            TextUtils.isEmpty(dateToEditText.text.trim()) -> {
+//                Toast.makeText(applicationContext, getString(R.string.invalid_to_date), Toast.LENGTH_SHORT).show()
+//                return false
+//            }
+//            day_picker.selectedDays.isEmpty() -> {
+//                Toast.makeText(applicationContext, getString(R.string.select_days), Toast.LENGTH_SHORT).show()
+//                return false
+//            }
+//            else -> return true
+//        }
     }
 
     /**

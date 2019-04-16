@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.material.navigation.NavigationView
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main2.*
 import kotlinx.android.synthetic.main.app_bar_main2.*
 import kotlinx.android.synthetic.main.content_main2.*
@@ -61,20 +62,21 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      */
     private fun observeData() {
         /**
-         * observing data for booking list
+         * observing data for cancel booking
          */
         mBookingDashBoardViewModel.returnBookingCancelled().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, getString(R.string.cancelled_successful), Toast.LENGTH_SHORT).show()
+            Toasty.success(this, getString(R.string.cancelled_successful), Toast.LENGTH_SHORT, true).show()
+            // make api call to get the updated list of booking after cancellation
             mBookingDashBoardViewModel.getBookingList(acct.email.toString())
         })
 
         mBookingDashBoardViewModel.returnCancelFailed().observe(this, Observer {
             progressDialog.dismiss()
-            // shoe some message according to the response code from backend
+            ShowToast.show(this, it)
         })
         /**
-         * observing data for cancel booking
+         * observing data for booking list
          */
         mBookingDashBoardViewModel.returnSuccess().observe(this, Observer {
             progressDialog.dismiss()
@@ -95,10 +97,9 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
 
             setFilteredDataToAdapter(it)
         })
-
         mBookingDashBoardViewModel.returnFailure().observe(this, Observer {
             progressDialog.dismiss()
-            // message according to the backend response
+            ShowToast.show(this, it)
         })
     }
 
