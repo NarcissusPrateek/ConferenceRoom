@@ -68,18 +68,10 @@ class ConferenceRoomAdapter(private val mConferenceRoomList: List<ConferenceRoom
      * get all fields from view
      */
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        init {
-            ButterKnife.bind(this,itemView)
-        }
-        @BindView(R.id.text_view_room)
-        @Nullable
-        lateinit var txvRoom: TextView
-        @BindView(R.id.txv_room_capacity)
-        lateinit var txvRoomCapacity: TextView
-        @BindView(R.id.status_txv)
-        lateinit var txvStatus: TextView
-        @BindView(R.id.cardview2)
-        lateinit var cardview: CardView
+        val txvRoom: TextView = itemView.findViewById(R.id.text_view_room)
+        val txvRoomCapacity: TextView = itemView.findViewById(R.id.txv_room_capacity)
+        val txvStatus: TextView = itemView.findViewById(R.id.status_txv)
+        val cardview: CardView = itemView.findViewById(R.id.cardview2)
         var conferenceRoom: ConferenceRoom? = null
     }
 

@@ -59,13 +59,8 @@ class ConferenceRoomAdapterNew(private val conferenceRoomList: List<ConferenceRo
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        init {
-            ButterKnife.bind(itemView)
-        }
-        @BindView(R.id.txv_room)
-        lateinit var txvRoom: TextView
-        @BindView(R.id.txv_room_capacity)
-        lateinit var txvRoomCapacity: TextView
+        val txvRoom: TextView = itemView.findViewById(R.id.txv_room)
+        val txvRoomCapacity: TextView = itemView.findViewById(R.id.txv_room_capacity)
         var conferenceRoom: ConferenceRoom? = null
         var button: Button? = null
         override fun toString(): String {

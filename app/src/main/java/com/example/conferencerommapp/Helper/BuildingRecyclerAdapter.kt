@@ -38,11 +38,7 @@ class BuildingRecyclerAdapter(private val buildingList: List<BuildingT>, val btn
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        init {
-            ButterKnife.bind(this, itemView)
-        }
-        @BindView(R.id.building_name)
-        lateinit var txvBuilding: TextView
+       val txvBuilding: TextView = itemView.findViewById(R.id.building_name)
         var building: BuildingT? = null
 
         override fun toString(): String {

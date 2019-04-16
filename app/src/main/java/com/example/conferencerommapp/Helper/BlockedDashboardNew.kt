@@ -44,24 +44,13 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        init {
-            ButterKnife.bind(this, itemView)
-        }
-        @BindView(R.id.block_conferenceRoomName)
-        lateinit var conferenceName : TextView
-        @BindView(R.id.block_building_name)
-        lateinit var buildingName : TextView
-        @BindView(R.id.block_purpose)
-        lateinit var purpose : TextView
-        @BindView(R.id.block_from_time)
-        lateinit var fromtime : TextView
-        @BindView(R.id.block_date)
-        lateinit var date : TextView
-        @BindView(R.id.card_block)
-        lateinit var card: CardView
-
-        @BindView(R.id.linearlayout_blocked)
-        lateinit var linearLayout:LinearLayout
+        val conferenceName : TextView = itemView.findViewById(R.id.block_conferenceRoomName)
+        val buildingName : TextView = itemView.findViewById(R.id.block_building_name)
+        val purpose : TextView = itemView.findViewById(R.id.block_purpose)
+        val fromtime : TextView = itemView.findViewById(R.id.block_from_time)
+        val date : TextView= itemView.findViewById(R.id.block_date)
+        val card: CardView = itemView.findViewById(R.id.card_block)
+        val linearLayout:LinearLayout = itemView.findViewById(R.id.linearlayout_blocked)
         val unblock :Button = itemView.findViewById(R.id.unblock)
         var blocked: Blocked? = null
     }
@@ -101,7 +90,7 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
         }
     }
 
-    private fun unBlockRoom(mContext: Context, mRoom: Unblock){
+    private fun unBlockRoom(mRoom: Unblock){
         listener.onClickOfUnblock(mRoom)
     }
 
@@ -116,7 +105,7 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
                 block.cId = blockedList[position].roomId
                 block.fromTime = blockedList[position].fromTime
                 block.toTime = blockedList[position].toTime
-                unBlockRoom(mContext, block)
+                unBlockRoom(block)
             }
             builder.setNegativeButton("No"){_, _ ->
             }

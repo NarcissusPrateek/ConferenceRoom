@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.Html.fromHtml
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
@@ -119,17 +120,6 @@ class BookingActivity : AppCompatActivity() {
     }
 
     /**
-     * show toast message according to the error
-     */
-    private fun showToastAccordingToError(message: String) {
-        if(message == getString(R.string.internal_server)) {
-            Toasty.error(this, message, Toast.LENGTH_SHORT, true).show()
-        }else {
-            Toasty.info(this, message, Toast.LENGTH_SHORT, true).show()
-        }
-    }
-
-    /**
      * function invoked automatically when user hit the book button
      */
     @OnClick(R.id.book_button)
@@ -150,18 +140,6 @@ class BookingActivity : AppCompatActivity() {
         mBooking.fromTime = mBookingDetails.fromTime!!
         mBooking.toTime = mBookingDetails.toTime!!
         mBooking.roomName = mBookingDetails.roomName!!
-    }
-
-    private fun validatePerposer(): Boolean {
-        var input = purposeEditText.text.toString().trim()
-        return if (input.isEmpty()) {
-
-            false
-        } else {
-            from_time_layout.error = null
-            from_time_layout.isErrorEnabled = false
-            true
-        }
     }
 
 
@@ -257,6 +235,7 @@ class BookingActivity : AppCompatActivity() {
                         }
                     }
                 }
+                Log.i("--------", name)
                 addPersonEditText.setText(name)
                 mBooking.cCMail = email
 
