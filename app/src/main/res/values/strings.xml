@@ -119,6 +119,7 @@
     <string name="invalid_conference_room">Invalid Room</string>
     <string name="internal_server">Internal Server Error!</string>
     <string name="field_cant_be_empty">Field can\'t be empty</string>
+    <string name="building_added">Building Added Succesfully</string>
 
 
     <string-array name="role">

@@ -306,21 +306,10 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 }
                 builder.setNegativeButton(getString(R.string.cancel)) { _, _ ->
                 }
+                //Setting the Uodate Options
                 builder.setNeutralButton("Update") { _, _ ->
-                    val mGetIntentDataFromActvity = GetIntentDataFromActvity()
-                    val fromTime = finalList[position].FromTime
-                    val dateFrom = fromTime!!.split("T")
-                    mGetIntentDataFromActvity.purpose = finalList[position].Purpose
-                    mGetIntentDataFromActvity.buildingName = finalList[position].BName
-                    mGetIntentDataFromActvity.roomName = finalList[position].CName
-                    mGetIntentDataFromActvity.date = dateFrom[0]
-                    mGetIntentDataFromActvity.roomId = finalList[position].CId.toString()
-                    mGetIntentDataFromActvity.fromTime = finalList[position].FromTime
-                    mGetIntentDataFromActvity.toTime = finalList[position].ToTime
-                    mGetIntentDataFromActvity.cCMail = finalList[position].cCMail
-                    val updateBookingActivityButton =Intent(this,UpdateBookingActivity::class.java)
-                    updateBookingActivityButton.putExtra(Constants.EXTRA_INTENT_DATA,mGetIntentDataFromActvity)
-                    startActivity(updateBookingActivityButton)
+
+                  updateRecurringBookings(finalList,position)
                 }
                 val dialog: AlertDialog = builder.create()
                 dialog.setCancelable(false)
@@ -331,6 +320,24 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         }
         val mDialog = builder.create()
         mDialog.show()
+    }
+
+    // Passing Intent to the UpdateBooking Activity
+    private fun updateRecurringBookings(finalList: ArrayList<Manager>, position: Int) {
+        val mGetIntentDataFromActvity = GetIntentDataFromActvity()
+        val fromTime = finalList[position].FromTime
+        val dateFrom = fromTime!!.split("T")
+        mGetIntentDataFromActvity.purpose = finalList[position].Purpose
+        mGetIntentDataFromActvity.buildingName = finalList[position].BName
+        mGetIntentDataFromActvity.roomName = finalList[position].CName
+        mGetIntentDataFromActvity.date = dateFrom[0]
+        mGetIntentDataFromActvity.roomId = finalList[position].CId.toString()
+        mGetIntentDataFromActvity.fromTime = finalList[position].FromTime
+        mGetIntentDataFromActvity.toTime = finalList[position].ToTime
+        mGetIntentDataFromActvity.cCMail = finalList[position].cCMail
+        val updateBookingActivityButton =Intent(this,UpdateBookingActivity::class.java)
+        updateBookingActivityButton.putExtra(Constants.EXTRA_INTENT_DATA,mGetIntentDataFromActvity)
+        startActivity(updateBookingActivityButton)
     }
 
     /**

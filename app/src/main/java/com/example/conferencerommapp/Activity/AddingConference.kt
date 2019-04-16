@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Activity
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.Html
 import android.view.View
@@ -14,9 +15,11 @@ import com.example.conferencerommapp.AddConferenceRoom
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ValidateField.ValidateInputFields
 import com.example.conferencerommapp.ViewModel.AddConferenceRoomViewModel
+import es.dmoral.toasty.Toasty
 import fr.ganfra.materialspinner.MaterialSpinner
 
 @Suppress("DEPRECATION")
@@ -34,6 +37,7 @@ class AddingConference : AppCompatActivity() {
 
     private lateinit var mAddConferenceRoomViewModel: AddConferenceRoomViewModel
     private var mConferenceRoom = AddConferenceRoom()
+    private lateinit var progressDialog: ProgressDialog
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,9 +47,31 @@ class AddingConference : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Add_Room) + "</font>")
         setSpinnerForCapacity()
+        init()
+        observeData()
 
     }
-
+    /**
+     * initialize all lateinit variables
+     */
+    fun init(){
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        mAddConferenceRoomViewModel = ViewModelProviders.of(this).get(AddConferenceRoomViewModel::class.java)
+    }
+    /**
+     * observing data for adding conference
+     */
+    fun observeData(){
+        mAddConferenceRoomViewModel.returnSuccessForAddingRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            Toasty.success(this, getString(R.string.room_add_success), Toast.LENGTH_SHORT, true).show()
+            finish()
+        })
+        mAddConferenceRoomViewModel.returnFailureForAddingRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            ShowToast.show(this, it)
+        })
+    }
 
     /**
      * function will invoke whenever the add button is clicked
@@ -108,26 +134,8 @@ class AddingConference : AppCompatActivity() {
      * function calls the ViewModel of addingConference and data into the database
      */
     private fun addRoom(mConferenceRoom: AddConferenceRoom) {
-        val mProgressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
-        mAddConferenceRoomViewModel = ViewModelProviders.of(this).get(AddConferenceRoomViewModel::class.java)
-        mProgressDialog.show()
+        progressDialog.show()
         mAddConferenceRoomViewModel.addConferenceDetails(mConferenceRoom)
-        mAddConferenceRoomViewModel.returnSuccessForAddingRoom().observe(this, Observer {
-            mProgressDialog.dismiss()
-            val dialog
-                    =
-                GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_added))
-            dialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
-                finish()
-            }
-            GetAleretDialog.showDialog(dialog)
-        })
-        mAddConferenceRoomViewModel.returnFailureForAddingRoom().observe(this, Observer {
-            mProgressDialog.dismiss()
-            val dialog = GetAleretDialog.getDialog(this, getString(R.string.status), it)
-            dialog.setCancelable(true)
-            GetAleretDialog.showDialog(dialog)
-            // some message
-        })
+
     }
 }

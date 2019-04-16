@@ -61,7 +61,6 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
         lateinit var card: CardView
 
         @BindView(R.id.linearlayout_blocked)
-        @Nullable
         lateinit var linearLayout:LinearLayout
         val unblock :Button = itemView.findViewById(R.id.unblock)
         var blocked: Blocked? = null
