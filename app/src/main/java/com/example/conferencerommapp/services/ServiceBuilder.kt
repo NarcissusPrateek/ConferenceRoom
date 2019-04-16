@@ -13,9 +13,13 @@ object ServiceBuilder  {
 
     private val logger = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
-    private val okHttp : OkHttpClient.Builder = OkHttpClient.Builder().addInterceptor(logger).connectTimeout(10, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS)
-
-
+    private val okHttp : OkHttpClient.Builder = OkHttpClient.Builder()
+        .addInterceptor(logger)
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
+        .addInterceptor {
+            it.proceed(it.request().newBuilder().addHeader("Authorization", "Key").build())
+        }
     private val builder: Retrofit.Builder = Retrofit.Builder()
                                             .baseUrl(Constants.IP_ADDRESS)
                                             .addConverterFactory(GsonConverterFactory.create()).client(okHttp.build())

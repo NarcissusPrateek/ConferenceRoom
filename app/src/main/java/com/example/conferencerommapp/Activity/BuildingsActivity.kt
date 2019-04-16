@@ -14,9 +14,11 @@ import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.BuildingAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
+import es.dmoral.toasty.Toasty
 
 @Suppress("DEPRECATION")
 class BuildingsActivity : AppCompatActivity() {
@@ -62,7 +64,8 @@ class BuildingsActivity : AppCompatActivity() {
              * if response is ok than we can set data into the adapter
              */
             if (it.isEmpty()) {
-                Toast.makeText(this, "No Building Available", Toast.LENGTH_SHORT).show()
+                Toasty.info(this,  getString(R.string.empty_building_list), Toast.LENGTH_SHORT, true).show()
+                finish()
             } else {
                 /**
                  * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
@@ -84,7 +87,7 @@ class BuildingsActivity : AppCompatActivity() {
         // Negative response from server
         mBuildingsViewModel.returnMBuildingFailure().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            ShowToast.show(this, it)
             finish()
         })
     }

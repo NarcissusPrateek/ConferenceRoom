@@ -7,9 +7,11 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.R
@@ -17,6 +19,7 @@ import com.example.conferencerommapp.RegistrationActivity
 import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.CheckRegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import kotlinx.android.synthetic.main.activity_splash_screen.*
 
 
 class SplashScreen : AppCompatActivity() {
@@ -94,7 +97,7 @@ class SplashScreen : AppCompatActivity() {
             else -> {
                 val builder = AlertDialog.Builder(this@SplashScreen)
                 builder.setTitle("Error!")
-                builder.setMessage("Plese Restart the application..")
+                builder.setMessage(getString(R.string.restart_app))
                 builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
                     finish()
                 }

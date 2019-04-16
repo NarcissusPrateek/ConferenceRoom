@@ -83,15 +83,14 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
 
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
-                textView_no_events.visibility = View.VISIBLE
-                Glide.with(this).load(R.drawable.yoga_lady_croped).into(empty_view)
+                //Glide.with(this).load(R.drawable.yoga_lady_croped).into(empty_view)
                 dashBord_recyclerView1.visibility = View.GONE
-                r1_dashboard.setBackgroundColor(Color.parseColor("#FFFFF6"))
+                r1_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
             }
 
             else {
                 empty_view.visibility = View.GONE
-                textView_no_events.visibility = View.GONE
+                //textView_no_events.visibility = View.GONE
                 dashBord_recyclerView1.visibility = View.VISIBLE
             }
 
@@ -186,7 +185,6 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      * else it will call another function for filtering the data
      */
     private fun loadDashboard() {
-
         val email = acct.email.toString()
         progressDialog.show()
         mBookingDashBoardViewModel.getBookingList(email)
@@ -286,7 +284,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         builder.setTitle(getString(R.string.dates_of_meeting))
         builder.setItems(listItems) { _, which ->
             if (finalList[position].Status[which] == "Cancelled") {
-                Toast.makeText(this, getString(R.string.cancelled_by_hr), Toast.LENGTH_LONG).show()
+                Toasty.info(this, getString(R.string.cancelled_by_hr),Toast.LENGTH_SHORT, true).show()
             } else {
                 val builder = GetAleretDialog.getDialog(
                     this,

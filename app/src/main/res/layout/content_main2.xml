@@ -21,20 +21,21 @@
             android:layout_width="359dp"
             android:layout_height="342dp"
             android:visibility="gone"
+            android:src="@drawable/emptystate1"
             android:layout_centerInParent="true"
             android:layout_marginTop="10dp"
             android:layout_alignParentTop="true"/>
-    <TextView
-            android:layout_width="match_parent"
-            android:text="@string/no_upcoming_events_n_let_s_change_that"
-            android:textSize="17dp"
-            android:visibility="gone"
-            android:layout_below="@id/empty_view"
-            android:layout_marginTop="136dp"
-            android:textStyle="bold|italic"
-            android:id="@+id/textView_no_events"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"/>
+    <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:text="@string/no_upcoming_events_n_let_s_change_that"-->
+            <!--android:textColor="@color/grey"-->
+            <!--android:textSize="17sp"-->
+            <!--android:visibility="visible"-->
+            <!--android:layout_below="@id/empty_view"-->
+            <!--android:textStyle="bold|italic"-->
+            <!--android:id="@+id/textView_no_events"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAlignment="center"/>-->
 
     <com.github.clans.fab.FloatingActionButton
             android:src="@drawable/fab_add"
@@ -46,7 +47,6 @@
             app:menu_colorPressed="@color/colorPrimary"
             app:fab_colorNormal="@color/colorPrimary"
             android:layout_alignParentBottom="true"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 </RelativeLayout>

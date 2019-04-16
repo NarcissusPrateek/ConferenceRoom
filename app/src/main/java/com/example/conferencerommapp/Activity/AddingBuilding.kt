@@ -20,6 +20,7 @@ import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ValidateField.ValidateInputFields
 import com.example.conferencerommapp.ViewModel.AddBuildingViewModel
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.activity_adding_building.*
 
 @Suppress("DEPRECATION")
 class AddingBuilding : AppCompatActivity() {
@@ -90,15 +91,42 @@ class AddingBuilding : AppCompatActivity() {
         mAddBuilding.place = buildingPlaceEditText.text.toString().trim()
     }
 
+
+    /**
+     * validation for building name
+     */
+    private fun validateBuildingName(): Boolean {
+        val input= buildingNameEditText.text.toString().trim()
+        return if(input.isEmpty()) {
+            building_name_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        }else {
+            building_name_layout.error = null
+            building_name_layout.isErrorEnabled = false
+            true
+        }
+    }
+
+    /**
+     * validation for building place
+     */
+    private fun validateBuildingPlace(): Boolean {
+        val input= buildingPlaceEditText.text.toString().trim()
+        return if(input.isEmpty()) {
+            location_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        }else {
+            location_layout.error = null
+            location_layout.isErrorEnabled = false
+            true
+        }
+    }
+
     /**
      * validate all input fields
      */
     private fun validateInputs(): Boolean {
-        if (!ValidateInputFields.validateInputForEmpty(buildingNameEditText.text.toString())) {
-            Toast.makeText(this, getString(R.string.missing_building_name), Toast.LENGTH_SHORT).show()
-            return false
-        } else if (!ValidateInputFields.validateInputForEmpty(buildingPlaceEditText.text.toString())) {
-            Toast.makeText(this, getString(R.string.missing_building_place), Toast.LENGTH_SHORT).show()
+        if(!validateBuildingName() or !validateBuildingPlace()) {
             return false
         }
         return true

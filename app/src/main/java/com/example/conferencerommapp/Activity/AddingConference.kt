@@ -13,14 +13,13 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.AddConferenceRoom
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.ValidateField.ValidateInputFields
 import com.example.conferencerommapp.ViewModel.AddConferenceRoomViewModel
 import es.dmoral.toasty.Toasty
 import fr.ganfra.materialspinner.MaterialSpinner
+import kotlinx.android.synthetic.main.activity_adding_conference.*
 
 @Suppress("DEPRECATION")
 class AddingConference : AppCompatActivity() {
@@ -34,7 +33,6 @@ class AddingConference : AppCompatActivity() {
 
     @BindView(R.id.conference_Capacity)
     lateinit var capacitySpinner: MaterialSpinner
-
     private lateinit var mAddConferenceRoomViewModel: AddConferenceRoomViewModel
     private var mConferenceRoom = AddConferenceRoom()
     private lateinit var progressDialog: ProgressDialog
@@ -87,7 +85,7 @@ class AddingConference : AppCompatActivity() {
     /**
      * fuction will set the BlockConferenceRoomActivity Value for the capacity
      */
-    fun setSpinnerForCapacity() {
+    private fun setSpinnerForCapacity() {
         val capacitySpinnerOptions = arrayOf(2, 4, 6, 8, 10, 12, 14)
         capacitySpinner.adapter =
             ArrayAdapter<Int>(this@AddingConference, android.R.layout.simple_list_item_1, capacitySpinnerOptions) as SpinnerAdapter?
@@ -117,14 +115,37 @@ class AddingConference : AppCompatActivity() {
     }
 
     /**
+     * validation for room name
+     */
+    private fun validateRoomName(): Boolean {
+        val input = conferenceRoomEditText.text.toString().trim()
+        return if(input.isEmpty()) {
+            room_name_layout_name.error = getString(R.string.field_cant_be_empty)
+            false
+        }else {
+            room_name_layout_name.error = null
+            room_name_layout_name.isErrorEnabled = false
+            true
+        }
+    }
+
+    /**
+     * validation for spinner
+     */
+    private fun validateSpinner(): Boolean {
+        return if(capacity == getString(R.string.select_capacity)) {
+            Toast.makeText(this, getString(R.string.enter_room_name), Toast.LENGTH_SHORT).show()
+            false
+        }else {
+            true
+        }
+    }
+
+    /**
      * validate all input fields
      */
     private fun validateInputs(): Boolean {
-        if (!ValidateInputFields.validateInputForEmpty(conferenceRoomEditText.text.toString().trim())) {
-            Toast.makeText(this@AddingConference, getString(R.string.enter_room_name), Toast.LENGTH_LONG).show()
-            return false
-        } else if (capacity == getString(R.string.select_capacity)) {
-            Toast.makeText(this@AddingConference, getString(R.string.select_capacity), Toast.LENGTH_LONG).show()
+        if(!validateRoomName() or !validateSpinner()) {
             return false
         }
         return true

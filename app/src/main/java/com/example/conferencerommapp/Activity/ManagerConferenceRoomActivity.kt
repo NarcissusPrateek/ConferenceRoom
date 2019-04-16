@@ -14,10 +14,12 @@ import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.ManagerConference
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.ManagerConferenceRoomViewModel
+import es.dmoral.toasty.Toasty
 
 @Suppress("DEPRECATION")
 class ManagerConferenceRoomActivity : AppCompatActivity() {
@@ -72,7 +74,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
         mManagerConferenceRoomViewModel.returnSuccess().observe(this, Observer {
             progressDialog.dismiss()
             if(it.isEmpty()) {
-                Toast.makeText(this, "No Room available!", Toast.LENGTH_SHORT).show()
+                Toasty.info(this, getString(R.string.room_not_available), Toast.LENGTH_SHORT, true).show()
                 finish()
             }else {
                 mCustomAdapter = ConferenceRoomAdapter(
@@ -89,7 +91,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
         })
         mManagerConferenceRoomViewModel.returnFailure().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            ShowToast.show(this, it)
             finish()
         })
     }

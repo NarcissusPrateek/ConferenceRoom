@@ -18,6 +18,7 @@ import butterknife.OnClick
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.ViewModel.CheckRegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -149,7 +150,7 @@ class SignIn : AppCompatActivity() {
         })
         // Negative response from server
         mCheckRegistrationViewModel.returnFailureCode().observe(this, Observer {
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            ShowToast.show(this, it)
         })
     }
 

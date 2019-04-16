@@ -13,9 +13,11 @@ import butterknife.ButterKnife
 import com.example.conferencerommapp.Helper.BuildingAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.ManagerBuildingViewModel
+import es.dmoral.toasty.Toasty
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -135,7 +137,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
         mManagerBuildingViewModel.returnBuildingSuccess().observe(this, androidx.lifecycle.Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
-                Toast.makeText(this, "No Building Available", Toast.LENGTH_SHORT).show()
+                Toasty.info(this, getString(R.string.empty_building_list), Toast.LENGTH_SHORT, true).show()
             } else {
                 mCustomAdapter = BuildingAdapter(this,
                     it!!,
@@ -156,7 +158,8 @@ class ManagerBuildingsActivity : AppCompatActivity() {
         })
         mManagerBuildingViewModel.returnBuildingFailure().observe(this, androidx.lifecycle.Observer {
             progressDialog.dismiss()
-            handleNegativeResponse(it)
+            ShowToast.show(this, it)
+            finish()
         })
     }
 
@@ -169,13 +172,6 @@ class ManagerBuildingsActivity : AppCompatActivity() {
 
     }
 
-    /**
-     * this function will handle the positive response from server
-     */
-    private fun handleNegativeResponse(mResponseMessage: String) {
-        Toast.makeText(this, mResponseMessage, Toast.LENGTH_SHORT).show()
-        finish()
-    }
 
     /**
      * intent to the ManagerConferenceRoomActivity

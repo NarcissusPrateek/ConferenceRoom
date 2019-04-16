@@ -26,6 +26,7 @@ import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.ManagerBookingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_alertdialog_members.view.*
 import java.util.*
 
@@ -161,7 +162,7 @@ class ManagerBookingActivity : AppCompatActivity() {
         })
         mManagerBookingViewModel.returnFailureForEmployeeList().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            ShowToast.show(this, it)
         })
 
         // observer for add Booking
@@ -171,9 +172,10 @@ class ManagerBookingActivity : AppCompatActivity() {
         })
         mManagerBookingViewModel.returnFailureForBooking().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            ShowToast.show(this, it)
         })
     }
+
     /**
      * set alert dialog to diaplay all the employee name list and provides option to select employee for meeting
      */
@@ -187,7 +189,7 @@ class ManagerBookingActivity : AppCompatActivity() {
             val view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
             view.recycler_view.adapter = customAdapter
             setClickListnerOnEditText(view)
-            mBuilder.setPositiveButton(getString(R.string.ok)) { _,_ ->
+            mBuilder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                 var email = ""
                 var name = ""
                 val employeeList = customAdapter!!.getList()
@@ -266,13 +268,10 @@ class ManagerBookingActivity : AppCompatActivity() {
      * go to UserBookingDashboardActivity
      */
     private fun goToBookingDashboard() {
-        val mDialog =
-            GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booked_successfully))
-        mDialog.setPositiveButton(getString(R.string.ok)) { _,_ ->
-            startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
-            finish()
-        }
-        GetAleretDialog.showDialog(mDialog)
+        Toasty.success(this, getString(R.string.booked_successfully), Toast.LENGTH_SHORT, true).show()
+        startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
+        finish()
+
     }
 }
 

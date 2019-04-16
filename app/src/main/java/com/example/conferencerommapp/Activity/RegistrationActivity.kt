@@ -17,11 +17,13 @@ import butterknife.OnClick
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.Model.Employee
 import com.example.conferencerommapp.ViewModel.RegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import es.dmoral.toasty.Toasty
 import fr.ganfra.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_registration.*
 
@@ -65,24 +67,40 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     /**
+     * validate employee id
+     */
+    private fun validateId(): Boolean {
+        val input = employeeIdEditText.text.toString().trim()
+        return if(input.isEmpty()) {
+            employee_id_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        } else {
+            employee_id_layout.error = null
+            employee_id_layout.isErrorEnabled = false
+            true
+        }
+    }
+
+    /**
+     * validate spinner
+     */
+    private fun validateRoleSpinner(): Boolean {
+        return if(mEmployee.role.toString() == "Select Role") {
+            Toast.makeText(this, "Select Role", Toast.LENGTH_SHORT).show()
+            false
+        }else {
+            true
+        }
+
+    }
+    /**
      * validate all data of input fields entered by user
      */
     private fun validateInput(): Boolean {
-        return when {
-            employeeIdEditText.text.trim().isEmpty() -> {
-                Toast.makeText(this@RegistrationActivity, "Invalid name", Toast.LENGTH_SHORT).show()
-                false
-            }
-            employeeNameEditText.text.trim().isEmpty() -> {
-                Toast.makeText(this@RegistrationActivity, "Invalid Id", Toast.LENGTH_SHORT).show()
-                false
-            }
-            mEmployee.role.toString() == "Select role" -> {
-                Toast.makeText(this@RegistrationActivity, "Invalid role", Toast.LENGTH_SHORT).show()
-                false
-            }
-            else -> true
+        if(!validateId() or !validateRoleSpinner()) {
+            return false
         }
+        return true
     }
 
     /**
@@ -174,12 +192,13 @@ class RegistrationActivity : AppCompatActivity() {
     private fun observeData() {
         mRegistrationViewModel.returnSuccessForRegistration().observe(this, Observer {
             progressDialog.dismiss()
+            Toasty.success(this, getString(R.string.registered_successfully), Toast.LENGTH_SHORT, true).show()
             setValueInSharedPreference()
             startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
         })
         mRegistrationViewModel.returnFailureForRegistration().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            ShowToast.show(this, it)
         })
     }
 

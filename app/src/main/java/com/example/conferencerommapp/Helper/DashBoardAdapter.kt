@@ -20,6 +20,7 @@ import com.example.conferencerommapp.Activity.UpdateBookingActivity
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
+import org.jetbrains.anko.find
 
 @Suppress("NAME_SHADOWING")
 class DashBoardAdapter(
@@ -87,34 +88,16 @@ class DashBoardAdapter(
     }
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
-        init {
-            ButterKnife.bind(this, itemView)
-        }
-
-        @Nullable
-        @BindView(R.id.building_name)
-        lateinit var buildingNameTextView: TextView
-        @BindView(R.id.conferenceRoomName)
-        lateinit var roomNameTextView: TextView
-        @Nullable
-        @BindView(R.id.from_time)
-        lateinit var fromTimeTextView: TextView
-        @BindView(R.id.date)
-        lateinit var dateTextView: TextView
-        @BindView(R.id.purpose)
-        lateinit var purposeTextView: TextView
-        @BindView(R.id.btnCancel)
-        lateinit var cancelButton: Button
-        @BindView(R.id.linearlayout)
-        @Nullable
-        lateinit var linearLayout: LinearLayout
-
-        @BindView(R.id.card)
-        lateinit var card: CardView
-        @BindView(R.id.btnshow)
-        lateinit var showButton: Button
-        @BindView(R.id.edit_time)
-        lateinit var updateTextView: TextView
+        var buildingNameTextView: TextView = itemView.findViewById(R.id.building_name)
+        var roomNameTextView: TextView = itemView.findViewById(R.id.conferenceRoomName)
+        var fromTimeTextView: TextView = itemView.findViewById(R.id.from_time)
+        var dateTextView: TextView = itemView.findViewById(R.id.date)
+        var purposeTextView: TextView = itemView.findViewById(R.id.purpose)
+        var cancelButton: Button = itemView.findViewById(R.id.btnCancel)
+        var linearLayout: LinearLayout = itemView.findViewById(R.id.linearlayout)
+        var card: CardView = itemView.findViewById(R.id.card)
+        var showButton: Button = itemView.findViewById(R.id.btnshow)
+        var updateTextView: TextView = itemView.findViewById(R.id.edit_time)
         var dashboard: Manager? = null
     }
 

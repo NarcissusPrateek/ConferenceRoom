@@ -11,14 +11,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetAleretDialog
-import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.Model.FetchConferenceRoom
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.ConferenceRoomViewModel
+import es.dmoral.toasty.Toasty
 
 @Suppress("DEPRECATION")
 class ConferenceRoomActivity : AppCompatActivity() {
@@ -80,7 +78,8 @@ class ConferenceRoomActivity : AppCompatActivity() {
         mConferenceRoomViewModel.returnSuccess().observe(this, Observer {
             progressDialog.dismiss()
             if(it.isEmpty()) {
-                showAlertDialog()
+                Toasty.info(this,  getString(R.string.room_not_available), Toast.LENGTH_SHORT, true).show()
+                finish()
             }else {
                 mCustomAdapter = ConferenceRoomAdapter(
                     it!!,
@@ -98,7 +97,7 @@ class ConferenceRoomActivity : AppCompatActivity() {
         // Negative response
         mConferenceRoomViewModel.returnFailure().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            ShowToast.show(this, it)
             finish()
         })
     }
