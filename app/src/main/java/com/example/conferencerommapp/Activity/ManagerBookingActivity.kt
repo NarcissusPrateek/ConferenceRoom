@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -48,7 +49,7 @@ class ManagerBookingActivity : AppCompatActivity() {
     @BindView(R.id.editText_person)
     lateinit var addPersonEditText: EditText
     private lateinit var mManagerBookingViewModel: ManagerBookingViewModel
-
+    private lateinit var progressDialog: ProgressDialog
     private lateinit var acct: GoogleSignInAccount
     private var checkedEmployee = ArrayList<EmployeeList>()
     private var mManagerBooking = ManagerBooking()
@@ -64,12 +65,20 @@ class ManagerBookingActivity : AppCompatActivity() {
 
 
         val mGetIntentDataFromActvity = getIntentData()
-
-        mManagerBookingViewModel = ViewModelProviders.of(this).get(ManagerBookingViewModel::class.java)
+        init()
+        observeData()
         setDataToTextview(mGetIntentDataFromActvity, acct.displayName.toString())
         getDateForSelectingMeetingMembers()
         setDialog()
         addDataToObject(mGetIntentDataFromActvity)
+    }
+
+    /**
+     * initialize all lateinit variables
+     */
+    fun init() {
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        mManagerBookingViewModel = ViewModelProviders.of(this).get(ManagerBookingViewModel::class.java)
     }
 
     @OnClick(R.id.book_button)
@@ -132,12 +141,16 @@ class ManagerBookingActivity : AppCompatActivity() {
      * function will make a api call whcih will get all the employee list from backend
      */
     private fun getDateForSelectingMeetingMembers() {
-        /**
-         * get Progress Dialog
-         */
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
         mManagerBookingViewModel.getEmployeeList()
+
+    }
+
+    /**
+     * observe data from server
+     */
+    private fun observeData() {
+        // observer for employeeList
         mManagerBookingViewModel.returnSuccessForEmployeeList().observe(this, Observer {
             progressDialog.dismiss()
             names.clear()
@@ -146,12 +159,21 @@ class ManagerBookingActivity : AppCompatActivity() {
                 names.add(item)
             }
         })
-        mManagerBookingViewModel.returnSuccessForEmployeeList().observe(this, Observer {
+        mManagerBookingViewModel.returnFailureForEmployeeList().observe(this, Observer {
             progressDialog.dismiss()
-            //some message according to the error code
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        })
+
+        // observer for add Booking
+        mManagerBookingViewModel.returnSuccessForBooking().observe(this, Observer {
+            progressDialog.dismiss()
+            goToBookingDashboard()
+        })
+        mManagerBookingViewModel.returnFailureForBooking().observe(this, Observer {
+            progressDialog.dismiss()
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
     }
-
     /**
      * set alert dialog to diaplay all the employee name list and provides option to select employee for meeting
      */
@@ -164,9 +186,6 @@ class ManagerBookingActivity : AppCompatActivity() {
             customAdapter = CheckBoxAdapter(names, checkedEmployee, this@ManagerBookingActivity)
             val view = layoutInflater.inflate(R.layout.activity_alertdialog_members, null)
             view.recycler_view.adapter = customAdapter
-//            view.clear_Text.setOnClickListener {
-//                view.editTextSearch.setText("")
-//            }
             setClickListnerOnEditText(view)
             mBuilder.setPositiveButton(getString(R.string.ok)) { _,_ ->
                 var email = ""
@@ -226,33 +245,21 @@ class ManagerBookingActivity : AppCompatActivity() {
      * this function get the filtered data and according to the data set the data into adapter
      */
     fun filter(text: String) {
-        val filterdNames = ArrayList<EmployeeList>()
+        val filterNames = ArrayList<EmployeeList>()
         for (s in names) {
             if (s.name!!.toLowerCase().contains(text.toLowerCase())) {
-                filterdNames.add(s)
+                filterNames.add(s)
             }
         }
-        customAdapter!!.filterList(filterdNames)
+        customAdapter!!.filterList(filterNames)
     }
 
     /**
      * function sets a observer which will observe the data from backend and add the booking details to the database
      */
     private fun addBooking() {
-        /**
-         * get Progress Dialog
-         */
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
         mManagerBookingViewModel.addBookingDetails(mManagerBooking)
-        mManagerBookingViewModel.returnSuccessForBooking().observe(this, Observer {
-            progressDialog.dismiss()
-            goToBookingDashboard()
-        })
-        mManagerBookingViewModel.returnFailureForBooking().observe(this, Observer {
-            progressDialog.dismiss()
-            // some messae according to the error code
-        })
     }
 
     /**

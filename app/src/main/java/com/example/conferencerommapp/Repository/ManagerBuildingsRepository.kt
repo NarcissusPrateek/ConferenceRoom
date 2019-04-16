@@ -1,15 +1,8 @@
 package com.example.conferencerommapp.Repository
 
-import android.content.Context
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Model.Building
-import com.example.conferencerommapp.R
-import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,11 +32,10 @@ class ManagerBuildingsRepository {
         /**
          * api call using retorfit
          */
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         val requestCall: Call<List<Building>> = service.getBuildingList()
         requestCall.enqueue(object : Callback<List<Building>> {
             override fun onFailure(call: Call<List<Building>>, t: Throwable) {
-
 
             }
 

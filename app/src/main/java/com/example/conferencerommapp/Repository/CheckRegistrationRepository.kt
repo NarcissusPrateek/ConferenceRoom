@@ -2,7 +2,7 @@ package com.example.conferencerommapp.Repository
 
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,11 +32,11 @@ class CheckRegistrationRepository {
         /**
          * api call using retrofit
          */
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         val requestCall: Call<Int> = service.getRequestCode(mEmail)
         requestCall.enqueue(object : Callback<Int> {
             override fun onFailure(call: Call<Int>, t: Throwable) {
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
 
             override fun onResponse(call: Call<Int>, response: Response<Int>) {

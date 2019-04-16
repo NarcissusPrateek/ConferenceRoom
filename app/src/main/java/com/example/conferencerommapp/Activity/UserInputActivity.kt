@@ -20,6 +20,7 @@ import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import fr.ganfra.materialspinner.MaterialSpinner
+import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.android.synthetic.main.activity_user_inputs.*
 
 
@@ -106,26 +107,69 @@ class UserInputActivity : AppCompatActivity() {
         }
     }
 
+    private fun validateFromTime(): Boolean {
+        var input = fromTimeEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            from_time_layout.error = "Field can't be empty"
+            false
+        } else {
+            from_time_layout.error = null
+            from_time_layout.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateToTime(): Boolean {
+        var input = toTimeEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            to_time_layout.error = "Field can't be empty"
+            false
+        } else {
+            to_time_layout.error = null
+            to_time_layout.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateDate(): Boolean {
+        var input = dateEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            date_layout.error = "Field can't be empty"
+            false
+        } else {
+            date_layout.error = null
+            date_layout.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun validateSpinner(): Boolean {
+        return if (capacity == "Select Capacity") {
+            spinner_layout.error = "Field can't be empty"
+            false
+        } else {
+            spinner_layout.error = null
+            spinner_layout.isErrorEnabled = false
+            true
+        }
+    }
+
     /**
      * check validation for all input fields
      */
     private fun validate(): Boolean {
-        if (TextUtils.isEmpty(fromTimeEditText.text.trim())) {
-            Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
+
+        if (!validateFromTime() or !validateToTime() or !validateDate() or !validateSpinner()) {
             return false
-        } else if (TextUtils.isEmpty(toTimeEditText.text.trim())) {
-            Toast.makeText(applicationContext, getString(R.string.invalid_to_time), Toast.LENGTH_SHORT).show()
-            return false
-        } else if (TextUtils.isEmpty(dateEditText.text.trim())) {
-            Toast.makeText(applicationContext, getString(R.string.invalid_date), Toast.LENGTH_SHORT).show()
-            return false
-        } else if (capacity == getString(R.string.select_capacity)) {
+        }
+        if (capacity == getString(R.string.select_capacity)) {
             Toast.makeText(applicationContext, getString(R.string.invalid_capacity), Toast.LENGTH_SHORT).show()
             return false
-        } else {
-            return true
         }
+        return true
+
     }
+
 
     /**
      * function will apply some validation on data entered by user

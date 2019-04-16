@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Activity
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
@@ -27,7 +28,7 @@ class BuildingsActivity : AppCompatActivity() {
     private lateinit var mBuildingsViewModel: BuildingViewModel
     @BindView(R.id.building_recycler_view)
     lateinit var mRecyclerView: RecyclerView
-
+    lateinit var progressDialog: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_building_list)
@@ -35,6 +36,8 @@ class BuildingsActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>")
+        init()
+        observerData()
         getViewModel()
 
     }
@@ -47,60 +50,57 @@ class BuildingsActivity : AppCompatActivity() {
     }
 
     /**
-     * get the object of ViewModel using ViewModelProviders and observers the data from backend
+     * observe data from server
      */
-    private fun getViewModel() {
-
-        /**
-         * get progress dialog
-         */
-
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+    private fun observerData() {
         val mIntentDataFromActivity = getIntentData()
-        mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
-        progressDialog.show()
-        mBuildingsViewModel.getBuildingList()
         mBuildingsViewModel.returnMBuildingSuccess().observe(this, Observer {
             progressDialog.dismiss()
             /**
              * different cases for different result from api call
-             * if the response is NULL than some iternal error is there
-             * if response is empty than
+             * if response is empty than show Toast
              * if response is ok than we can set data into the adapter
              */
-            when (it) {
-                null -> {
-                    Toast.makeText(this, getString(R.string.internal_server_error), Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                else -> {
-                    if (it.isEmpty()) {
-                        Toast.makeText(this, "Some messgae from backend", Toast.LENGTH_SHORT).show()
-                    } else {
-                        /**
-                         * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
-                         */
-                        customAdapter = BuildingAdapter(this,
-                            it!!,
-                            object : BuildingAdapter.BtnClickListener {
-                                override fun onBtnClick(buildingId: String?, buildingname: String?) {
-                                    mIntentDataFromActivity.buildingId = buildingId
-                                    mIntentDataFromActivity.buildingName = buildingname
-                                    goToConferenceRoomActivity(mIntentDataFromActivity)
-                                }
-                            }
-                        )
-                        mRecyclerView.adapter = customAdapter
+            if (it.isEmpty()) {
+                Toast.makeText(this, "No Building Available", Toast.LENGTH_SHORT).show()
+            } else {
+                /**
+                 * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
+                 */
+                customAdapter = BuildingAdapter(this,
+                    it!!,
+                    object : BuildingAdapter.BtnClickListener {
+                        override fun onBtnClick(buildingId: String?, buildingname: String?) {
+                            mIntentDataFromActivity.buildingId = buildingId
+                            mIntentDataFromActivity.buildingName = buildingname
+                            goToConferenceRoomActivity(mIntentDataFromActivity)
+                        }
                     }
-                }
+                )
+                mRecyclerView.adapter = customAdapter
             }
-        })
 
+        })
+        // Negative response from server
         mBuildingsViewModel.returnMBuildingFailure().observe(this, Observer {
             progressDialog.dismiss()
-            // some message goes here for error code
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            finish()
         })
+    }
 
+    /**
+     * get the object of ViewModel using ViewModelProviders and observers the data from backend
+     */
+    private fun getViewModel() {
+        progressDialog.show()
+        // make api call
+        mBuildingsViewModel.getBuildingList()
+    }
+
+    fun init() {
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
     }
 
     /**

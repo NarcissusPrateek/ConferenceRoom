@@ -1,13 +1,10 @@
 package com.example.conferencerommapp.Repository
 
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.CancelBooking
 import com.example.conferencerommapp.Model.Dashboard
-import com.example.conferencerommapp.Model.UpdateBooking
-import com.example.conferencerommapp.R
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -40,7 +37,7 @@ class BookingDashboardRepository {
         /**
          * API call using retrofit
          */
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         val requestCall: Call<List<Dashboard>> = service.getDashboard(email)
         requestCall.enqueue(object : Callback<List<Dashboard>> {
             override fun onFailure(call: Call<List<Dashboard>>, t: Throwable) {
@@ -65,7 +62,7 @@ class BookingDashboardRepository {
         /**
          * api call using retrofit
          */
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         var requestCall: Call<ResponseBody> = service.cancelBooking(mCancel)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

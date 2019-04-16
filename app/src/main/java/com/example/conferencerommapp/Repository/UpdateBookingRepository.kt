@@ -1,10 +1,8 @@
 package com.example.conferencerommapp.Repository
 
-import android.util.Log
-import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.UpdateBooking
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -27,7 +25,7 @@ class UpdateBookingRepository{
      * and call the interface method with data from server
      */
     fun updateBookingDetails(mUpdateBooking: UpdateBooking, listener: ResponseListener) {
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         val requestCall: Call<ResponseBody> = service.update(mUpdateBooking)
         requestCall.enqueue(object :Callback<ResponseBody>{
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

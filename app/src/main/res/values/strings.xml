@@ -117,18 +117,17 @@
     <string name="from_date">From-Date</string>
     <string name="to_date">To-Date</string>
     <string name="invalid_conference_room">Invalid Room</string>
+    <string name="internal_server">Internal Server Error!</string>
 
 
     <string-array name="role">
         <item>Intern</item>
         <item>SDE-1</item>
         <item>SDE-2</item>
-        <item>HR</item>
         <item>SDE-3</item>
         <item>HR</item>
-        <item>SDE-3</item>
-        <item>Principal Engineer</item>
         <item>Project Manager</item>
+        <item>Principal Engineer</item>
         <item>CEO</item>
         <item>CTO</item>
         <item>COO</item>

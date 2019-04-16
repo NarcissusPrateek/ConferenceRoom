@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.Nullable
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.conferencerommapp.Model.Building
@@ -64,6 +65,7 @@ class BuildingAdapter(var mContext: Context, private val mBuildingList: List<Bui
         init {
             ButterKnife.bind(this, itemView)
         }
+        @Nullable
         @BindView(R.id.text_view_building)
         lateinit var txvBuilding: TextView
         var building: Building? = null

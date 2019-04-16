@@ -1,5 +1,6 @@
 package com.example.conferencerommapp
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.animation.AnimationUtils.loadAnimation
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -33,12 +35,15 @@ class SignIn : AppCompatActivity() {
     lateinit var linearLayoutDown: LinearLayout
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private lateinit var prefs: SharedPreferences
-
+    private lateinit var progressDialog: ProgressDialog
+    private lateinit var mCheckRegistrationViewModel: CheckRegistrationViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in_activity)
         ButterKnife.bind(this)
+        init()
         initialize()
+        observeData()
     }
 
     @OnClick(R.id.sign_in_button)
@@ -121,25 +126,37 @@ class SignIn : AppCompatActivity() {
      * if not registered than make an intent to registration activity
      */
     private fun checkRegistration(email: String) {
-        /**
-         * getting Progress Dialog
-         */
-        var progressDialog =  GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
-        val mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
         mCheckRegistrationViewModel.checkRegistration(email)
+
+    }
+
+    /**
+     * initialize all lateinit variables
+     */
+    fun init() {
+        progressDialog =  GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
+    }
+
+    /**
+     * observe data from server
+     */
+    private fun observeData() {
+        //positive response from server
         mCheckRegistrationViewModel.returnSuccessCode().observe(this, Observer {
             setValueForSharedPreference(it)
         })
+        // Negative response from server
         mCheckRegistrationViewModel.returnFailureCode().observe(this, Observer {
-            //some message according to error code form server
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
     }
 
     /**
      * this function will intent to some activity according to the received data from backend
      */
-    fun intentToNextActivity(code: Int?) {
+    private fun intentToNextActivity(code: Int?) {
         when (code) {
             11, 10, 2, 12 -> {
                 startActivity(Intent(this@SignIn, UserBookingsDashboardActivity::class.java))

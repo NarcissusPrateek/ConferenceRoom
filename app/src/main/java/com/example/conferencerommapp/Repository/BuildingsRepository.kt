@@ -1,11 +1,9 @@
 package com.example.conferencerommapp.Repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.Building
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -34,14 +32,14 @@ class BuildingsRepository {
      * for negative response, we will call onFailure method with response code from server
      */
     fun getBuildingList(listener: ResponseListener) {
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         val requestCall: Call<List<Building>> = service.getBuildingList()
         requestCall.enqueue(object : Callback<List<Building>> {
             override fun onFailure(call: Call<List<Building>>, t: Throwable) {
                 /**
                  * call interface method which is implemented in ViewModel
                  */
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
             override fun onResponse(call: Call<List<Building>>, response: Response<List<Building>>) {
                 if (response.code() == Constants.OK_RESPONSE) {

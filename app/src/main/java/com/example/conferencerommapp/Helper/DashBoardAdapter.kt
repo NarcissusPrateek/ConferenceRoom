@@ -227,10 +227,7 @@ class DashBoardAdapter(
         mGetIntentDataFromActivity.toTime = dashboardItemList[position].ToTime
         mGetIntentDataFromActivity.cCMail = dashboardItemList[position].cCMail
         mEditBookingListener!!.editBooking(mGetIntentDataFromActivity)
-//        val updateActivity = Intent(mContext, UpdateBookingActivity::class.java)
-//        updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActivity)
-//        mContext.startActivity(updateActivity)
-    }
+}
 
     private fun editAlert(position: Int, context: Context) {
         val mGetIntentDataFromActvity = GetIntentDataFromActvity()

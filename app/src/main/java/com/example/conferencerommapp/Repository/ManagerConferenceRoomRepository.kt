@@ -1,17 +1,10 @@
 package com.example.conferencerommapp.Repository
 
-import android.content.Context
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.Model.ManagerConference
-import com.example.conferencerommapp.R
-import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,13 +33,13 @@ class ManagerConferenceRoomRepository {
      */
     fun getConferenceRoomList(mRoom: ManagerConference, listener: ResponseListener) {
         /**
-         * api call using retorfit
+         * api call using retrofit
          */
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         val requestCall: Call<List<ConferenceRoom>> = service.getMangerConferenceRoomList(mRoom)
         requestCall.enqueue(object : Callback<List<ConferenceRoom>> {
             override fun onFailure(call: Call<List<ConferenceRoom>>, t: Throwable) {
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
 
             override fun onResponse(call: Call<List<ConferenceRoom>>, response: Response<List<ConferenceRoom>>) {

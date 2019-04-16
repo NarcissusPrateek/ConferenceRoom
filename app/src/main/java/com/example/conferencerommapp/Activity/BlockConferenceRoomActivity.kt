@@ -41,7 +41,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     lateinit var dateEditText: EditText
     @BindView(R.id.Purpose)
     lateinit var purposeEditText: EditText
-    lateinit var mBlockRoomViewModel: BlockRoomViewModel
+    private lateinit var mBlockRoomViewModel: BlockRoomViewModel
     var room = BlockRoom()
     private lateinit var mBuildingViewModel: BuildingViewModel
     private lateinit var progressDialog: ProgressDialog
@@ -67,7 +67,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
     }
 
-    fun observeData() {
+    private fun observeData() {
         // observe data for building list
         mBuildingViewModel.returnMBuildingSuccess().observe(this, Observer {
             progressDialog.dismiss()
@@ -99,8 +99,8 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         })
 
         mBlockRoomViewModel.returnResponseErrorForBlockRoom().observe(this, Observer {
-            //progressDialog.dismiss()
-            // some message according to the error code
+            progressDialog.dismiss()
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
 
         // observer for block confirmation
@@ -126,7 +126,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
         mBlockRoomViewModel.returnResponseErrorForConfirmation().observe(this, Observer {
             progressDialog.dismiss()
-            // some message according to the error code from server
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
 
         // observer for conference room list

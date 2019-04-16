@@ -1,11 +1,13 @@
 package com.example.conferencerommapp.Activity
 
 import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -15,19 +17,20 @@ import com.example.conferencerommapp.RegistrationActivity
 import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.CheckRegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import es.dmoral.toasty.Toasty
 
 
 class SplashScreen : AppCompatActivity() {
 
     private lateinit var prefs: SharedPreferences
-
+    private lateinit var progressDialog: ProgressDialog
+    private lateinit var mCheckRegistrationViewModel: CheckRegistrationViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        /**
-         * for splash screen
-         */
+        init()
+        observeData()
         val logoHandler = Handler()
         val logoRunnable = Runnable {
             val account = GoogleSignIn.getLastSignedInAccount(this)
@@ -45,24 +48,33 @@ class SplashScreen : AppCompatActivity() {
      * function make a request to backend for checking whether the user is registered or not
      */
     private fun checkRegistration(email: String) {
-
-        /**
-         * getting Progress Dialog
-         */
-        var progressDialog =  GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
-        val mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
         mCheckRegistrationViewModel.checkRegistration(email)
+    }
+
+    /**
+     * initialize all lateinit variables
+     */
+    fun init() {
+        progressDialog =  GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
+    }
+
+    private fun observeData() {
         mCheckRegistrationViewModel.returnSuccessCode().observe(this, Observer {
             progressDialog.dismiss()
             setValueForSharedPreference(it)
         })
         mCheckRegistrationViewModel.returnFailureCode().observe(this, Observer {
             progressDialog.dismiss()
-            //some message according to error code form server
+            if(it == getString(R.string.internal_server)) {
+                Toasty.error(this, it, Toast.LENGTH_SHORT, true).show()
+            }else {
+                Toasty.info(this, it, Toast.LENGTH_SHORT, true).show()
+            }
+
         })
     }
-
     /**
      * pass the intent for the SignIn Activity
      */

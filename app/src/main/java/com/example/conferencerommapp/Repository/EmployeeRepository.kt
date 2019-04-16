@@ -3,7 +3,7 @@ package com.example.conferencerommapp.Repository
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.EmployeeList
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,7 +30,7 @@ class EmployeeRepository {
      * function will call the api which will return some data
      */
     fun getEmployeeList(listener: ResponseListener) {
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         val requestCall: Call<List<EmployeeList>> = service.getEmployees()
         requestCall.enqueue(object : Callback<List<EmployeeList>> {
             override fun onFailure(call: Call<List<EmployeeList>>, t: Throwable) {

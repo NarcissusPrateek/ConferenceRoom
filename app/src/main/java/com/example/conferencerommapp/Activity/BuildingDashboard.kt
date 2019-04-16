@@ -2,6 +2,7 @@
 
 package com.example.conferencerommapp.Activity
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -27,7 +28,7 @@ class BuildingDashboard : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     private lateinit var buildingAdapter: BuildingAdapter
     private lateinit var mBuildingsViewModel: BuildingViewModel
-
+    private lateinit var mProgressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,8 @@ class BuildingDashboard : AppCompatActivity() {
             Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Building_Dashboard) + "</font>")
 
         ButterKnife.bind(this)
+        init()
+        observeData()
         getViewModel()
     }
 
@@ -59,13 +62,17 @@ class BuildingDashboard : AppCompatActivity() {
     }
 
     /**
-     * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
+     * initialize objects
      */
-     private fun getViewModel() {
-        val mProgressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+    private fun init() {
+        mProgressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
-        mProgressDialog.show()
-        mBuildingsViewModel.getBuildingList()
+    }
+
+    /**
+     * observe data from server
+     */
+    private fun observeData() {
         mBuildingsViewModel.returnMBuildingSuccess().observe(this, Observer {
             mProgressDialog.dismiss()
             when(it){
@@ -90,5 +97,14 @@ class BuildingDashboard : AppCompatActivity() {
             mProgressDialog.dismiss()
             //some message goes here
         })
+    }
+
+    /**
+     * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
+     */
+     private fun getViewModel() {
+        mProgressDialog.show()
+        // making API call
+        mBuildingsViewModel.getBuildingList()
     }
 }

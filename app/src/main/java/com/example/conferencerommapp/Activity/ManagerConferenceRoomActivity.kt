@@ -1,8 +1,10 @@
 package com.example.conferencerommapp.Activity
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -26,6 +28,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
     private lateinit var mGetIntentDataFromActivity: GetIntentDataFromActvity
     @BindView(R.id.conference_recycler_view)
     lateinit var mRecyclerView: RecyclerView
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +37,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Select_Room) + "</font>")
+        init()
         loadConferenceRoom()
     }
 
@@ -50,20 +54,26 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
     }
 
     /**
+     * initialize lateinit variables
+     */
+    fun init() {
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        mManagerConferenceRoomViewModel = ViewModelProviders.of(this).get(ManagerConferenceRoomViewModel::class.java)
+    }
+    /**
      * get the object of ViewModel class and by using this object we call the api and set the observer on the function
      */
     private fun getViewModel(mGetIntentDataFromActvity: GetIntentDataFromActvity) {
         /**
          * get progress dialog
          */
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
-        mManagerConferenceRoomViewModel = ViewModelProviders.of(this).get(ManagerConferenceRoomViewModel::class.java)
         progressDialog.show()
         mManagerConferenceRoomViewModel.getConferenceRoomList(setDataToObjectForApiCall(mGetIntentDataFromActvity))
         mManagerConferenceRoomViewModel.returnSuccess().observe(this, Observer {
             progressDialog.dismiss()
             if(it.isEmpty()) {
-                //some messages
+                Toast.makeText(this, "No Room available!", Toast.LENGTH_SHORT).show()
+                finish()
             }else {
                 mCustomAdapter = ConferenceRoomAdapter(
                     it!!,
@@ -79,7 +89,8 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
         })
         mManagerConferenceRoomViewModel.returnFailure().observe(this, Observer {
             progressDialog.dismiss()
-            // message according to the error code
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            finish()
         })
     }
 

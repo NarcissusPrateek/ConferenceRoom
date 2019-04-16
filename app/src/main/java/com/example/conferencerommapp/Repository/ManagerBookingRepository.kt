@@ -3,7 +3,7 @@ package com.example.conferencerommapp.Repository
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.ManagerBooking
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -36,11 +36,11 @@ class ManagerBookingRepository {
         /**
          * api call using retrofit
          */
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         val requestCall: Call<ResponseBody> = service.addManagerBookingDetails(mBooking)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

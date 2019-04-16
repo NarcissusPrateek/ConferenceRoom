@@ -27,6 +27,8 @@ import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BookingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_alertdialog_members.view.*
 import java.util.*
 
@@ -53,7 +55,7 @@ class BookingActivity : AppCompatActivity() {
     private var checkedEmployee = ArrayList<EmployeeList>()
     private var mBooking = Booking()
     lateinit var progressDialog: ProgressDialog
-
+    private lateinit var acct: GoogleSignInAccount
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -63,18 +65,68 @@ class BookingActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Confirm_Details) + "</font>")
 
-        progressDialog =
-            GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
-        val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
+
         val mIntentDataFromActivity = getIntentData()
-
-        // getting view model object
-        mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
-
-        setDataToTextView(mIntentDataFromActivity, acct!!.displayName.toString())
+        init()
+        observerData()
+        setDataToTextView(mIntentDataFromActivity, acct.displayName.toString())
         setDialogForSelectingMeetingMembers()
         setDialog(mIntentDataFromActivity)
         addDataToObject(mIntentDataFromActivity)
+    }
+
+    /**
+     * this method will Initialize all input fields
+     */
+
+    private fun init() {
+        progressDialog =
+            GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        acct = GoogleSignIn.getLastSignedInAccount(applicationContext)!!
+        // getting view model object
+        mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
+
+    }
+
+    /**
+     * observe data from server
+     */
+    private fun observerData() {
+
+        // observer for fetching employee List from server
+        mBookingViewModel.returnSuccessForBooking().observe(this, Observer {
+            progressDialog.dismiss()
+            goToBookingDashboard()
+        })
+        mBookingViewModel.returnFailureForBooking().observe(this, Observer {
+            progressDialog.dismiss()
+            showToastAccordingToError(it)
+        })
+
+        // observer for add booking details
+        mBookingViewModel.returnSuccessForEmployeeList().observe(this, Observer {
+            progressDialog.dismiss()
+            names.clear()
+            for (item in it!!) {
+                item.isSelected = false
+                names.add(item)
+            }
+        })
+        mBookingViewModel.returnFailureForEmployeeList().observe(this, Observer {
+            progressDialog.dismiss()
+            showToastAccordingToError(it)
+        })
+    }
+
+    /**
+     * show toast message according to the error
+     */
+    private fun showToastAccordingToError(message: String) {
+        if(message == getString(R.string.internal_server)) {
+            Toasty.error(this, message, Toast.LENGTH_SHORT, true).show()
+        }else {
+            Toasty.info(this, message, Toast.LENGTH_SHORT, true).show()
+        }
     }
 
     /**
@@ -128,10 +180,6 @@ class BookingActivity : AppCompatActivity() {
         customAdapter!!.filterList(filterName)
     }
 
-    /**
-     * this method will Initialize all input fields
-     */
-
 
     /**
      * get that data from intent
@@ -158,17 +206,8 @@ class BookingActivity : AppCompatActivity() {
      * function will make a api call whcih will get all the employee list from backend
      */
     private fun setDialogForSelectingMeetingMembers() {
+        progressDialog.show()
         mBookingViewModel.getEmployeeList()
-        mBookingViewModel.returnSuccessForEmployeeList().observe(this, Observer {
-            names.clear()
-            for (item in it!!) {
-                item.isSelected = false
-                names.add(item)
-            }
-        })
-        mBookingViewModel.returnFailureForEmployeeList().observe(this, Observer {
-            //for error code for employeeList
-        })
     }
 
 
@@ -245,37 +284,20 @@ class BookingActivity : AppCompatActivity() {
      * function sets a observer which will observe the data from backend and add the booking details to the database
      */
     private fun addBooking(mBooking: Booking) {
-        /**
-         * getting Progress Dialog
-         */
-
         mBooking.purpose = purposeEditText.text.toString()
         progressDialog.show()
         mBookingViewModel.addBookingDetails(mBooking)
-        mBookingViewModel.returnSuccessForBooking().observe(this, Observer {
-            progressDialog.dismiss()
-            goToBookingDashboard()
-        })
-        mBookingViewModel.returnFailureForBooking().observe(this, Observer {
-            progressDialog.dismiss()
-            // based on some error code
-        })
     }
 
     /**
      *  redirect to UserBookingDashboardActivity
      */
     private fun goToBookingDashboard() {
-        val mDialog =
-            GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booked_successfully))
-        mDialog.setPositiveButton(getString(R.string.ok)) { _, _ ->
-            startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
-            finish()
-        }
-        GetAleretDialog.showDialog(mDialog)
+
+        Toasty.success(this, getString(R.string.booked_successfully), Toast.LENGTH_SHORT, true).show();
+        startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
+        finish()
     }
-
-
     @SuppressLint("ClickableViewAccessibility")
     private fun EditText.onRightDrawableClicked(onClicked: (view: EditText) -> Unit) {
         this.setOnTouchListener { v, event ->

@@ -16,12 +16,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
+                android:name=".Activity.UpdateBookingActivity"
                 android:launchMode="singleTop"
                 android:parentActivityName=".Activity.UserBookingsDashboardActivity"
-                android:name=".Activity.UpdateBookingActivity"
                 android:screenOrientation="portrait">
         </activity>
-
         <activity
                 android:name=".Activity.ProjectManagerInputActivity"
                 android:launchMode="singleTop"
@@ -35,21 +34,21 @@
         <activity
                 android:name=".Activity.ManagerConferenceRoomActivity"
                 android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:parentActivityName=".Activity.BuildingsActivity">
+                android:parentActivityName=".Activity.BuildingsActivity"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".Activity.UserBookingsDashboardActivity"
                 android:label="Bookings"
-                android:screenOrientation="portrait"
                 android:launchMode="singleTop"
+                android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
                 android:name=".Activity.ManagerBuildingsActivity"
                 android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:parentActivityName=".Activity.ProjectManagerInputActivity"/>
+                android:parentActivityName=".Activity.ProjectManagerInputActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".Activity.SplashScreen"
                 android:screenOrientation="portrait"
@@ -63,65 +62,65 @@
         </activity>
         <activity
                 android:name=".Activity.UserInputActivity"
-                android:parentActivityName=".Activity.UserBookingsDashboardActivity"
                 android:label="Input"
-                android:screenOrientation="portrait"
-                android:launchMode="singleTop">
-
+                android:launchMode="singleTop"
+                android:parentActivityName=".Activity.UserBookingsDashboardActivity"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".Activity.BuildingsActivity"
-                android:screenOrientation="portrait"
                 android:launchMode="singleTop"
-                android:parentActivityName=".Activity.UserInputActivity">
+                android:parentActivityName=".Activity.UserInputActivity"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".Activity.ConferenceRoomActivity"
                 android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:parentActivityName=".Activity.BuildingsActivity"/>
+                android:parentActivityName=".Activity.BuildingsActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".SignIn"
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".Activity.BookingActivity"
                 android:label="Booking"
-                android:screenOrientation="portrait"
                 android:launchMode="singleTop"
-                android:parentActivityName=".Activity.ConferenceRoomActivity"/>
+                android:parentActivityName=".Activity.ConferenceRoomActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".Activity.AddingBuilding"
                 android:label="Add Building"
                 android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:parentActivityName=".Activity.BuildingDashboard"/>
+                android:parentActivityName=".Activity.BuildingDashboard"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".Activity.AddingConference"
                 android:label="Add Conference Room"
-                android:screenOrientation="portrait"
-                android:parentActivityName=".Activity.ConferenceDashBoard"/>
+                android:parentActivityName=".Activity.ConferenceDashBoard"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".Activity.BuildingDashboard"
-                android:screenOrientation="portrait"
-                android:parentActivityName=".Activity.BlockedDashboard"/>
+                android:parentActivityName=".Activity.BlockedDashboard"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".RegistrationActivity"
-                android:screenOrientation="portrait"
-                android:label="Registration"/>
+                android:label="Registration"
+                android:screenOrientation="portrait">
+        </activity>
         <activity
                 android:name=".Activity.BlockedDashboard"
-                android:screenOrientation="portrait"
-                android:parentActivityName=".Activity.UserBookingsDashboardActivity"/>
+                android:parentActivityName=".Activity.UserBookingsDashboardActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".Activity.BlockConferenceRoomActivity"
                 android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:parentActivityName=".Activity.BlockedDashboard"/>
+                android:parentActivityName=".Activity.BlockedDashboard"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".Activity.ConferenceDashBoard"
                 android:launchMode="singleTop"
-                android:screenOrientation="portrait"
-                android:parentActivityName=".Activity.BuildingDashboard"/>
+                android:parentActivityName=".Activity.BuildingDashboard"
+                android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

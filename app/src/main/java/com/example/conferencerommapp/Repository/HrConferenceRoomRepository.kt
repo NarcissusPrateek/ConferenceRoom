@@ -1,14 +1,8 @@
 package com.example.conferencerommapp.Repository
 
-import android.content.Context
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.ResponseListener
-import com.example.conferencerommapp.R
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import com.example.myapplication.Models.ConferenceList
 import org.json.JSONObject
 import retrofit2.Call
@@ -31,7 +25,7 @@ class HrConferenceRoomRepository {
         /**
          * api call using retorfit
          */
-        val service = Servicebuilder.getObject()
+        val service = ServiceBuilder.getObject()
         val requestCall: Call<List<ConferenceList>> = service.conferencelist(buildingId)
         requestCall.enqueue(object : Callback<List<ConferenceList>> {
             override fun onFailure(call: Call<List<ConferenceList>>, t: Throwable) {

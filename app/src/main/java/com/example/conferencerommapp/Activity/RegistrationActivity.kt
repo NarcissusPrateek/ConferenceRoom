@@ -1,15 +1,13 @@
 package com.example.conferencerommapp
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Html
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -39,6 +37,7 @@ class RegistrationActivity : AppCompatActivity() {
     lateinit var employeeNameEditText: EditText
     @BindView(R.id.spinner)
     lateinit var employeeRoleSpinner: MaterialSpinner
+    private lateinit var progressDialog: ProgressDialog
     val mEmployee = Employee()
     private lateinit var pref: SharedPreferences
 
@@ -49,7 +48,8 @@ class RegistrationActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Registration) + "</font>")
-
+        init()
+        observeData()
         initializeFields()
     }
 
@@ -164,13 +164,14 @@ class RegistrationActivity : AppCompatActivity() {
      * this function will call some other viewmodel function which will make a request to backend for adding the employee
      */
     private fun addEmployee() {
-        /**
-         * get progress dialog
-         */
-        var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         progressDialog.show()
-        mRegistrationViewModel = ViewModelProviders.of(this).get(RegistrationViewModel::class.java)
         mRegistrationViewModel.addEmployee(mEmployee)
+    }
+
+    /**
+     * observe data from server
+     */
+    private fun observeData() {
         mRegistrationViewModel.returnSuccessForRegistration().observe(this, Observer {
             progressDialog.dismiss()
             setValueInSharedPreference()
@@ -178,8 +179,16 @@ class RegistrationActivity : AppCompatActivity() {
         })
         mRegistrationViewModel.returnFailureForRegistration().observe(this, Observer {
             progressDialog.dismiss()
-            // some error message according to the error code from backend
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
+    }
+
+    /**
+     * initialize all lateinit variables
+     */
+    fun init() {
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        mRegistrationViewModel = ViewModelProviders.of(this).get(RegistrationViewModel::class.java)
     }
 
     /**

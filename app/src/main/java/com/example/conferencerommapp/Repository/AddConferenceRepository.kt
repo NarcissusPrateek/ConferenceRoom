@@ -1,17 +1,9 @@
 package com.example.conferencerommapp.Repository
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.AddConferenceRoom
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetAleretDialog
-import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.ResponseListener
-import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -34,7 +26,7 @@ class AddConferenceRepository {
     //Passing the Context and model and call API, In return sends the status of LiveData
     fun addConferenceDetails(mConferenceRoom : AddConferenceRoom, listener: ResponseListener) {
         //Retrofit Call
-        val addConferenceRoomService: ConferenceService = Servicebuilder.buildService(ConferenceService::class.java)
+        val addConferenceRoomService: ConferenceService = ServiceBuilder.buildService(ConferenceService::class.java)
         val addConferenceRequestCall: Call<ResponseBody> = addConferenceRoomService.addConference(mConferenceRoom)
 
         addConferenceRequestCall.enqueue(object : Callback<ResponseBody> {

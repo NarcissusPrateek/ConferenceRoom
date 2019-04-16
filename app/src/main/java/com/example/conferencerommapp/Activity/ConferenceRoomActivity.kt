@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Activity
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
@@ -27,6 +28,7 @@ class ConferenceRoomActivity : AppCompatActivity() {
     @BindView(R.id.conference_recycler_view)
     lateinit var mRecyclerView: RecyclerView
     private lateinit var mIntentDataFromActivity: GetIntentDataFromActvity
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,8 @@ class ConferenceRoomActivity : AppCompatActivity() {
 
         mIntentDataFromActivity = getIntentData()
         val mFetchRoom = setDataToObjectForApiCall(mIntentDataFromActivity)
+        init()
+        observeData()
         getViewModel(mIntentDataFromActivity, mFetchRoom)
     }
 
@@ -55,10 +59,24 @@ class ConferenceRoomActivity : AppCompatActivity() {
         /**
          * get progress dialog
          */
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
-        mConferenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
+
         progressDialog.show()
         mConferenceRoomViewModel.getConferenceRoomList(mFetchRoom)
+    }
+
+    /**
+     * initialize lateinit variables
+     */
+    fun init() {
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        mConferenceRoomViewModel = ViewModelProviders.of(this).get(ConferenceRoomViewModel::class.java)
+    }
+
+    /**
+     * observe data from server
+     */
+    private fun observeData() {
+        //positive response
         mConferenceRoomViewModel.returnSuccess().observe(this, Observer {
             progressDialog.dismiss()
             if(it.isEmpty()) {
@@ -76,10 +94,11 @@ class ConferenceRoomActivity : AppCompatActivity() {
                 mRecyclerView.adapter = mCustomAdapter
             }
         })
+
+        // Negative response
         mConferenceRoomViewModel.returnFailure().observe(this, Observer {
             progressDialog.dismiss()
-            // according to the code
-            Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
             finish()
         })
     }
@@ -87,9 +106,9 @@ class ConferenceRoomActivity : AppCompatActivity() {
     /**
      * intent to the BookingActivity
      */
-    fun goToNextActivity(mIntentDataFromActvity: GetIntentDataFromActvity) {
+    fun goToNextActivity(mIntentDataFromActivity: GetIntentDataFromActvity) {
         val intent = Intent(this@ConferenceRoomActivity, BookingActivity::class.java)
-        intent.putExtra(Constants.EXTRA_INTENT_DATA, mIntentDataFromActvity)
+        intent.putExtra(Constants.EXTRA_INTENT_DATA, mIntentDataFromActivity)
         startActivity(intent)
     }
 

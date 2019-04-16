@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Activity
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
@@ -29,6 +30,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
     private lateinit var mCustomAdapter: BuildingAdapter
     @BindView(R.id.building_recycler_view)
     lateinit var mRecyclerView: RecyclerView
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>")
+        init()
         loadBuildings()
     }
 
@@ -127,17 +130,12 @@ class ManagerBuildingsActivity : AppCompatActivity() {
      * after that whenever data changes it will set a adapter to recyclerview
      */
     private fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity) {
-        mManagerBuildingViewModel = ViewModelProviders.of(this).get(ManagerBuildingViewModel::class.java)
-        /**
-         * get Progress Dialog
-         */
-        var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
         mManagerBuildingViewModel.getBuildingList()
         mManagerBuildingViewModel.returnBuildingSuccess().observe(this, androidx.lifecycle.Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
-                // some message
+                Toast.makeText(this, "No Building Available", Toast.LENGTH_SHORT).show()
             } else {
                 mCustomAdapter = BuildingAdapter(this,
                     it!!,
@@ -160,18 +158,23 @@ class ManagerBuildingsActivity : AppCompatActivity() {
             progressDialog.dismiss()
             handleNegativeResponse(it)
         })
+    }
+
+    /**
+     * initialize lateinit variables
+     */
+    fun init() {
+        mManagerBuildingViewModel = ViewModelProviders.of(this).get(ManagerBuildingViewModel::class.java)
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
 
     }
 
     /**
      * this function will handle the positive response from server
      */
-    private fun handleNegativeResponse(mResponseCode: String) {
-        if (mResponseCode == "Internal Server Code!") {
-
-        } else {
-            // messgae according to the response code from server
-        }
+    private fun handleNegativeResponse(mResponseMessage: String) {
+        Toast.makeText(this, mResponseMessage, Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     /**

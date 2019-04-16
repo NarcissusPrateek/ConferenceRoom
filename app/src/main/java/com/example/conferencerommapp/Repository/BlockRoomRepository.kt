@@ -1,21 +1,13 @@
 package com.example.conferencerommapp.Repository
 
-import android.content.Context
-import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.BuildingConference
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetAleretDialog
-import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.BlockRoom
 import com.example.conferencerommapp.Model.BlockingConfirmation
-import com.example.conferencerommapp.Model.ConferenceRoom
-import com.example.conferencerommapp.Model.FetchConferenceRoom
-import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -43,7 +35,7 @@ class BlockRoomRepository {
         /**
          * make API call usnig retrofit
          */
-        val blockRoomApi = Servicebuilder.buildService(ConferenceService::class.java)
+        val blockRoomApi = ServiceBuilder.buildService(ConferenceService::class.java)
         val requestCall: Call<ResponseBody> = blockRoomApi.blockconference(mRoom)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -76,10 +68,10 @@ class BlockRoomRepository {
         /**
          *  api call using retrofit
          */
-        val requestCall: Call<List<BuildingConference>> = Servicebuilder.getObject().getBuildingsConference(buildingId)
+        val requestCall: Call<List<BuildingConference>> = ServiceBuilder.getObject().getBuildingsConference(buildingId)
         requestCall.enqueue(object : Callback<List<BuildingConference>> {
             override fun onFailure(call: Call<List<BuildingConference>>, t: Throwable) {
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
 
             override fun onResponse(
@@ -103,11 +95,11 @@ class BlockRoomRepository {
         /**
          * API call using retrofit
          */
-        var blockRoomApi = Servicebuilder.getObject()
+        var blockRoomApi = ServiceBuilder.getObject()
         val requestCall: Call<BlockingConfirmation> = blockRoomApi.blockConfirmation(mRoom)
         requestCall.enqueue(object : Callback<BlockingConfirmation> {
             override fun onFailure(call: Call<BlockingConfirmation>, t: Throwable) {
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
 
             override fun onResponse(call: Call<BlockingConfirmation>, response: Response<BlockingConfirmation>) {

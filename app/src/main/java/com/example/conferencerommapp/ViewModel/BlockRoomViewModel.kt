@@ -13,7 +13,7 @@ class BlockRoomViewModel : ViewModel() {
     /**
      * a object which will hold the reference to the corrosponding repository class
      */
-    var mBlockRoomRepository: BlockRoomRepository? = null
+    private var mBlockRoomRepository: BlockRoomRepository? = null
 
     /**
      * a MutableLiveData variable which will hold the positive response from server for the list of rooms
@@ -38,7 +38,7 @@ class BlockRoomViewModel : ViewModel() {
     /**
      * a variable to hold failure code from backend whenever unable to fetch the confirmation details from server
      */
-    var mFailureCodeForConfirmaationOfBlocking = MutableLiveData<String>()
+    var mFailureCodeForConfirmationOfBlocking = MutableLiveData<String>()
 
     /**
      * a variable to hold failure code from backend whenever unable to block the room
@@ -118,7 +118,7 @@ class BlockRoomViewModel : ViewModel() {
             }
 
             override fun onFailure(failure: String) {
-                mFailureCodeForConfirmaationOfBlocking.value = failure
+                mFailureCodeForConfirmationOfBlocking.value = failure
             }
 
         })
@@ -129,7 +129,7 @@ class BlockRoomViewModel : ViewModel() {
     }
 
     fun returnResponseErrorForConfirmation():MutableLiveData<String> {
-        return mFailureCodeForConfirmaationOfBlocking
+        return mFailureCodeForConfirmationOfBlocking
     }
 
 

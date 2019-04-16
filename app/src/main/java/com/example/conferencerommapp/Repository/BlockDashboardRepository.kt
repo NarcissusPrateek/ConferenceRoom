@@ -1,17 +1,11 @@
 package com.example.conferencerommapp.Repository
 
-import android.content.Context
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.conferencerommapp.Blocked
 import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Helper.Unblock
-import com.example.conferencerommapp.R
 import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -31,7 +25,7 @@ class BlockDashboardRepository {
     }
 
     fun getBlockedList(listener: ResponseListener) {
-        val blockServices = Servicebuilder.buildService(ConferenceService::class.java)
+        val blockServices = ServiceBuilder.buildService(ConferenceService::class.java)
         val requestCall: Call<List<Blocked>> = blockServices.getBlockedConference()
         requestCall.enqueue(object : Callback<List<Blocked>> {
             override fun onFailure(call: Call<List<Blocked>>, t: Throwable) {
@@ -52,11 +46,11 @@ class BlockDashboardRepository {
      * make request to server for unblock room
      */
     fun unblockRoom(mRoom: Unblock, listener: ResponseListener) {
-        val unBlockApi = Servicebuilder.buildService(ConferenceService::class.java)
+        val unBlockApi = ServiceBuilder.buildService(ConferenceService::class.java)
         val requestCall: Call<ResponseBody> = unBlockApi.unBlockingConferenceRoom(mRoom)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == Constants.OK_RESPONSE) {

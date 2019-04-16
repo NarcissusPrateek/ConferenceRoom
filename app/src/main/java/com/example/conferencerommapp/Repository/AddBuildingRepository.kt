@@ -1,10 +1,9 @@
 package com.example.conferencerommapp.Repository
 
-import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.AddBuilding
 import com.example.conferencerommapp.services.ConferenceService
-import com.example.globofly.services.Servicebuilder
+import com.example.globofly.services.ServiceBuilder
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -33,11 +32,11 @@ class AddBuildingRepository {
      * function will initialize the MutableLivedata Object and than call a function for api call
      */
     fun addBuildingDetails(mAddBuilding: AddBuilding, listener: ResponseListener) {
-        val addBuildingService: ConferenceService = Servicebuilder.getObject()
+        val addBuildingService: ConferenceService = ServiceBuilder.getObject()
         val addBuildingRequestCall: Call<ResponseBody> = addBuildingService.addBuilding(mAddBuilding)
         addBuildingRequestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
