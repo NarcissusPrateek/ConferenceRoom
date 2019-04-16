@@ -72,6 +72,7 @@ class ConferenceRoomAdapter(private val mConferenceRoomList: List<ConferenceRoom
             ButterKnife.bind(this,itemView)
         }
         @BindView(R.id.text_view_room)
+        @Nullable
         lateinit var txvRoom: TextView
         @BindView(R.id.txv_room_capacity)
         lateinit var txvRoomCapacity: TextView

@@ -306,7 +306,20 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 builder.setNegativeButton(getString(R.string.cancel)) { _, _ ->
                 }
                 builder.setNeutralButton("Update") { _, _ ->
-                    //editAlert(position, context)
+                    val mGetIntentDataFromActvity = GetIntentDataFromActvity()
+                    val fromTime = finalList[position].FromTime
+                    val dateFrom = fromTime!!.split("T")
+                    mGetIntentDataFromActvity.purpose = finalList[position].Purpose
+                    mGetIntentDataFromActvity.buildingName = finalList[position].BName
+                    mGetIntentDataFromActvity.roomName = finalList[position].CName
+                    mGetIntentDataFromActvity.date = dateFrom[0]
+                    mGetIntentDataFromActvity.roomId = finalList[position].CId.toString()
+                    mGetIntentDataFromActvity.fromTime = finalList[position].FromTime
+                    mGetIntentDataFromActvity.toTime = finalList[position].ToTime
+                    mGetIntentDataFromActvity.cCMail = finalList[position].cCMail
+                    val updateBookingActivityButton =Intent(this,UpdateBookingActivity::class.java)
+                    updateBookingActivityButton.putExtra(Constants.EXTRA_INTENT_DATA,mGetIntentDataFromActvity)
+                    startActivity(updateBookingActivityButton)
                 }
                 val dialog: AlertDialog = builder.create()
                 dialog.setCancelable(false)

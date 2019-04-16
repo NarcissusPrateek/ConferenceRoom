@@ -155,7 +155,7 @@ class UpdateBookingActivity : AppCompatActivity() {
         mUpdateBookingViewModel.updateBookingDetails(mUpdateBooking)
         mUpdateBookingViewModel.returnBookingUpdated().observe(this, Observer {
             progressDialog.dismiss()
-            var builder = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booking_updated))
+            val builder = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.booking_updated))
             builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                 finish()
             }
@@ -164,7 +164,10 @@ class UpdateBookingActivity : AppCompatActivity() {
         })
         mUpdateBookingViewModel.returnUpdateFailed().observe(this, Observer {
             progressDialog.dismiss()
-            Log.i("-------", " " + it)
+            val builder = GetAleretDialog.getDialog(this,getString(R.string.status),it)
+            builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+            }
+            GetAleretDialog.showDialog(builder)
             // some message goes here on failure and error
         })
 

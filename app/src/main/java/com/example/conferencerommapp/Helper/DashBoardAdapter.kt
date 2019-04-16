@@ -107,7 +107,9 @@ class DashBoardAdapter(
         @BindView(R.id.btnCancel)
         lateinit var cancelButton: Button
         @BindView(R.id.linearlayout)
+        @Nullable
         lateinit var linearLayout: LinearLayout
+
         @BindView(R.id.card)
         lateinit var card: CardView
         @BindView(R.id.btnshow)
