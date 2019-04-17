@@ -38,10 +38,4 @@ class AddConferenceRoomViewModelTest {
         Assert.assertSame(mStatus, mAddConferenceRoomRepository.addConferenceDetails(mAddConference))
     }
 
-    @Throws(NullPointerException::class)
-    @Test
-    fun testAddingBuilding_withoutBuildingName(){
-        Assert.assertSame(mStatusFalseValue,mAddConferenceRoomRepository.addConferenceDetails(mAddConferenceEmpty))
-    }
-
 }

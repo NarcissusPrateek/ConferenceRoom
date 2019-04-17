@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -16,6 +17,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Helper.BlockedDashboardNew
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.Helper.Unblock
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BlockedDashboardViewModel
@@ -29,6 +31,8 @@ class BlockedDashboard : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     private lateinit var blockedAdapter: BlockedDashboardNew
     lateinit var mBlockedDashboardViewModel: BlockedDashboardViewModel
+    private lateinit var progressDialog: ProgressDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -37,9 +41,50 @@ class BlockedDashboard : AppCompatActivity() {
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Blocked_Rooms) + "</font>")
 
         ButterKnife.bind(this)
-        mBlockedDashboardViewModel = ViewModelProviders.of(this).get(BlockedDashboardViewModel::class.java)
+        init()
         loadBlocking()
+        observeData()
+    }
 
+    private fun init(){
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        mBlockedDashboardViewModel = ViewModelProviders.of(this).get(BlockedDashboardViewModel::class.java)
+
+    }
+
+    private fun observeData(){
+        mBlockedDashboardViewModel.returnBlockedRoomList().observe(this, Observer {
+            progressDialog.dismiss()
+            if (it.isEmpty()) {
+                empty_view_blocked.visibility = View.VISIBLE
+                empty_view_blocked.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            } else {
+                empty_view_blocked.visibility = View.GONE
+            }
+            blockedAdapter = BlockedDashboardNew(
+                it,
+                this,
+                object: BlockedDashboardNew.UnblockRoomListener {
+                    override fun onClickOfUnblock(mRoom: Unblock) {
+                        unblockRoom(mRoom)
+                    }
+                })
+            recyclerView.adapter = blockedAdapter
+
+        })
+        mBlockedDashboardViewModel.returnFailureCodeFromBlockedApi().observe(this, Observer {
+            progressDialog.dismiss()
+            ShowToast.show(this, it)
+        })
+        mBlockedDashboardViewModel.returnSuccessCodeForUnBlockRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            Toast.makeText(this, getString(R.string.room_unblocked), Toast.LENGTH_SHORT).show()
+            mBlockedDashboardViewModel.getBlockedList()
+        })
+        mBlockedDashboardViewModel.returnFailureCodeForUnBlockRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            // some message goes here
+        })
     }
 
     @OnClick(R.id.menu)
@@ -71,50 +116,17 @@ class BlockedDashboard : AppCompatActivity() {
     }
 
     private fun loadBlocking() {
-
-        var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
         mBlockedDashboardViewModel.getBlockedList()
-        mBlockedDashboardViewModel.returnBlockedRoomList().observe(this, Observer {
-            progressDialog.dismiss()
-            if (it.isEmpty()) {
-                empty_view_blocked.visibility = View.VISIBLE
-                empty_view_blocked.setBackgroundColor(Color.parseColor("#FFFFFF"))
-            } else {
-                empty_view_blocked.visibility = View.GONE
-            }
-            blockedAdapter = BlockedDashboardNew(
-                it,
-                this,
-                object: BlockedDashboardNew.UnblockRoomListener {
-                    override fun onClickOfUnblock(mRoom: Unblock) {
-                        unblockRoom(mRoom)
-                    }
-                })
-            recyclerView.adapter = blockedAdapter
 
-        })
-        mBlockedDashboardViewModel.returnFailureCodeFromBlockedApi().observe(this, Observer {
-            progressDialog.dismiss()
-            //some message goes here
-        })
     }
 
     fun unblockRoom(mRoom: Unblock) {
         /**
          * getting Progress Dialog
          */
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
         mBlockedDashboardViewModel.unBlockRoom(mRoom)
-        mBlockedDashboardViewModel.returnSuccessCodeForUnBlockRoom().observe(this, Observer {
-            progressDialog.dismiss()
-            Toast.makeText(this, getString(R.string.room_unblocked), Toast.LENGTH_SHORT).show()
-            mBlockedDashboardViewModel.getBlockedList()
-        })
-        mBlockedDashboardViewModel.returnFailureCodeForUnBlockRoom().observe(this, Observer {
-            progressDialog.dismiss()
-            // some message goes here
-        })
+
     }
 }
