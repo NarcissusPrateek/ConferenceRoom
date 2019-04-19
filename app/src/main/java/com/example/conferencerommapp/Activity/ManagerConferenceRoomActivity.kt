@@ -102,7 +102,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      */
     fun goToNextActivity(mGetIntentDataFromActvity: GetIntentDataFromActvity) {
         val intent =
-            Intent(this@ManagerConferenceRoomActivity, ManagerBookingActivity::class.java)
+            Intent(this@ManagerConferenceRoomActivity, ManagerSelectMeetingMembers::class.java)
         intent.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
         startActivity(intent)
     }

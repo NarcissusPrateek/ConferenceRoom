@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -73,8 +75,7 @@ class DashBoardAdapter(
         holder.fromTimeTextView.text = fromDate[1] + " - " + toDate[1]
         setButtonFunctionalityAccordingToStatus(holder, position)
         setFunctionOnButton(holder, position, mContext)
-
-        holder.updateTextView.setOnClickListener {
+        holder.purposeTextView.onRightDrawableClicked {
             editActivity(position, mContext)
         }
     }
@@ -97,7 +98,6 @@ class DashBoardAdapter(
         var linearLayout: LinearLayout = itemView.findViewById(R.id.linearlayout)
         var card: CardView = itemView.findViewById(R.id.card)
         var showButton: Button = itemView.findViewById(R.id.btnshow)
-        var updateTextView: TextView = itemView.findViewById(R.id.edit_time)
         var dashboard: Manager? = null
     }
 
@@ -144,7 +144,7 @@ class DashBoardAdapter(
      * send employee List to the activity using interface which will display the list of employee names in the alert dialog
      */
     private fun setMeetingMembers(position: Int) {
-        mShowMembersListener!!.showMembers(dashboardItemList[position].Name!!)
+        mShowMembers.showMembers(dashboardItemList[position].Name!!)
     }
 
     /**
@@ -211,25 +211,9 @@ class DashBoardAdapter(
         mGetIntentDataFromActivity.toTime = dashboardItemList[position].ToTime
         mGetIntentDataFromActivity.cCMail = dashboardItemList[position].cCMail
         mEditBookingListener!!.editBooking(mGetIntentDataFromActivity)
-}
-
-    private fun editAlert(position: Int, context: Context) {
-        val mGetIntentDataFromActvity = GetIntentDataFromActvity()
-        val fromTime = dashboardItemList[position].FromTime
-        val fromDate = fromTime!!.split("T")
-        mGetIntentDataFromActvity.purpose = dashboardItemList[position].Purpose
-        mGetIntentDataFromActvity.buildingName = dashboardItemList[position].BName
-        mGetIntentDataFromActvity.roomName = dashboardItemList[position].CName
-        mGetIntentDataFromActvity.roomId = dashboardItemList[position].CId.toString()
-        mGetIntentDataFromActvity.date = fromDate[0]
-        mGetIntentDataFromActvity.fromTime = dashboardItemList[position].FromTime
-        mGetIntentDataFromActvity.toTime = dashboardItemList[position].ToTime
-        mGetIntentDataFromActvity.cCMail = dashboardItemList[position].cCMail
-        //mEditBookingListener!!.editBooking(position)
-//        val updateActivity = Intent(mContext, UpdateBookingActivity::class.java)
-//        updateActivity.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
-//        mContext.startActivity(updateActivity)
     }
+
+
 
     /**
      * An interface which will be implemented by UserDashboardBookingActivity activity
@@ -256,5 +240,21 @@ class DashBoardAdapter(
 
     interface EditBookingListener {
         fun editBooking(mGetIntentDataFromActvity: GetIntentDataFromActvity)
+    }
+
+    /**
+     * click listener on right drawable
+     */
+    private fun TextView.onRightDrawableClicked(onClicked: (view: TextView) -> Unit) {
+        this.setOnTouchListener { v, event ->
+            var hasConsumed = false
+            if (v is TextView && event.x >= v.width - v.totalPaddingRight) {
+                if (event.action == MotionEvent.ACTION_UP) {
+                    onClicked(this)
+                }
+                hasConsumed = true
+            }
+            hasConsumed
+        }
     }
 }

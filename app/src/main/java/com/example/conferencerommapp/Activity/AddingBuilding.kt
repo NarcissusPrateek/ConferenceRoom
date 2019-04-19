@@ -11,13 +11,10 @@ import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.Model.AddBuilding
 import com.example.conferencerommapp.R
-import com.example.conferencerommapp.ValidateField.ValidateInputFields
 import com.example.conferencerommapp.ViewModel.AddBuildingViewModel
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_adding_building.*
@@ -93,7 +90,7 @@ class AddingBuilding : AppCompatActivity() {
 
 
     /**
-     * validation for building name
+     * validation for building employeeList
      */
     private fun validateBuildingName(): Boolean {
         val input= buildingNameEditText.text.toString().trim()
@@ -135,13 +132,12 @@ class AddingBuilding : AppCompatActivity() {
     /**
      * function calls the ViewModel of addingBuilding and send data to the backend
      */
-    fun addBuild(mBuilding: AddBuilding) {
+    private fun addBuild(mBuilding: AddBuilding) {
 
         /**
          * Get the progress dialog from GetProgress Helper class
          */
         progressDialog.show()
         mAddBuildingViewModel.addBuildingDetails(mBuilding)
-
     }
 }

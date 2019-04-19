@@ -83,7 +83,7 @@ class AddingConference : AppCompatActivity() {
     }
 
     /**
-     * fuction will set the BlockConferenceRoomActivity Value for the capacity
+     * function will set the BlockConferenceRoomActivity Value for the capacity
      */
     private fun setSpinnerForCapacity() {
         val capacitySpinnerOptions = arrayOf(2, 4, 6, 8, 10, 12, 14)
@@ -115,7 +115,7 @@ class AddingConference : AppCompatActivity() {
     }
 
     /**
-     * validation for room name
+     * validation for room employeeList
      */
     private fun validateRoomName(): Boolean {
         val input = conferenceRoomEditText.text.toString().trim()
@@ -134,7 +134,7 @@ class AddingConference : AppCompatActivity() {
      */
     private fun validateSpinner(): Boolean {
         return if(capacity == getString(R.string.select_capacity)) {
-            Toast.makeText(this, getString(R.string.enter_room_name), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.select_capacity), Toast.LENGTH_SHORT).show()
             false
         }else {
             true

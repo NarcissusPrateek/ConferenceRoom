@@ -7,7 +7,7 @@
         <item
                 android:id="@+id/HR"
                 android:icon="@drawable/hr_manager"
-                android:title="Block Room"/>
+                android:title="HR"/>
         <item
                 android:id="@+id/project_manager"
                 android:icon="@drawable/manager"

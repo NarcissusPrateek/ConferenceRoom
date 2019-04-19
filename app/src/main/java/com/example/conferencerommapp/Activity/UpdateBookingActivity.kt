@@ -169,10 +169,11 @@ class UpdateBookingActivity : AppCompatActivity() {
     /**
      * observing data for update booking
      */
-    fun observerData() {
+    private fun observerData() {
         mUpdateBookingViewModel.returnBookingUpdated().observe(this, Observer {
             progressDialog.dismiss()
             Toasty.success(this, getString(R.string.booking_updated), Toast.LENGTH_SHORT, true).show()
+            finish()
         })
         mUpdateBookingViewModel.returnUpdateFailed().observe(this, Observer {
             progressDialog.dismiss()

@@ -29,16 +29,17 @@ class AddBuildingRepository {
     }
 
     /**
-     * function will initialize the MutableLivedata Object and than call a function for api call
+     * make API call and calls the methods of interface
      */
     fun addBuildingDetails(mAddBuilding: AddBuilding, listener: ResponseListener) {
         val addBuildingService: ConferenceService = ServiceBuilder.getObject()
         val addBuildingRequestCall: Call<ResponseBody> = addBuildingService.addBuilding(mAddBuilding)
         addBuildingRequestCall.enqueue(object : Callback<ResponseBody> {
+            // Negative response
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")
             }
-
+            //positive response
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     listener.onSuccess(response.code())

@@ -17,8 +17,6 @@ class BookingViewModel: ViewModel() {
      */
     private var mBookingRepository: BookingRepository? = null
 
-    private var mEmployeeRepository: EmployeeRepository? = null
-
     /**
      * a MutableLivedata variable which will hold the Value for the Livedata
      */
@@ -26,9 +24,6 @@ class BookingViewModel: ViewModel() {
 
     var mErrorCodeFromServerFromBooking =  MutableLiveData<String>()
 
-    var mEmployeeList =  MutableLiveData<List<EmployeeList>>()
-
-    var mErrorCodeFromServerForEmployees =  MutableLiveData<String>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
@@ -48,26 +43,7 @@ class BookingViewModel: ViewModel() {
     }
 
     /**
-     * for Employee List
-     */
-    fun getEmployeeList() {
-        mEmployeeRepository = EmployeeRepository.getInstance()
-        mEmployeeRepository!!.getEmployeeList(object: ResponseListener {
-            override fun onFailure(failure: String) {
-                mErrorCodeFromServerForEmployees.value = failure
-            }
-            override fun onSuccess(success: Any) {
-                mEmployeeList.value = success as List<EmployeeList>
-            }
-
-        })
-
-    }
-
-
-
-    /**
-     * function will return the MutableLiveData of List of buildings
+     * function will return MutableLiveData of List of EmployeeList
      */
     fun returnSuccessForBooking(): MutableLiveData<Int> {
         return mSuccessForBooking
@@ -78,16 +54,5 @@ class BookingViewModel: ViewModel() {
      */
     fun returnFailureForBooking(): MutableLiveData<String> {
         return mErrorCodeFromServerFromBooking
-    }
-
-    fun returnSuccessForEmployeeList(): MutableLiveData<List<EmployeeList>> {
-        return mEmployeeList
-    }
-
-    /**
-     * function will return the MutableLiveData of Int if something went wrong at server
-     */
-    fun returnFailureForEmployeeList(): MutableLiveData<String> {
-        return mErrorCodeFromServerForEmployees
     }
 }

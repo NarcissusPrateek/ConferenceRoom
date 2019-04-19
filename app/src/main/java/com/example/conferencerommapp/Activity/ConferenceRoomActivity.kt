@@ -106,7 +106,7 @@ class ConferenceRoomActivity : AppCompatActivity() {
      * intent to the BookingActivity
      */
     fun goToNextActivity(mIntentDataFromActivity: GetIntentDataFromActvity) {
-        val intent = Intent(this@ConferenceRoomActivity, BookingActivity::class.java)
+        val intent = Intent(this@ConferenceRoomActivity, SelectMeetingMembersActivity::class.java)
         intent.putExtra(Constants.EXTRA_INTENT_DATA, mIntentDataFromActivity)
         startActivity(intent)
     }

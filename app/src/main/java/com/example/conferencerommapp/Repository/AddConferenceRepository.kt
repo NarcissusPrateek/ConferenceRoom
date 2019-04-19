@@ -31,7 +31,7 @@ class AddConferenceRepository {
 
         addConferenceRequestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure("Internal Server Error!!")
+                listener.onFailure("Internal Server Error!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

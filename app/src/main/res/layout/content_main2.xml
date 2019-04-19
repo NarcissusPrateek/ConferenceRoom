@@ -25,18 +25,6 @@
             android:layout_centerInParent="true"
             android:layout_marginTop="10dp"
             android:layout_alignParentTop="true"/>
-    <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:text="@string/no_upcoming_events_n_let_s_change_that"-->
-            <!--android:textColor="@color/grey"-->
-            <!--android:textSize="17sp"-->
-            <!--android:visibility="visible"-->
-            <!--android:layout_below="@id/empty_view"-->
-            <!--android:textStyle="bold|italic"-->
-            <!--android:id="@+id/textView_no_events"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textAlignment="center"/>-->
-
     <com.github.clans.fab.FloatingActionButton
             android:src="@drawable/fab_add"
             android:id="@+id/user_input"

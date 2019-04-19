@@ -8,7 +8,5 @@ data class EmployeeList (
     var email: String? = null,
 
     @SerializedName("name")
-    var name: String? = null,
-
-    var isSelected: Boolean? = null
+    var name: String? = null
 )

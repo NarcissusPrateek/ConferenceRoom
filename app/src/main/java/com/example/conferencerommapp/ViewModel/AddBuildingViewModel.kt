@@ -14,14 +14,14 @@ open class AddBuildingViewModel : ViewModel() {
     var mAddBuildingRepository: AddBuildingRepository? = null
 
     /**
-     * a MutableLivedata variable which will hold the Value for the Livedata
+     * a MutableLivedata variable which will hold the response from server
      */
     var mSuccessForAddBuilding = MutableLiveData<Int>()
     var mFailureForAddBuilding = MutableLiveData<String>()
 
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
-     * and function will return the value for MutableLivedata
+     * and assign values to the live data objects
      */
     fun addBuildingDetails(mAddBuilding: AddBuilding) {
         mAddBuildingRepository = AddBuildingRepository.getInstance()
@@ -36,9 +36,15 @@ open class AddBuildingViewModel : ViewModel() {
         })
     }
 
+    /**
+     * return positive response from server
+     */
     fun returnSuccessForAddBuilding(): MutableLiveData<Int> {
         return mSuccessForAddBuilding
     }
+    /**
+     * return negative response from server
+     */
     fun returnFailureForAddBuilding(): MutableLiveData<String> {
         return mFailureForAddBuilding
     }

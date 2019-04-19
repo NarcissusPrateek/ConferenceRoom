@@ -34,7 +34,7 @@ class EmployeeRepository {
         val requestCall: Call<List<EmployeeList>> = service.getEmployees()
         requestCall.enqueue(object : Callback<List<EmployeeList>> {
             override fun onFailure(call: Call<List<EmployeeList>>, t: Throwable) {
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
 
             override fun onResponse(call: Call<List<EmployeeList>>, response: Response<List<EmployeeList>>) {

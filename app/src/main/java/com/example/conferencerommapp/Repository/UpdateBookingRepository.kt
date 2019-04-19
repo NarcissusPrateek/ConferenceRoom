@@ -29,7 +29,7 @@ class UpdateBookingRepository{
         val requestCall: Call<ResponseBody> = service.update(mUpdateBooking)
         requestCall.enqueue(object :Callback<ResponseBody>{
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                listener.onFailure("Internal Server Code!")
+                listener.onFailure("Internal Server Error!")
             }
 
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

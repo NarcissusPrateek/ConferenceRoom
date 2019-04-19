@@ -16,9 +16,11 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Helper.BlockedDashboardNew
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.Helper.Unblock
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BlockedDashboardViewModel
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_blocked_dashboard.*
 
 @SuppressLint("Registered")
@@ -96,7 +98,7 @@ class BlockedDashboard : AppCompatActivity() {
         })
         mBlockedDashboardViewModel.returnFailureCodeFromBlockedApi().observe(this, Observer {
             progressDialog.dismiss()
-            //some message goes here
+            ShowToast.show(this, it)
         })
     }
 
@@ -109,12 +111,12 @@ class BlockedDashboard : AppCompatActivity() {
         mBlockedDashboardViewModel.unBlockRoom(mRoom)
         mBlockedDashboardViewModel.returnSuccessCodeForUnBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, getString(R.string.room_unblocked), Toast.LENGTH_SHORT).show()
+            Toasty.success(this, getString(R.string.room_unblocked), Toast.LENGTH_SHORT, true).show()
             mBlockedDashboardViewModel.getBlockedList()
         })
         mBlockedDashboardViewModel.returnFailureCodeForUnBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
-            // some message goes here
+            ShowToast.show(this, it)
         })
     }
 }

@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -93,7 +94,6 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 //textView_no_events.visibility = View.GONE
                 dashBord_recyclerView1.visibility = View.VISIBLE
             }
-
             setFilteredDataToAdapter(it)
         })
         mBookingDashBoardViewModel.returnFailure().observe(this, Observer {
@@ -137,7 +137,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     /**
      * this function will set items in the navigation view and calls another function for setting the item according to role
      * if there is no image at the particular url provided by google than we will set a dummy imgae
-     * else we set the image provided by google and set the name according to the google display name
+     * else we set the image provided by google and set the employeeList according to the google display employeeList
      */
     @SuppressLint("SetTextI18n")
     fun setNavigationViewItem() {
