@@ -33,10 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_margin="5dp"
             app:menu_animationDelayPerItem="55"
             app:menu_backgroundColor="@android:color/transparent"
-            app:menu_buttonSpacing="0dp"
             app:menu_fab_size="normal"
             app:menu_icon="@drawable/ic_add_black_24dp"
             app:menu_labels_colorNormal="#333"
@@ -54,11 +52,6 @@
             app:menu_labels_textColor="#f2f1f1"
             app:menu_labels_textSize="15sp"
             app:menu_openDirection="up"
-
-            app:menu_shadowRadius="4dp"
-            app:menu_shadowXOffset="1dp"
-            app:menu_shadowYOffset="4dp"
-            app:menu_showShadow="true"
             android:id="@+id/menu">
 
         <com.github.clans.fab.FloatingActionButton
