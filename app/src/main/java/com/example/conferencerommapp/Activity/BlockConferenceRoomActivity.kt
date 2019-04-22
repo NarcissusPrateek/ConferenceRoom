@@ -1,12 +1,9 @@
-
 package com.example.conferencerommapp.Activity
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.text.Html.fromHtml
-import android.text.TextUtils.isEmpty
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -22,12 +19,14 @@ import com.example.conferencerommapp.BuildingConference
 import com.example.conferencerommapp.Helper.ConvertTimeInMillis
 import com.example.conferencerommapp.Helper.DateAndTimePicker
 import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.Model.BlockRoom
 import com.example.conferencerommapp.Model.Building
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.BlockRoomViewModel
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_spinner.*
 
 @Suppress("NAME_SHADOWING", "DEPRECATION")
@@ -45,6 +44,8 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     var room = BlockRoom()
     private lateinit var mBuildingViewModel: BuildingViewModel
     private lateinit var progressDialog: ProgressDialog
+    private var mBuuildingName = "Select Building"
+    private var mRoomName = "Select Room"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_spinner)
@@ -71,9 +72,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         // observe data for building list
         mBuildingViewModel.returnMBuildingSuccess().observe(this, Observer {
             progressDialog.dismiss()
-            if(it.isEmpty()) {
+            if (it.isEmpty()) {
 
-            }else {
+            } else {
                 buildingListFromBackend(it)
             }
         })
@@ -87,20 +88,13 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
         mBlockRoomViewModel.returnSuccessForBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
-            val builder =
-                AlertDialog.Builder(this@BlockConferenceRoomActivity)
-            builder.setTitle(getString(R.string.blockingStatus))
-            builder.setMessage(getString(R.string.room_is_blocked))
-            builder.setPositiveButton(getString(R.string.ok)) { _,_ ->
-                finish()
-            }
-            val dialog: AlertDialog = builder.create()
-            dialog.show()
+            Toasty.success(this, getString(R.string.room_is_blocked), Toast.LENGTH_SHORT, true).show()
+            finish()
         })
 
         mBlockRoomViewModel.returnResponseErrorForBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            ShowToast.show(this, it)
         })
 
         // observer for block confirmation
@@ -114,9 +108,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
                 val name = it.name
                 val purpose = it.purpose
                 builder.setMessage(
-                    "Room is already Booked by Employee $name for $purpose.\nAre you sure the 'BLOCKING' is Necessary?"
+                    "Room is Booked by Employee $name for $purpose.\nAre you sure the 'BLOCKING' is Necessary?"
                 )
-                builder.setPositiveButton(getString(R.string.ok_label)) { _,_ ->
+                builder.setPositiveButton(getString(R.string.ok_label)) { _, _ ->
                     blockConfirmed(room)
                 }
                 val dialog: AlertDialog = builder.create()
@@ -196,18 +190,24 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     }
 
     private fun buildingListFromBackend(it: List<Building>) {
-        sendDataForSpinner(it)
+        if (it.isEmpty()) {
+            Toasty.info(this, R.string.empty_building_list, Toast.LENGTH_SHORT, true).show()
+        } else {
+            sendDataForSpinner(it)
+        }
     }
 
     private fun sendDataForSpinner(it: List<Building>) {
         val items = mutableListOf<String>()
         val itemsId = mutableListOf<Int>()
+        items.add("Select Building")
+        itemsId.add(-1)
         for (item in it) {
             items.add(item.buildingName!!)
             itemsId.add(item.buildingId!!.toInt())
         }
         buiding_Spinner.adapter =
-            ArrayAdapter<String>(this@BlockConferenceRoomActivity, android.R.layout.simple_list_item_1, items)
+            ArrayAdapter<String>(this@BlockConferenceRoomActivity, R.layout.spinner_icon, R.id.gender, items)
         buiding_Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 /**
@@ -217,6 +217,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 room.bId = itemsId[position]
+                mBuuildingName = items[position]
                 conferenceRoomListFromBackend(itemsId[position])
             }
         }
@@ -230,17 +231,19 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     private fun setSpinnerToConferenceList(it: List<BuildingConference>) {
         val conferencename = mutableListOf<String>()
         val conferenceid = mutableListOf<Int>()
-        if(it.isEmpty()){
+        if (it.isEmpty()) {
             conferencename.add("No Room in the Buildings")
             conferenceid.add(-1)
+        } else {
+            conferencename.add("Select Room")
         }
-
+        conferenceid.add(-1)
         for (item in it) {
             conferencename.add(item.roomName!!)
             conferenceid.add(item.roomId)
         }
         conference_Spinner.adapter =
-            ArrayAdapter<String>(this@BlockConferenceRoomActivity, android.R.layout.simple_list_item_1, conferencename)
+            ArrayAdapter<String>(this@BlockConferenceRoomActivity, R.layout.spinner_icon, R.id.gender, conferencename)
         conference_Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 /**
@@ -250,49 +253,98 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 room.cId = conferenceid[position]
-
+                mRoomName = conferencename[position]
             }
         }
 
     }
 
-    private fun validateInput(): Boolean {
-        when {
-            isEmpty(fromTime_b.text.trim()) -> {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.please_enter_fromtime),
-                    Toast.LENGTH_SHORT
-                ).show()
-                return false
 
-            }
-            isEmpty(toTime_b.text.trim()) -> {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.please_enter_totime),
-                    Toast.LENGTH_SHORT
-                ).show()
-                return false
-            }
-            isEmpty(date_block.text.trim()) -> {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.please_enter_date),
-                    Toast.LENGTH_SHORT
-                ).show()
-                return false
-            }
-            Purpose.text.toString().trim().isEmpty() -> {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.enter_purpose),
-                    Toast.LENGTH_SHORT
-                ).show()
-                return false
-            }
-            else -> return true
+    /**
+     * validate from time field
+     */
+    private fun validateFromTime(): Boolean {
+        val input = fromTimeEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            block_from_time_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        } else {
+            block_from_time_layout.error = null
+            true
         }
+    }
+
+    /**
+     * validate to time field
+     */
+    private fun validateToTime(): Boolean {
+        val input = toTimeEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            block_to_time_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        } else {
+            block_to_time_layout.error = null
+            true
+        }
+    }
+
+    /**
+     * validate date field
+     */
+    private fun validateDate(): Boolean {
+        val input = dateEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            block_date_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        } else {
+            block_date_layout.error = null
+            true
+        }
+    }
+
+    /**
+     * validate purpose field
+     */
+    private fun validatePurpose(): Boolean {
+        val input = purposeEditText.text.toString().trim()
+        return if (input.isEmpty()) {
+            purpose_layout.error = getString(R.string.field_cant_be_empty)
+            false
+        } else {
+            purpose_layout.error = null
+            true
+        }
+    }
+
+    /**
+     * validate building spinner
+     */
+    private fun validateBuildingSpinner(): Boolean {
+        return if (mBuuildingName == "Select Building") {
+            Toast.makeText(this, "Select Building!", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
+
+    /**
+     * validate conference room spinner
+     */
+    private fun validateRoomSpinner(): Boolean {
+        return if (mRoomName == "Select Room") {
+            Toast.makeText(this, "Select Conference Room!", Toast.LENGTH_SHORT).show()
+            false
+        } else {
+            true
+        }
+    }
+
+    private fun validateInput(): Boolean {
+        if (!validateFromTime() or !validateToTime() or !validateDate() or !validatePurpose() or !validateBuildingSpinner() or !validateRoomSpinner()) {
+            return false
+        }
+        return true
     }
 
     private fun validationOnDataEnteredByUser() {
@@ -312,18 +364,17 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             )
             if (elapsed2 < 0) {
                 builder.setMessage(getString(R.string.invalid_from_time))
-                builder.setPositiveButton(getString(R.string.ok_label)) {_,_ ->
+                builder.setPositiveButton(getString(R.string.ok_label)) { _, _ ->
                 }
                 val dialog: AlertDialog = builder.create()
                 dialog.setCanceledOnTouchOutside(false)
                 dialog.show()
 
             }
-            if (room.cId!!.compareTo(-1)==0){
-                Toast.makeText(this,R.string.invalid_conference_room,Toast.LENGTH_SHORT).show()
-            }
-            else {
-                if ((minmilliseconds <= elapsed) && (maxmilliseconds >= elapsed) ) {
+            if (room.cId!!.compareTo(-1) == 0) {
+                Toast.makeText(this, R.string.invalid_conference_room, Toast.LENGTH_SHORT).show()
+            } else {
+                if ((minmilliseconds <= elapsed) && (maxmilliseconds >= elapsed)) {
                     blockRoom()
                 } else {
                     val builder = AlertDialog.Builder(this@BlockConferenceRoomActivity).also {

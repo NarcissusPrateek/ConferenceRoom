@@ -22,7 +22,8 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:layout_marginTop="10dp"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <EditText
                         android:id="@+id/fromTime_manager"
                         android:layout_width="match_parent"
@@ -44,7 +45,8 @@
                     android:background="@color/white"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <EditText
                         android:id="@+id/toTime_manager"
                         android:layout_width="match_parent"
@@ -63,7 +65,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="100"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/manager_from_date_layout"
                     android:layout_width="0dp"
@@ -71,7 +74,8 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:layout_marginTop="10dp"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <EditText android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:ems="10"
@@ -90,7 +94,8 @@
                     android:background="@color/white"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
-                    app:errorEnabled="true">
+                    app:errorEnabled="true"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <EditText android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:ems="10"

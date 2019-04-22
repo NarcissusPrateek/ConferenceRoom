@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -15,6 +16,7 @@ import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.GetProgress
 import com.example.conferencerommapp.Helper.ShowToast
+import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.ManagerConference
 import com.example.conferencerommapp.R
@@ -77,8 +79,10 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
                 Toasty.info(this, getString(R.string.room_not_available), Toast.LENGTH_SHORT, true).show()
                 finish()
             }else {
+
+                var filteredList = getFilteredList(it)
                 mCustomAdapter = ConferenceRoomAdapter(
-                    it!!,
+                    filteredList,
                     object : ConferenceRoomAdapter.BtnClickListener {
                         override fun onBtnClick(roomId: String?, roomname: String?) {
                             mGetIntentDataFromActvity.roomName = roomname
@@ -94,6 +98,23 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
             ShowToast.show(this, it)
             finish()
         })
+    }
+
+    /**
+     * filter the list based on objects
+     */
+    private fun getFilteredList(it: List<ConferenceRoom>?): List<ConferenceRoom> {
+        var filteredListOfRooms = ArrayList<ConferenceRoom>()
+        for(room in it!!) {
+            if(filteredListOfRooms.isEmpty()) {
+                filteredListOfRooms.add(room)
+            }else {
+                if(!filteredListOfRooms.contains(room)) {
+                    filteredListOfRooms.add(room)
+                }
+            }
+        }
+        return filteredListOfRooms
     }
 
 

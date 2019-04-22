@@ -30,7 +30,7 @@ class BlockedDashboard : AppCompatActivity() {
     @BindView(R.id.block_recyclerView)
     lateinit var recyclerView: RecyclerView
     private lateinit var blockedAdapter: BlockedDashboardNew
-    lateinit var mBlockedDashboardViewModel: BlockedDashboardViewModel
+    private lateinit var mBlockedDashboardViewModel: BlockedDashboardViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -44,22 +44,11 @@ class BlockedDashboard : AppCompatActivity() {
 
     }
 
-    @OnClick(R.id.menu)
-    fun floatingActionMenuOptions() {
-        menu.setClosedOnTouchOutside(true)
-    }
 
     @OnClick(R.id.maintenance)
     fun blockConferenceActivity() {
         val maintenanceintent = Intent(applicationContext, BlockConferenceRoomActivity::class.java)
         startActivity(maintenanceintent)
-    }
-
-    @OnClick(R.id.add_conference)
-    fun addConferenceBuildingActivity() {
-        val addConferenceintent = Intent(applicationContext, BuildingDashboard::class.java)
-        startActivity(addConferenceintent)
-
     }
 
     override fun onBackPressed() {

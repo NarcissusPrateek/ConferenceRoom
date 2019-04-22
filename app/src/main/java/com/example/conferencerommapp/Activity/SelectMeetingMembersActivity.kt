@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.activity_select_meeting_members.*
 
 class SelectMeetingMembersActivity : AppCompatActivity() {
 
-    val employeeList = ArrayList<EmployeeList>()
+    private val employeeList = ArrayList<EmployeeList>()
     private val selectedName = ArrayList<String>()
     private val selectedEmail = ArrayList<String>()
     lateinit var customAdapter: SelectMembers
@@ -39,6 +39,11 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
     lateinit var searchEditText: EditText
     private lateinit var mSelectMemberViewModel: SelectMemberViewModel
     lateinit var progressDialog: ProgressDialog
+    private lateinit var mGetIntentDataFromActivity: GetIntentDataFromActvity
+    private var count = 0
+    companion object {
+        var selectedCapacity = 0
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_meeting_members)
@@ -62,13 +67,16 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
      */
     fun init() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        mGetIntentDataFromActivity = getIntentData()
+        selectedCapacity = (mGetIntentDataFromActivity.capacity!!.toInt() + 1)
         mSelectMemberViewModel = ViewModelProviders.of(this).get(SelectMemberViewModel::class.java)
     }
 
     /**
-     * observer data from viewmodel
+     * observer data from ViewModel
      */
     private fun observeData() {
+        // positive response from server
         mSelectMemberViewModel.returnSuccessForEmployeeList().observe(this, Observer {
             progressDialog.dismiss()
             if(it.isEmpty()) {
@@ -86,6 +94,7 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
                 select_member_recycler_view.adapter = customAdapter
             }
         })
+        // Negative response from server
         mSelectMemberViewModel.returnFailureForEmployeeList().observe(this, Observer {
             progressDialog.dismiss()
             ShowToast.show(this, it)
@@ -93,6 +102,7 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
         })
     }
 
+    // call function of ViewModel which will make API call
     private fun getViewModel() {
         progressDialog.show()
         mSelectMemberViewModel.getEmployeeList()
@@ -112,29 +122,37 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
                 emailString += ","
             }
         }
-        var mGetIntentDataFromActivity = getIntentData()
         mGetIntentDataFromActivity.emailOfSelectedEmployees = emailString
         var intent = Intent(this@SelectMeetingMembersActivity, BookingActivity::class.java)
         intent.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActivity)
         startActivity(intent)
     }
 
+    /**
+     * add selected recycler item to chip and add this chip to chip group
+     */
     fun addChip(name:String, email: String) {
-        if(!selectedName.contains(name)) {
+        if(!selectedName.contains(name) && count < selectedCapacity) {
             val chip = Chip(this)
             chip.text = name
             chip.isCloseIconVisible = true
-            //chip.chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPrimary))
             chip_group.addView(chip)
             chip.setOnCloseIconClickListener {
                 selectedName.remove(name)
                 selectedEmail.remove(email)
                 chip_group.removeView(chip)
+                count--
             }
             selectedName.add(name)
             selectedEmail.add(email)
-        }else {
-            Toast.makeText(this, "Already Selected!", Toast.LENGTH_SHORT).show()
+            count++
+        } else {
+            if(count >= selectedCapacity) {
+                Toast.makeText(this, "select at max $selectedCapacity participants", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Already Selected!", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
 

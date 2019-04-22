@@ -1,54 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="fill_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:layout_margin="16dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        app:cardCornerRadius="5dp"
+        app:cardUseCompatPadding="true"
         tools:context=".Activity.AddingConference">
 
-    <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/room_name_layout_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:errorEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/conference_Name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:maxLines="1"
-                android:drawableStart="@drawable/ic_room_black_24dp"
-                android:drawablePadding="5dp"
-                android:maxLength="30"
-                android:hint="@string/room_hint"/>
-    </com.google.android.material.textfield.TextInputLayout>
-    <fr.ganfra.materialspinner.MaterialSpinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/conference_Capacity"
-            android:ems="10"
-            app:ms_arrowColor="@color/colorAccent"
-            app:ms_arrowSize="16dp"
-            app:ms_floatingLabelColor="#A9A9A9"
-            app:ms_floatingLabelText="Select Capacity"
-            app:ms_hint="Please Select Capacity"
-            app:ms_multiline="true"
-            app:ms_hintColor="#000000">
-    </fr.ganfra.materialspinner.MaterialSpinner>
-    <Button android:id="@+id/add_conference_room"
+    <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/ADD"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorPrimary"
-            android:textColor="@android:color/white"/>
-</LinearLayout>
+            android:orientation="vertical"
+            android:layout_margin="16dp">
 
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/room_name_layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:counterEnabled="true"
+                app:counterMaxLength="30"
+                app:errorEnabled="true"
+                android:focusableInTouchMode="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/conference_Name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:maxLines="1"
+                    android:drawableStart="@drawable/ic_room_black_24dp"
+                    android:drawablePadding="5dp"
+                    android:maxLength="30"
+                    android:hint="@string/room_hint"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+                android:id="@+id/conference_Capacity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:drawablePadding="5dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/spinner_rect_for_add_conference"/>
+
+        <Button android:id="@+id/add_conference_room"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ADD"
+                android:layout_marginTop="30dp"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
 

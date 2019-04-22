@@ -99,7 +99,6 @@ class AddingBuilding : AppCompatActivity() {
             false
         }else {
             building_name_layout.error = null
-            building_name_layout.isErrorEnabled = false
             true
         }
     }
@@ -114,7 +113,6 @@ class AddingBuilding : AppCompatActivity() {
             false
         }else {
             location_layout.error = null
-            location_layout.isErrorEnabled = false
             true
         }
     }

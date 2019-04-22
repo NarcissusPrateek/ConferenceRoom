@@ -23,6 +23,8 @@ import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.Manager
 import com.example.conferencerommapp.R
 import org.jetbrains.anko.find
+import java.lang.Exception
+import java.text.SimpleDateFormat
 
 @Suppress("NAME_SHADOWING")
 class DashBoardAdapter(
@@ -78,6 +80,16 @@ class DashBoardAdapter(
         holder.purposeTextView.onRightDrawableClicked {
             editActivity(position, mContext)
         }
+    }
+
+    /**
+     * formate date
+     */
+    @SuppressLint("SimpleDateFormat")
+    private fun formatDate(date: String): String {
+        val simpleDateFormatInput = SimpleDateFormat("yyyy-MM-dd")
+        val simpleDateFormatOutput = SimpleDateFormat("dd MMMM yyyy")
+        return simpleDateFormatOutput.format(simpleDateFormatInput.parse(date.split("T")[0]))
     }
 
 
@@ -151,8 +163,13 @@ class DashBoardAdapter(
      * set button text according to the type of meeting and booking status
      */
     private fun setButtonFunctionalityAccordingToStatus(holder: ViewHolder, position: Int) {
-        if (dashboardItemList[position].fromlist.size == 1)
-            holder.dateTextView.text = dashboardItemList[position].FromTime!!.split("T")[0]
+        if (dashboardItemList[position].fromlist.size == 1) {
+            try {
+                holder.dateTextView.text = formatDate(dashboardItemList[position].FromTime!!.split("T")[0])
+            }catch(e: Exception) {
+
+            }
+        }
         else {
             setDataToDialogShowDates(holder, position, mContext)
         }
@@ -212,7 +229,6 @@ class DashBoardAdapter(
         mGetIntentDataFromActivity.cCMail = dashboardItemList[position].cCMail
         mEditBookingListener!!.editBooking(mGetIntentDataFromActivity)
     }
-
 
 
     /**

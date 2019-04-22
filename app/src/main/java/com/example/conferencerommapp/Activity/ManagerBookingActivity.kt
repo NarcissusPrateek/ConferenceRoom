@@ -103,7 +103,6 @@ class ManagerBookingActivity : AppCompatActivity() {
             false
         } else {
             purpose_edit_layout.error = null
-            purpose_edit_layout.isErrorEnabled = false
             true
         }
 
@@ -149,7 +148,6 @@ class ManagerBookingActivity : AppCompatActivity() {
      */
     private fun addBooking() {
         progressDialog.show()
-        Log.i("--------data", mManagerBooking.toString())
         mManagerBookingViewModel.addBookingDetails(mManagerBooking)
     }
 

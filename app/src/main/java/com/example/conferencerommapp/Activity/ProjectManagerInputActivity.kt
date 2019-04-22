@@ -32,8 +32,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
     @BindView(R.id.date_manager)
     lateinit var dateFromEditText: EditText
     private var listOfDays = ArrayList<String>()
-    private lateinit var listItems: Array<String>
-    private lateinit var checkedItems: BooleanArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,18 +40,10 @@ class ProjectManagerInputActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + "Booking Details" + "</font>")
-
-        initializeListForDays()
         setPickerToEditTexts()
     }
 
-    /**
-     * set the values for Days in Array
-     */
-    private fun initializeListForDays() {
-        listItems = resources.getStringArray(R.array.days)
-        checkedItems = BooleanArray(size = listItems.size)
-    }
+
 
 
     /**
@@ -109,7 +99,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             false
         } else {
             manager_from_time_layout.error = null
-            manager_from_time_layout.isErrorEnabled = false
             true
         }
     }
@@ -121,10 +110,10 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             false
         } else {
             manager_to_time_layout.error = null
-            manager_to_time_layout.isErrorEnabled = false
             true
         }
     }
+
     private fun validateToDate(): Boolean {
         var input = dateFromEditText.text.toString().trim()
         return if (input.isEmpty()) {
@@ -132,10 +121,10 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             false
         } else {
             manager_from_date_layout.error = null
-            manager_from_date_layout.isErrorEnabled = false
             true
         }
     }
+
     private fun validateFromDate(): Boolean {
         var input = dateToEditText.text.toString().trim()
         return if (input.isEmpty()) {
@@ -143,11 +132,11 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             false
         } else {
             manager_to_date_layout.error = null
-            manager_to_date_layout.isErrorEnabled = false
             true
         }
     }
-    fun validateSelectedDayList(): Boolean {
+
+    private fun validateSelectedDayList(): Boolean {
         if(day_picker.selectedDays.isEmpty()) {
             Toast.makeText(this, getString(R.string.select_days), Toast.LENGTH_SHORT).show()
             return false
@@ -166,32 +155,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             return false
         }
         return true
-
-
-
-//        when {
-//            TextUtils.isEmpty(fromTimeEditText.text.trim()) -> {
-//                Toast.makeText(applicationContext, getString(R.string.invalid_from_time), Toast.LENGTH_SHORT).show()
-//                return false
-//            }
-//            TextUtils.isEmpty(toTimeEditText.text.trim()) -> {
-//                Toast.makeText(applicationContext, getString(R.string.invalid_to_time), Toast.LENGTH_SHORT).show()
-//                return false
-//            }
-//            TextUtils.isEmpty(dateFromEditText.text.trim()) -> {
-//                Toast.makeText(applicationContext, getString(R.string.invalid_from_date), Toast.LENGTH_SHORT).show()
-//                return false
-//            }
-//            TextUtils.isEmpty(dateToEditText.text.trim()) -> {
-//                Toast.makeText(applicationContext, getString(R.string.invalid_to_date), Toast.LENGTH_SHORT).show()
-//                return false
-//            }
-//            day_picker.selectedDays.isEmpty() -> {
-//                Toast.makeText(applicationContext, getString(R.string.select_days), Toast.LENGTH_SHORT).show()
-//                return false
-//            }
-//            else -> return true
-//        }
     }
 
     /**

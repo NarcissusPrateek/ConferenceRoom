@@ -24,7 +24,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import es.dmoral.toasty.Toasty
-import fr.ganfra.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_registration.*
 
 
@@ -38,7 +37,7 @@ class RegistrationActivity : AppCompatActivity() {
     @BindView(R.id.textView_name)
     lateinit var employeeNameEditText: EditText
     @BindView(R.id.spinner)
-    lateinit var employeeRoleSpinner: MaterialSpinner
+    lateinit var employeeRoleSpinner: Spinner
     private lateinit var progressDialog: ProgressDialog
     val mEmployee = Employee()
     private lateinit var pref: SharedPreferences
@@ -76,7 +75,6 @@ class RegistrationActivity : AppCompatActivity() {
             false
         } else {
             employee_id_layout.error = null
-            employee_id_layout.isErrorEnabled = false
             true
         }
     }
@@ -125,14 +123,14 @@ class RegistrationActivity : AppCompatActivity() {
     private fun getValueFromRoleSpinner() {
 
         val employeeRole = resources.getStringArray(R.array.role)
-        employeeRoleSpinner.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, employeeRole)
-        employeeRoleSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                mEmployee.role = "Intern"
+        var adapter = ArrayAdapter<String>(this, R.layout.role_spinner_icon, R.id.gender, employeeRole)
+        employeeRoleSpinner.adapter = adapter
+        employeeRoleSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
+                mEmployee.role = employeeRole[position]
             }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                mEmployee.role = spinner.getItemAtPosition(position).toString()
+            override fun onNothingSelected(adapterView: AdapterView<*>) {
+                //capacity = getString(R.string.select_room_capacity)
             }
         }
     }

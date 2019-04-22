@@ -45,7 +45,6 @@ class BookingActivity : AppCompatActivity() {
     @BindView(R.id.textView_buildingname)
     lateinit var buildingNameTextView: TextView
     private lateinit var mBookingViewModel: BookingViewModel
-    private var names = ArrayList<EmployeeList>()
     private var mBooking = Booking()
     lateinit var progressDialog: ProgressDialog
     private lateinit var acct: GoogleSignInAccount
@@ -81,13 +80,15 @@ class BookingActivity : AppCompatActivity() {
      * function sets a observer which will observe the data from ViewModel
      */
     private fun observerData() {
-
-
+        // positive response from server
         mBookingViewModel.returnSuccessForBooking().observe(this, Observer {
-            Toasty.success(this, getString(R.string.booked_successfully), Toast.LENGTH_SHORT).show()
+            progressDialog.dismiss()
+            Toasty.success(this, getString(R.string.booked_successfully), Toast.LENGTH_SHORT, true).show();
             goToBookingDashboard()
         })
+        // negative response from server
         mBookingViewModel.returnFailureForBooking().observe(this, Observer {
+            progressDialog.dismiss()
             ShowToast.show(this, it)
         })
     }
@@ -128,7 +129,6 @@ class BookingActivity : AppCompatActivity() {
             false
         }else {
             purpose_edit_layout.error = null
-            purpose_edit_layout.isErrorEnabled = false
             true
         }
     }
@@ -169,7 +169,6 @@ class BookingActivity : AppCompatActivity() {
      *  redirect to UserBookingDashboardActivity
      */
     private fun goToBookingDashboard() {
-        Toasty.success(this, getString(R.string.booked_successfully), Toast.LENGTH_SHORT, true).show();
         startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
         finish()
     }

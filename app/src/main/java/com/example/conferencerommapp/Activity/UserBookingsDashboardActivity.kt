@@ -129,6 +129,9 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             R.id.project_manager -> {
                 startActivity(Intent(this@UserBookingsDashboardActivity, ProjectManagerInputActivity::class.java))
             }
+            R.id.hr_add -> {
+                startActivity(Intent(this@UserBookingsDashboardActivity, BuildingDashboard::class.java))
+            }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
@@ -172,11 +175,13 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         if (code != 11) {
             val navMenu = nav_view.menu
             navMenu.findItem(R.id.HR).isVisible = false
+            navMenu.findItem(R.id.hr_add).isVisible = false
         }
         if (code != 12) {
             val navMenu = nav_view.menu
             navMenu.findItem(R.id.project_manager).isVisible = false
         }
+
     }
 
     /**

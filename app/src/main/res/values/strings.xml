@@ -123,9 +123,12 @@
     <string name="empty_building_list">Building List is Empty!</string>
     <string name="registered_successfully">Registered Successfully!</string>
     <string name="select_participipants">Select Participants</string>
+    <string name="room_capacity">Room Capacity</string>
+    <string name="select_room_capacity">Select Room Capacity</string>
 
 
     <string-array name="role">
+        <item>Select Role</item>
         <item>Intern</item>
         <item>SDE-1</item>
         <item>SDE-2</item>
@@ -138,13 +141,15 @@
         <item>COO</item>
     </string-array>
 
-    <string-array name="days">
-        <item>SUNDAY</item>
-        <item>MONDAY</item>
-        <item>TUESDAY</item>
-        <item>WEDNESDAY</item>
-        <item>THURSDAY</item>
-        <item>FRIDAY</item>
-        <item>SATURDAY</item>
+    <string-array name="capacity">
+        <item>"Select Room Capacity"</item>
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>10</item>
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
     </string-array>
 </resources>

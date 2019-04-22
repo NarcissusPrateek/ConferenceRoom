@@ -49,9 +49,10 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
         val purpose : TextView = itemView.findViewById(R.id.block_purpose)
         val fromtime : TextView = itemView.findViewById(R.id.block_from_time)
         val date : TextView= itemView.findViewById(R.id.block_date)
-        val card: CardView = itemView.findViewById(R.id.card_block)
+        val card: CardView = itemView.findViewById(R.id.block_card_view)
         val linearLayout:LinearLayout = itemView.findViewById(R.id.linearlayout_blocked)
         val unblock :Button = itemView.findViewById(R.id.unblock)
+        val layout: LinearLayout = itemView.findViewById(R.id.linearlayout)
         var blocked: Blocked? = null
     }
 
@@ -70,7 +71,6 @@ class BlockedDashboardNew(private val blockedList: List<Blocked>, val mContext: 
         holder.card.setOnClickListener {
             currentPosition = position
             notifyDataSetChanged()
-
         }
         if (currentPosition == position) {
             if (holder.linearLayout.visibility == View.GONE) {

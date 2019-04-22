@@ -18,7 +18,6 @@ import com.example.conferencerommapp.Helper.ShowToast
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.ViewModel.AddConferenceRoomViewModel
 import es.dmoral.toasty.Toasty
-import fr.ganfra.materialspinner.MaterialSpinner
 import kotlinx.android.synthetic.main.activity_adding_conference.*
 
 @Suppress("DEPRECATION")
@@ -27,12 +26,12 @@ class AddingConference : AppCompatActivity() {
     /**
      * Declaring Global variables and butterknife
      */
-    var capacity = ""
+    var capacity = "Select Room Capacity"
     @BindView(R.id.conference_Name)
     lateinit var conferenceRoomEditText: EditText
 
     @BindView(R.id.conference_Capacity)
-    lateinit var capacitySpinner: MaterialSpinner
+    lateinit var capacitySpinner: Spinner
     private lateinit var mAddConferenceRoomViewModel: AddConferenceRoomViewModel
     private var mConferenceRoom = AddConferenceRoom()
     private lateinit var progressDialog: ProgressDialog
@@ -86,18 +85,17 @@ class AddingConference : AppCompatActivity() {
      * function will set the BlockConferenceRoomActivity Value for the capacity
      */
     private fun setSpinnerForCapacity() {
-        val capacitySpinnerOptions = arrayOf(2, 4, 6, 8, 10, 12, 14)
-        capacitySpinner.adapter =
-            ArrayAdapter<Int>(this@AddingConference, android.R.layout.simple_list_item_1, capacitySpinnerOptions) as SpinnerAdapter?
-        capacitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                capacity = "2"
-            }
+        val options = mutableListOf("Select Room Capacity","2", "4", "6", "8", "10", "12", "14", "16")
+        var adapter = ArrayAdapter<String>(this, R.layout.spinner_icon, R.id.gender, options)
+        capacitySpinner.adapter = adapter
 
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                capacity = capacitySpinner.getItemAtPosition(position).toString()
+        capacitySpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
+                capacity = options[position]
             }
-
+            override fun onNothingSelected(adapterView: AdapterView<*>) {
+                capacity = getString(R.string.select_room_capacity)
+            }
         }
     }
 
@@ -124,7 +122,6 @@ class AddingConference : AppCompatActivity() {
             false
         }else {
             room_name_layout_name.error = null
-            room_name_layout_name.isErrorEnabled = false
             true
         }
     }
@@ -133,7 +130,7 @@ class AddingConference : AppCompatActivity() {
      * validation for spinner
      */
     private fun validateSpinner(): Boolean {
-        return if(capacity == getString(R.string.select_capacity)) {
+        return if(capacity == getString(R.string.select_room_capacity)) {
             Toast.makeText(this, getString(R.string.select_capacity), Toast.LENGTH_SHORT).show()
             false
         }else {

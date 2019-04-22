@@ -3,7 +3,6 @@ package com.example.conferencerommapp.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
-import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -19,9 +18,6 @@ import com.example.conferencerommapp.Helper.DateAndTimePicker
 import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
-import es.dmoral.toasty.Toasty
-import fr.ganfra.materialspinner.MaterialSpinner
-import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.android.synthetic.main.activity_user_inputs.*
 
 
@@ -35,10 +31,7 @@ class UserInputActivity : AppCompatActivity() {
     lateinit var fromTimeEditText: EditText
     @BindView(R.id.toTime)
     lateinit var toTimeEditText: EditText
-    @BindView(R.id.spinner2)
-    lateinit var capacitySpinner: MaterialSpinner
-    lateinit var capacity: String
-
+    var capacity = "Select Room Capacity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_inputs)
@@ -47,9 +40,9 @@ class UserInputActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title =
             fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>")
-
         setPickerToEditText()
     }
+
 
     /**
      * function will invoke whenever the button is hit
@@ -90,20 +83,16 @@ class UserInputActivity : AppCompatActivity() {
      * a spinner for selecting room capacity
      */
     private fun setCapacitySpinner() {
+        val options = mutableListOf("Select Room Capacity","2", "4", "6", "8", "10", "12", "14", "16")
+        var adapter = ArrayAdapter<String>(this, R.layout.spinner_icon, R.id.gender, options)
+        capacity_spinner.adapter = adapter
 
-        /**
-         * array of Integers for setting values into the spinner
-         */
-        val options = arrayOf(2, 4, 6, 8, 10, 12, 14, 16)
-
-        capacitySpinner.adapter = ArrayAdapter<Int>(this, android.R.layout.simple_list_item_1, options)
-        capacitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                capacity = "2"
+        capacity_spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
+                capacity = options[position]
             }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                capacity = spinner2.getItemAtPosition(position).toString()
+            override fun onNothingSelected(adapterView: AdapterView<*>) {
+                capacity = getString(R.string.select_room_capacity)
             }
         }
     }
@@ -115,7 +104,6 @@ class UserInputActivity : AppCompatActivity() {
             false
         } else {
             from_time_layout.error = null
-            from_time_layout.isErrorEnabled = false
             true
         }
     }
@@ -127,7 +115,6 @@ class UserInputActivity : AppCompatActivity() {
             false
         } else {
             to_time_layout.error = null
-            to_time_layout.isErrorEnabled = false
             true
         }
     }
@@ -139,7 +126,6 @@ class UserInputActivity : AppCompatActivity() {
             false
         } else {
             date_layout.error = null
-            date_layout.isErrorEnabled = false
             true
         }
     }
@@ -148,7 +134,7 @@ class UserInputActivity : AppCompatActivity() {
      * validation for spinner
      */
     private fun validateSpinner(): Boolean {
-       if(capacity == "Select Capacity") {
+       if(capacity == "Select Room Capacity") {
            Toast.makeText(this, getString(R.string.select_capacity), Toast.LENGTH_SHORT).show()
            return false
        }
@@ -161,10 +147,6 @@ class UserInputActivity : AppCompatActivity() {
     private fun validate(): Boolean {
 
         if (!validateFromTime() or !validateToTime() or !validateDate() or !validateSpinner()) {
-            return false
-        }
-        if (capacity == getString(R.string.select_capacity)) {
-            Toast.makeText(applicationContext, getString(R.string.invalid_capacity), Toast.LENGTH_SHORT).show()
             return false
         }
         return true

@@ -83,7 +83,6 @@ class SignIn : AppCompatActivity() {
      * set aniimation for the login activity
      */
     private fun setAnimationToLayout() {
-
         linearLayoutUp.animation = loadAnimation(this, R.anim.uotodown)
         linearLayoutDown.animation = loadAnimation(this, R.anim.downtoup)
     }
@@ -129,7 +128,6 @@ class SignIn : AppCompatActivity() {
     private fun checkRegistration(email: String) {
         progressDialog.show()
         mCheckRegistrationViewModel.checkRegistration(email)
-
     }
 
     /**
@@ -146,10 +144,12 @@ class SignIn : AppCompatActivity() {
     private fun observeData() {
         //positive response from server
         mCheckRegistrationViewModel.returnSuccessCode().observe(this, Observer {
+            progressDialog.dismiss()
             setValueForSharedPreference(it)
         })
         // Negative response from server
         mCheckRegistrationViewModel.returnFailureCode().observe(this, Observer {
+            progressDialog.dismiss()
             ShowToast.show(this, it)
         })
     }

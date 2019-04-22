@@ -6,15 +6,19 @@
     <group android:checkableBehavior="single">
         <item
                 android:id="@+id/HR"
-                android:icon="@drawable/hr_manager"
-                android:title="HR"/>
+                android:icon="@drawable/block_room"
+                android:title="Block Room"/>
         <item
                 android:id="@+id/project_manager"
-                android:icon="@drawable/manager"
+                android:icon="@drawable/ic_event"
                 android:title="Recurring Meeting"/>
         <item
+                android:id="@+id/hr_add"
+                android:icon="@drawable/add_build"
+                android:title="ADD"/>
+        <item
                 android:id="@+id/logout"
-                android:icon="@drawable/exit1"
+                android:icon="@drawable/ic_logout"
                 android:title="Logout"/>
     </group>
 </menu>
