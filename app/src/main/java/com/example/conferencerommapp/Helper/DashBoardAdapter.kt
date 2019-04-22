@@ -148,6 +148,7 @@ class DashBoardAdapter(
         holder.roomNameTextView.text = dashboardItemList[position].CName
         holder.purposeTextView.text = dashboardItemList[position].Purpose
         holder.showButton.setOnClickListener {
+            Log.i("----------employee",""+dashboardItemList[position])
             setMeetingMembers(position)
         }
     }
