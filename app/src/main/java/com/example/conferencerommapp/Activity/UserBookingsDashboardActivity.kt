@@ -375,7 +375,6 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         val listItems = arrayOfNulls<String>(arrayListOfNames.size)
         arrayListOfNames.toArray(listItems)
         val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.meeting_members))
         builder.setItems(
             listItems
         ) { _, _ -> }

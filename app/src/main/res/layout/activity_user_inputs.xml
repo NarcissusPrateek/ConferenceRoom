@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:focusable="false"
+                android:textColor="@color/textColorGray"
                 android:drawableStart="@drawable/ic_schedule_black_24dp"
                 android:drawablePadding="8dp"
                 android:hint="From-Time"/>
@@ -41,6 +42,7 @@
                 android:layout_marginTop="2dp"
                 android:focusable="false"
                 android:hint="To-Time"
+                android:textColor="@color/textColorGray"
                 android:drawableStart="@drawable/ic_schedule_black_24dp"
                 android:drawablePadding="8dp"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -56,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:focusable="false"
                 android:id="@+id/date"
+                android:textColor="@color/textColorGray"
                 android:layout_marginTop="2dp"
                 android:hint="Date"
                 android:drawableStart="@drawable/ic_today_black_24dp"

@@ -23,7 +23,6 @@
                 android:id="@+id/sign_up_input_layout_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp">
 
             <TextView
@@ -31,11 +30,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:textSize="20dp"
+                    android:textSize="16sp"
                     android:maxLines="1"
                     android:drawableStart="@drawable/ic_room_black_24dp"
                     android:drawablePadding="15dp"
-                    android:textColor="#696969"
+                    android:textColor="@color/textColorGray"
                     android:ellipsize="end"
                     android:paddingRight="80dp"
                     android:hint="Room Name"/>
@@ -63,9 +62,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:textSize="20dp"
+                        android:textSize="16sp"
                         android:hint="Capacity"
-                        android:textColor="#696969"
+                        android:textColor="@color/textColorGray"
                         android:drawableStart="@drawable/ic_group_black_24dp"
                         android:drawablePadding="15dp"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -76,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/status_txv"
                     android:hint="Available"
-                    android:textSize="11dp"
+                    android:textSize="11sp"
                     android:layout_marginTop="10dp"
                     android:textStyle="bold"
                     android:gravity="center"/>

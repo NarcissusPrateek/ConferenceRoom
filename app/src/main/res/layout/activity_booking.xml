@@ -110,14 +110,17 @@
             android:layout_height="wrap_content"
             android:focusable="true"
             android:layout_marginTop="5dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:focusableInTouchMode="true"
             android:background="#FFFFFF"
-            app:errorEnabled="true">
+            app:errorEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:id="@+id/editText_purpose"
                 android:hint="Purpose"
+                android:maxLines="1"
+                android:textColor="@color/textColorGray"
+                android:singleLine="true"
                 android:drawableStart="@drawable/ic_local_offer_black_24dp"
                 android:drawablePadding="16dp"
                 android:layout_height="wrap_content"/>

@@ -36,6 +36,7 @@
                     android:drawableStart="@drawable/ic_room_black_24dp"
                     android:drawablePadding="5dp"
                     android:maxLength="30"
+                    android:textColor="@color/textColorGray"
                     android:hint="@string/room_hint"/>
         </com.google.android.material.textfield.TextInputLayout>
 

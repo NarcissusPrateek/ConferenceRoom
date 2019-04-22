@@ -28,13 +28,12 @@
                 android:ems="10"
                 android:textColor="#696969"
                 android:maxLines="1"
-                android:paddingRight="30dp"
                 android:ellipsize="end"
                 android:drawableStart="@drawable/ic_room_black_24dp"
-                android:drawableLeft="@drawable/ic_room_black_24dp"
-                android:textSize="20dp"
+                android:textSize="16sp"
                 android:drawablePadding="15dp"
                 android:maxLength="30"
+                android:paddingRight="100dp"
                 android:hint="Room Name"/>
         <TextView
                 android:id="@+id/conference_room_capacity_show"
@@ -43,12 +42,10 @@
                 android:ems="10"
                 android:textColor="#696969"
                 android:layout_marginTop="15dp"
-                android:textSize="20dp"
+                android:textSize="16sp"
                 android:layout_marginBottom="3dp"
-                android:inputType="text"
                 android:hint="Capacity"
                 android:drawableStart="@drawable/ic_group_black_24dp"
-                android:drawableLeft="@drawable/ic_group_black_24dp"
                 android:drawablePadding="15dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

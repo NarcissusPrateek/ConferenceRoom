@@ -33,6 +33,7 @@
                     android:drawableStart="@drawable/ic_person_black_24dp"
                     android:drawablePadding="5dp"
                     android:maxLength="20"
+                    android:textColor="@color/textColorGray"
                     android:ellipsize="end"
                     android:hint="Name"/>
 
@@ -52,6 +53,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:maxLines="1"
+                    android:textColor="@color/textColorGray"
                     android:inputType="text"
                     android:drawableStart="@drawable/ic_fingerprint_black_24dp"
                     android:drawablePadding="5dp"
