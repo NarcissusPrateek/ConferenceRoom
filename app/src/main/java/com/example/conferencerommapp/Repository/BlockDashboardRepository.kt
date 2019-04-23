@@ -25,7 +25,7 @@ class BlockDashboardRepository {
     }
 
     fun getBlockedList(listener: ResponseListener) {
-        val blockServices = ServiceBuilder.buildService(ConferenceService::class.java)
+        val blockServices  = ServiceBuilder.getObject()
         val requestCall: Call<List<Blocked>> = blockServices.getBlockedConference()
         requestCall.enqueue(object : Callback<List<Blocked>> {
             override fun onFailure(call: Call<List<Blocked>>, t: Throwable) {

@@ -12,8 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
-import com.example.conferencerommapp.Helper.GetProgress
-import com.example.conferencerommapp.Helper.ShowToast
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.RegistrationActivity
 import com.example.conferencerommapp.SignIn
@@ -30,13 +29,11 @@ class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
         init()
         observeData()
         val logoHandler = Handler()
         val logoRunnable = Runnable {
             val account = GoogleSignIn.getLastSignedInAccount(this)
-            prefs = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
             if (account != null) {
                 checkRegistration(account.email.toString())
             } else {
@@ -51,7 +48,7 @@ class SplashScreen : AppCompatActivity() {
      */
     private fun checkRegistration(email: String) {
         progressDialog.show()
-        mCheckRegistrationViewModel.checkRegistration(email)
+        mCheckRegistrationViewModel.checkRegistration(email, this)
     }
 
     /**
@@ -59,6 +56,7 @@ class SplashScreen : AppCompatActivity() {
      */
     fun init() {
         progressDialog =  GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        prefs = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
         mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
     }
 
@@ -69,8 +67,12 @@ class SplashScreen : AppCompatActivity() {
         })
         mCheckRegistrationViewModel.returnFailureCode().observe(this, Observer {
             progressDialog.dismiss()
-            ShowToast.show(this, it)
-            finish()
+            if(it == getString(R.string.invalid_token)) {
+                signIn()
+            }else {
+                ShowToast.show(this, it)
+                finish()
+            }
         })
     }
     /**

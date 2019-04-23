@@ -115,6 +115,10 @@ dependencies {
 
     implementation 'com.github.chivorns:smartmaterialspinner:1.0.4'
 
+
+    // custom alert dialog
+    implementation 'com.yarolegovich:lovely-dialog:1.1.0'
+
 /**
  *
  androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'

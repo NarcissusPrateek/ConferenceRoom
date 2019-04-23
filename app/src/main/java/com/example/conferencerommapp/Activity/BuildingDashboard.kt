@@ -14,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.example.conferencerommapp.Helper.BuildingAdapter
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
 
 class BuildingDashboard : AppCompatActivity() {
@@ -95,6 +94,12 @@ class BuildingDashboard : AppCompatActivity() {
         })
         mBuildingsViewModel.returnMBuildingFailure().observe(this, Observer {
             mProgressDialog.dismiss()
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+                finish()
+            }
             //some message goes here
         })
     }
@@ -106,5 +111,30 @@ class BuildingDashboard : AppCompatActivity() {
         mProgressDialog.show()
         // making API call
         mBuildingsViewModel.getBuildingList()
+    }
+
+    /**
+     * show dialog for session expired
+     */
+    private fun showAlert() {
+        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+                getString(R.string.session_expired_messgae))
+        dialog.setPositiveButton(R.string.ok) { _, _ ->
+            signOut()
+        }
+        var builder = GetAleretDialog.showDialog(dialog)
+        ColorOfDialogButton.setColorOfDialogButton(builder)
+    }
+
+    /**
+     * sign out from application
+     */
+    private fun signOut() {
+        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient!!.signOut()
+            .addOnCompleteListener(this) {
+                startActivity(Intent(applicationContext, SignIn::class.java))
+                finish()
+            }
     }
 }

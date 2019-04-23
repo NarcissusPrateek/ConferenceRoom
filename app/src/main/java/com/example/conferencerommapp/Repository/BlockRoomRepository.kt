@@ -35,7 +35,7 @@ class BlockRoomRepository {
         /**
          * make API call usnig retrofit
          */
-        val blockRoomApi = ServiceBuilder.buildService(ConferenceService::class.java)
+        val blockRoomApi = ServiceBuilder.getObject()
         val requestCall: Call<ResponseBody> = blockRoomApi.blockconference(mRoom)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

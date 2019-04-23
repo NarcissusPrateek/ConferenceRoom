@@ -21,7 +21,6 @@
                 android:id="@+id/fromTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:focusable="false"
                 android:textColor="@color/textColorGray"
                 android:drawableStart="@drawable/ic_schedule_black_24dp"
@@ -33,13 +32,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:layout_marginTop="8dp"
             app:errorEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <EditText
                 android:id="@+id/toTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:focusable="false"
                 android:hint="To-Time"
                 android:textColor="@color/textColorGray"
@@ -51,6 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:layout_marginTop="8dp"
             app:errorEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <EditText
@@ -59,7 +59,6 @@
                 android:focusable="false"
                 android:id="@+id/date"
                 android:textColor="@color/textColorGray"
-                android:layout_marginTop="2dp"
                 android:hint="Date"
                 android:drawableStart="@drawable/ic_today_black_24dp"
                 android:drawablePadding="8dp"/>
@@ -72,9 +71,19 @@
             android:layout_height="wrap_content"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
+            android:textAlignment="center"
             android:drawablePadding="5dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/spinner_rect"/>
+    <TextView
+            android:id="@+id/error_spinner_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ba160c"
+            android:visibility="gone"
+            android:layout_marginStart="11dp"
+            android:textSize="12sp"
+            android:text="Field can't be empty"/>
 
     <Button
             android:id="@+id/next"
@@ -82,7 +91,7 @@
             android:layout_height="wrap_content"
             android:text="NEXT"
             android:background="@color/colorPrimary"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="52dp"
             android:textColor="@android:color/white"/>
 </LinearLayout>
 

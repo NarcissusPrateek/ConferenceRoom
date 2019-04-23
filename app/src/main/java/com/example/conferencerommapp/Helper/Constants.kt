@@ -1,10 +1,13 @@
 package com.example.conferencerommapp.Helper
 
+import android.content.SharedPreferences
+
 class Constants {
     /**
      * it will provides some static final constants
      */
     companion object {
+
 
         /**
          * to check the status of user whether registered or not
@@ -29,7 +32,7 @@ class Constants {
         /**
          * ip address for api call
          */
-        var IP_ADDRESS = "http://192.168.1.195/CRB/"
+        var IP_ADDRESS = "http://192.168.1.197/CRB/"
 
         const val INTERNAL_SERVER_ERROR = 555
 

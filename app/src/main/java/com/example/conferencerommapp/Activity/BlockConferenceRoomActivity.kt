@@ -2,6 +2,7 @@ package com.example.conferencerommapp.Activity
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
 import android.view.View
@@ -16,13 +17,11 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.BuildingConference
-import com.example.conferencerommapp.Helper.ConvertTimeInMillis
-import com.example.conferencerommapp.Helper.DateAndTimePicker
-import com.example.conferencerommapp.Helper.GetProgress
-import com.example.conferencerommapp.Helper.ShowToast
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.Model.BlockRoom
 import com.example.conferencerommapp.Model.Building
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.BlockRoomViewModel
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -52,8 +51,6 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Block) + "</font>")
         ButterKnife.bind(this)
-
-
         init()
         observeData()
         setDialogsToInputFields()
@@ -73,7 +70,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         mBuildingViewModel.returnMBuildingSuccess().observe(this, Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
-
+                Toast.makeText(this, getString(R.string.empty_building_list),Toast.LENGTH_SHORT).show()
             } else {
                 buildingListFromBackend(it)
             }
@@ -81,7 +78,12 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
         mBuildingViewModel.returnMBuildingFailure().observe(this, Observer {
             progressDialog.dismiss()
-            // some message according to the error code from backend
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+                finish()
+            }
         })
 
         // observer for Block room
@@ -94,7 +96,11 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
         mBlockRoomViewModel.returnResponseErrorForBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
-            ShowToast.show(this, it)
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            } else {
+                ShowToast.show(this, it)
+            }
         })
 
         // observer for block confirmation
@@ -113,14 +119,25 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
                 builder.setPositiveButton(getString(R.string.ok_label)) { _, _ ->
                     blockConfirmed(room)
                 }
+                builder.setNegativeButton(getString(R.string.no)) {_, _ ->
+                    /**
+                     * do nothing
+                     */
+                }
+                builder.setCancelable(false)
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
+                ColorOfDialogButton.setColorOfDialogButton(dialog)
             }
         })
 
         mBlockRoomViewModel.returnResponseErrorForConfirmation().observe(this, Observer {
             progressDialog.dismiss()
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            } else {
+                ShowToast.show(this, it)
+            }
         })
 
         // observer for conference room list
@@ -128,12 +145,15 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         mBlockRoomViewModel.returnConferenceRoomList().observe(this, Observer {
             progressDialog.dismiss()
             setSpinnerToConferenceList(it)
-
         })
 
         mBlockRoomViewModel.returnResponseErrorForConferenceRoom().observe(this, Observer {
             progressDialog.dismiss()
-            // some message according to the error code from backend
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            } else {
+                ShowToast.show(this, it)
+            }
         })
 
     }
@@ -207,7 +227,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             itemsId.add(item.buildingId!!.toInt())
         }
         buiding_Spinner.adapter =
-            ArrayAdapter<String>(this@BlockConferenceRoomActivity, R.layout.spinner_icon, R.id.gender, items)
+            ArrayAdapter<String>(this@BlockConferenceRoomActivity, R.layout.spinner_icon, R.id.spinner_text, items)
         buiding_Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 /**
@@ -243,7 +263,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             conferenceid.add(item.roomId)
         }
         conference_Spinner.adapter =
-            ArrayAdapter<String>(this@BlockConferenceRoomActivity, R.layout.spinner_icon, R.id.gender, conferencename)
+            ArrayAdapter<String>(this@BlockConferenceRoomActivity, R.layout.spinner_icon, R.id.spinner_text, conferencename)
         conference_Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 /**
@@ -397,5 +417,30 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     private fun blockRoom() {
         addDataToObject()
         blocking(room)
+    }
+
+    /**
+     * show dialog for session expired
+     */
+    private fun showAlert() {
+        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+                getString(R.string.session_expired_messgae))
+        dialog.setPositiveButton(R.string.ok) { _, _ ->
+            signOut()
+        }
+        var builder = GetAleretDialog.showDialog(dialog)
+        ColorOfDialogButton.setColorOfDialogButton(builder)
+    }
+
+    /**
+     * sign out from application
+     */
+    private fun signOut() {
+        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient!!.signOut()
+            .addOnCompleteListener(this) {
+                startActivity(Intent(applicationContext, SignIn::class.java))
+                finish()
+            }
     }
 }

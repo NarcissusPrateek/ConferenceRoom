@@ -1,6 +1,8 @@
 package com.example.conferencerommapp.Activity
 
 import android.app.ProgressDialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Html
 import android.view.View
@@ -12,10 +14,9 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.AddConferenceRoom
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
-import com.example.conferencerommapp.Helper.ShowToast
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.AddConferenceRoomViewModel
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_adding_conference.*
@@ -86,7 +87,7 @@ class AddingConference : AppCompatActivity() {
      */
     private fun setSpinnerForCapacity() {
         val options = mutableListOf("Select Room Capacity","2", "4", "6", "8", "10", "12", "14", "16")
-        var adapter = ArrayAdapter<String>(this, R.layout.spinner_icon, R.id.gender, options)
+        var adapter = ArrayAdapter<String>(this, R.layout.spinner_icon, R.id.spinner_text, options)
         capacitySpinner.adapter = adapter
 
         capacitySpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
@@ -155,5 +156,30 @@ class AddingConference : AppCompatActivity() {
         progressDialog.show()
         mAddConferenceRoomViewModel.addConferenceDetails(mConferenceRoom)
 
+    }
+
+    /**
+     * show dialog for session expired
+     */
+    private fun showAlert() {
+        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+                getString(R.string.session_expired_messgae))
+        dialog.setPositiveButton(R.string.ok) { _, _ ->
+            signOut()
+        }
+        var builder = GetAleretDialog.showDialog(dialog)
+        ColorOfDialogButton.setColorOfDialogButton(builder)
+    }
+
+    /**
+     * sign out from application
+     */
+    private fun signOut() {
+        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient!!.signOut()
+            .addOnCompleteListener(this) {
+                startActivity(Intent(applicationContext, SignIn::class.java))
+                finish()
+            }
     }
 }

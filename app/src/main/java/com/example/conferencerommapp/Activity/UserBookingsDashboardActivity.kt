@@ -46,17 +46,28 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     private lateinit var mBookingDashBoardViewModel: BookingDashboardViewModel
     private lateinit var acct: GoogleSignInAccount
     private lateinit var progressDialog: ProgressDialog
+    lateinit var contextOfApplication: Context
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         ButterKnife.bind(this)
+        init()
         setNavigationViewItem()
-        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
-        acct = GoogleSignIn.getLastSignedInAccount(application)!!
-        mBookingDashBoardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
         loadDashboard()
         observeData()
     }
+
+    fun init() {
+        contextOfApplication = applicationContext
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        acct = GoogleSignIn.getLastSignedInAccount(application)!!
+        mBookingDashBoardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
+    }
+
+    fun getContextOfApplicationFromActivity(): Context {
+        return contextOfApplication
+    }
+
 
     /**
      * all observer for LiveData
@@ -74,22 +85,23 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
 
         mBookingDashBoardViewModel.returnCancelFailed().observe(this, Observer {
             progressDialog.dismiss()
-            ShowToast.show(this, it)
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+            }
         })
         /**
          * observing data for booking list
          */
         mBookingDashBoardViewModel.returnSuccess().observe(this, Observer {
             progressDialog.dismiss()
-
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
                 //Glide.with(this).load(R.drawable.yoga_lady_croped).into(empty_view)
                 dashBord_recyclerView1.visibility = View.GONE
                 r1_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
-            }
-
-            else {
+            } else {
                 empty_view.visibility = View.GONE
                 //textView_no_events.visibility = View.GONE
                 dashBord_recyclerView1.visibility = View.VISIBLE
@@ -98,7 +110,11 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         })
         mBookingDashBoardViewModel.returnFailure().observe(this, Observer {
             progressDialog.dismiss()
-            ShowToast.show(this, it)
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+            }
         })
     }
 
@@ -289,7 +305,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         builder.setTitle(getString(R.string.dates_of_meeting))
         builder.setItems(listItems) { _, which ->
             if (finalList[position].Status[which] == "Cancelled") {
-                Toasty.info(this, getString(R.string.cancelled_by_hr),Toast.LENGTH_SHORT, true).show()
+                Toasty.info(this, getString(R.string.cancelled_by_hr), Toast.LENGTH_SHORT, true).show()
             } else {
                 val builder = GetAleretDialog.getDialog(
                     this,
@@ -312,7 +328,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 //Setting the Uodate Options
                 builder.setNeutralButton("Update") { _, _ ->
 
-                  updateRecurringBookings(finalList,position)
+                    updateRecurringBookings(finalList, position)
                 }
                 val dialog: AlertDialog = builder.create()
                 dialog.setCancelable(false)
@@ -338,8 +354,8 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         mGetIntentDataFromActvity.fromTime = finalList[position].FromTime
         mGetIntentDataFromActvity.toTime = finalList[position].ToTime
         mGetIntentDataFromActvity.cCMail = finalList[position].cCMail
-        val updateBookingActivityButton =Intent(this,UpdateBookingActivity::class.java)
-        updateBookingActivityButton.putExtra(Constants.EXTRA_INTENT_DATA,mGetIntentDataFromActvity)
+        val updateBookingActivityButton = Intent(this, UpdateBookingActivity::class.java)
+        updateBookingActivityButton.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
         startActivity(updateBookingActivityButton)
     }
 
@@ -438,6 +454,21 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 finish()
             }
     }
+
+    /**
+     * show dialog for session expired
+     */
+    private fun showAlert() {
+        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+                getString(R.string.session_expired_messgae))
+        dialog.setPositiveButton(R.string.ok) { _, _ ->
+            signOut()
+        }
+        var builder = GetAleretDialog.showDialog(dialog)
+        ColorOfDialogButton.setColorOfDialogButton(builder)
+    }
+
+
 }
 
 

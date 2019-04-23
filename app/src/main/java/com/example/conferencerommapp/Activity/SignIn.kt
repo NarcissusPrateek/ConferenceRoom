@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.animation.AnimationUtils.loadAnimation
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -49,7 +48,7 @@ class SignIn : AppCompatActivity() {
 
     @OnClick(R.id.sign_in_button)
     fun signIn() {
-        startintentToGoogle()
+        startIntentToGoogleSignIn()
     }
 
     /**
@@ -64,7 +63,7 @@ class SignIn : AppCompatActivity() {
     /**
      * function will starts a explict intent for the google sign in
      */
-    private fun startintentToGoogle() {
+    private fun startIntentToGoogleSignIn() {
         val signInIntent = mGoogleSignInClient!!.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
@@ -75,6 +74,7 @@ class SignIn : AppCompatActivity() {
     private fun initializeGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
+            .requestIdToken(getString(R.string.server_client_id))
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
@@ -106,11 +106,22 @@ class SignIn : AppCompatActivity() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
+            Log.i("-----------id", account!!.id)
+            saveTokenAndUserIdInSharedPreference(account.idToken, account.id)
             checkRegistration(account!!.email.toString())
         } catch (e: ApiException) {
             Log.w("Google Sign In Error", "signInResult:failed code=" + e.statusCode)
         }
 
+    }
+
+    private fun saveTokenAndUserIdInSharedPreference(idToken: String?, userId: String?) {
+        Log.i("----------token",idToken)
+        Log.i("----------userId",userId)
+        val editor = prefs.edit()
+        editor.putString("Token", idToken)
+        editor.putString("UserId", userId)
+        editor.apply()
     }
 
     /**
@@ -127,7 +138,7 @@ class SignIn : AppCompatActivity() {
      */
     private fun checkRegistration(email: String) {
         progressDialog.show()
-        mCheckRegistrationViewModel.checkRegistration(email)
+        mCheckRegistrationViewModel.checkRegistration(email, this)
     }
 
     /**

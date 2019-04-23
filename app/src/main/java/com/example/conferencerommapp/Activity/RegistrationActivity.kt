@@ -15,9 +15,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Activity.UserBookingsDashboardActivity
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
-import com.example.conferencerommapp.Helper.ShowToast
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.Model.Employee
 import com.example.conferencerommapp.ViewModel.RegistrationViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -123,7 +121,7 @@ class RegistrationActivity : AppCompatActivity() {
     private fun getValueFromRoleSpinner() {
 
         val employeeRole = resources.getStringArray(R.array.role)
-        var adapter = ArrayAdapter<String>(this, R.layout.role_spinner_icon, R.id.gender, employeeRole)
+        var adapter = ArrayAdapter<String>(this, R.layout.role_spinner_icon, R.id.spinner_text, employeeRole)
         employeeRoleSpinner.adapter = adapter
         employeeRoleSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -162,21 +160,6 @@ class RegistrationActivity : AppCompatActivity() {
     }
 
     /**
-     * to signout from the application
-     */
-    private fun signOut() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(this@RegistrationActivity, gso)
-        mGoogleSignInClient!!.signOut()
-            .addOnCompleteListener(this) {
-                startActivity(Intent(applicationContext, SignIn::class.java))
-                finish()
-            }
-    }
-
-    /**
      * this function will call some other viewmodel function which will make a request to backend for adding the employee
      */
     private fun addEmployee() {
@@ -196,7 +179,11 @@ class RegistrationActivity : AppCompatActivity() {
         })
         mRegistrationViewModel.returnFailureForRegistration().observe(this, Observer {
             progressDialog.dismiss()
-            ShowToast.show(this, it)
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+            }
         })
     }
 
@@ -215,5 +202,31 @@ class RegistrationActivity : AppCompatActivity() {
         val editor = pref.edit()
         editor.putInt(Constants.EXTRA_REGISTERED, 1)
         editor.apply()
+    }
+
+
+    /**
+     * show dialog for session expired
+     */
+    private fun showAlert() {
+        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+                getString(R.string.session_expired_messgae))
+        dialog.setPositiveButton(R.string.ok) { _, _ ->
+            signOut()
+        }
+        var builder = GetAleretDialog.showDialog(dialog)
+        ColorOfDialogButton.setColorOfDialogButton(builder)
+    }
+
+    /**
+     * sign out from application
+     */
+    private fun signOut() {
+        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient!!.signOut()
+            .addOnCompleteListener(this) {
+                startActivity(Intent(applicationContext, SignIn::class.java))
+                finish()
+            }
     }
 }

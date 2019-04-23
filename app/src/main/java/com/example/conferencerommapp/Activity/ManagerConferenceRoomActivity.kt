@@ -12,14 +12,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.example.conferencerommapp.Helper.ConferenceRoomAdapter
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.GetProgress
-import com.example.conferencerommapp.Helper.ShowToast
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.Model.ConferenceRoom
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.ManagerConference
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.ManagerConferenceRoomViewModel
 import es.dmoral.toasty.Toasty
 
@@ -95,8 +93,12 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
         })
         mManagerConferenceRoomViewModel.returnFailure().observe(this, Observer {
             progressDialog.dismiss()
-            ShowToast.show(this, it)
-            finish()
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+                finish()
+            }
         })
     }
 
@@ -147,6 +149,31 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
         input.toTime = mGetIntentDataFromActvity.toTimeList
         input.buildingId = mGetIntentDataFromActvity.buildingId!!.toInt()
         return input
+    }
+
+    /**
+     * show dialog for session expired
+     */
+    private fun showAlert() {
+        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+                getString(R.string.session_expired_messgae))
+        dialog.setPositiveButton(R.string.ok) { _, _ ->
+            signOut()
+        }
+        var builder = GetAleretDialog.showDialog(dialog)
+        ColorOfDialogButton.setColorOfDialogButton(builder)
+    }
+
+    /**
+     * sign out from application
+     */
+    private fun signOut() {
+        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient!!.signOut()
+            .addOnCompleteListener(this) {
+                startActivity(Intent(applicationContext, SignIn::class.java))
+                finish()
+            }
     }
 }
 

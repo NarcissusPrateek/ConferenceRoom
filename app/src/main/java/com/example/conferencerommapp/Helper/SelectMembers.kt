@@ -43,6 +43,7 @@ class SelectMembers(private var mEmployeeList: List<EmployeeList>, var listener:
 
 
         holder.nameTextView.text = mEmployeeList[position].name
+        holder.emailTextView.text = mEmployeeList[position].email
         /**
          * call the interface method on click of item in recyclerview
          */
@@ -55,6 +56,7 @@ class SelectMembers(private var mEmployeeList: List<EmployeeList>, var listener:
 
     class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.add_member_checkbox)
+        val emailTextView: TextView = itemView.findViewById(R.id.add_member_email)
 
     }
 

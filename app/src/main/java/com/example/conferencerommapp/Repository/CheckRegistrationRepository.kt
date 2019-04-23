@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Repository
 
+import android.content.Context
 import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.globofly.services.ServiceBuilder
@@ -28,11 +29,11 @@ class CheckRegistrationRepository {
     /**
      * function will initialize the MutableLivedata Object and than call a function for api call
      */
-    fun checkRegistration(mEmail: String, listener: ResponseListener)  {
+    fun checkRegistration(mEmail: String, listener: ResponseListener, mContext: Context)  {
         /**
          * api call using retrofit
          */
-        val service = ServiceBuilder.getObject()
+        val service = ServiceBuilder.getObjectWithContext(mContext)
         val requestCall: Call<Int> = service.getRequestCode(mEmail)
         requestCall.enqueue(object : Callback<Int> {
             override fun onFailure(call: Call<Int>, t: Throwable) {

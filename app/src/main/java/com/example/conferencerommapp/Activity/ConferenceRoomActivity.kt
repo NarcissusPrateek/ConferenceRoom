@@ -15,6 +15,7 @@ import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.Model.FetchConferenceRoom
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.ConferenceRoomViewModel
 import es.dmoral.toasty.Toasty
 
@@ -97,8 +98,12 @@ class ConferenceRoomActivity : AppCompatActivity() {
         // Negative response
         mConferenceRoomViewModel.returnFailure().observe(this, Observer {
             progressDialog.dismiss()
-            ShowToast.show(this, it)
-            finish()
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            } else {
+                ShowToast.show(this, it)
+                finish()
+            }
         })
     }
 
@@ -142,5 +147,30 @@ class ConferenceRoomActivity : AppCompatActivity() {
             finish()
         }
         GetAleretDialog.showDialog(mDialog)
+    }
+
+    /**
+     * show dialog for session expired
+     */
+    private fun showAlert() {
+        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+                getString(R.string.session_expired_messgae))
+        dialog.setPositiveButton(R.string.ok) { _, _ ->
+            signOut()
+        }
+        var builder = GetAleretDialog.showDialog(dialog)
+        ColorOfDialogButton.setColorOfDialogButton(builder)
+    }
+
+    /**
+     * sign out from application
+     */
+    private fun signOut() {
+        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient!!.signOut()
+            .addOnCompleteListener(this) {
+                startActivity(Intent(applicationContext, SignIn::class.java))
+                finish()
+            }
     }
 }
