@@ -184,7 +184,6 @@ class UpdateBookingActivity : AppCompatActivity() {
                 showAlert()
             }else {
                 ShowToast.show(this, it)
-                finish()
             }
         })
     }

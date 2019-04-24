@@ -326,7 +326,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                     ).toUpperCase()
                 )
             ) {
-                //dataList.add(simpleDateFormat.format(c1.time).toString())
+                dataList.add(simpleDateFormat.format(c1.time).toString())
             }
             getLists(start, end)
         } catch (e: Exception) {
