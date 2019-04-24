@@ -23,9 +23,9 @@ open class AddBuildingViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and assign values to the live data objects
      */
-    fun addBuildingDetails(mAddBuilding: AddBuilding) {
+    fun addBuildingDetails(mAddBuilding: AddBuilding,userId: String, token: String) {
         mAddBuildingRepository = AddBuildingRepository.getInstance()
-        mAddBuildingRepository!!.addBuildingDetails(mAddBuilding, object : ResponseListener {
+        mAddBuildingRepository!!.addBuildingDetails(mAddBuilding, userId, token, object : ResponseListener {
             override fun onFailure(failure: String) {
                 mFailureForAddBuilding.value = failure
             }

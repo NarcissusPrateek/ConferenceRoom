@@ -22,10 +22,12 @@ class ManagerConferenceRoomViewModel : ViewModel() {
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
      */
-    fun getConferenceRoomList(mRoom: ManagerConference) {
+    fun getConferenceRoomList(mRoom: ManagerConference, userId: String, token: String) {
         mManagerConferenceRoomRepository = ManagerConferenceRoomRepository.getInstance()
         mManagerConferenceRoomRepository!!.getConferenceRoomList(
             mRoom,
+            userId,
+            token,
             object : ResponseListener {
                 override fun onSuccess(success: Any) {
                     mConferenceRoomList.value = success as List<ConferenceRoom>

@@ -24,9 +24,9 @@ class BlockDashboardRepository {
         }
     }
 
-    fun getBlockedList(listener: ResponseListener) {
+    fun getBlockedList(userId: String, token: String, listener: ResponseListener) {
         val blockServices  = ServiceBuilder.getObject()
-        val requestCall: Call<List<Blocked>> = blockServices.getBlockedConference()
+        val requestCall: Call<List<Blocked>> = blockServices.getBlockedConference(token, userId)
         requestCall.enqueue(object : Callback<List<Blocked>> {
             override fun onFailure(call: Call<List<Blocked>>, t: Throwable) {
                 listener.onFailure("Internal Server Code!")
@@ -45,9 +45,9 @@ class BlockDashboardRepository {
     /**
      * make request to server for unblock room
      */
-    fun unblockRoom(mRoom: Unblock, listener: ResponseListener) {
+    fun unblockRoom(mRoom: Unblock,userId: String, token: String,  listener: ResponseListener) {
         val unBlockApi = ServiceBuilder.buildService(ConferenceService::class.java)
-        val requestCall: Call<ResponseBody> = unBlockApi.unBlockingConferenceRoom(mRoom)
+        val requestCall: Call<ResponseBody> = unBlockApi.unBlockingConferenceRoom(token, userId, mRoom)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")

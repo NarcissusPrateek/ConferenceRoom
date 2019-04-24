@@ -21,12 +21,12 @@ class HrConferenceRoomRepository {
         }
     }
 
-    fun getConferenceRoomList(buildingId: Int, listener: ResponseListener) {
+    fun getConferenceRoomList(buildingId: Int,userId: String, token: String,  listener: ResponseListener) {
         /**
          * api call using retorfit
          */
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<List<ConferenceList>> = service.conferencelist(buildingId)
+        val requestCall: Call<List<ConferenceList>> = service.conferencelist(token, userId, buildingId)
         requestCall.enqueue(object : Callback<List<ConferenceList>> {
             override fun onFailure(call: Call<List<ConferenceList>>, t: Throwable) {
                 listener.onFailure("Internal Server Code!")

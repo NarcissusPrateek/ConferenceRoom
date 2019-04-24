@@ -48,7 +48,7 @@ class SplashScreen : AppCompatActivity() {
      */
     private fun checkRegistration(email: String) {
         progressDialog.show()
-        mCheckRegistrationViewModel.checkRegistration(email, this)
+        mCheckRegistrationViewModel.checkRegistration(email, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -118,6 +118,16 @@ class SplashScreen : AppCompatActivity() {
         editor.putInt("Code", status)
         editor.apply()
         goToNextActivity(status)
+    }
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }
 

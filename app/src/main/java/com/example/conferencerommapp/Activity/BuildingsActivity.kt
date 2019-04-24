@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Activity
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
@@ -16,7 +17,6 @@ import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
-import com.yarolegovich.lovelydialog.LovelyInfoDialog
 import es.dmoral.toasty.Toasty
 
 @Suppress("DEPRECATION")
@@ -34,13 +34,9 @@ class BuildingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_building_list)
         ButterKnife.bind(this)
-
-        val actionBar = supportActionBar
-        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>")
         init()
         observerData()
         getViewModel()
-
     }
 
     /**
@@ -126,10 +122,12 @@ class BuildingsActivity : AppCompatActivity() {
     private fun getViewModel() {
         progressDialog.show()
         // make api call
-        mBuildingsViewModel.getBuildingList()
+        mBuildingsViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
     fun init() {
+        val actionBar = supportActionBar
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>")
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         mBuildingsViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
     }
@@ -139,7 +137,7 @@ class BuildingsActivity : AppCompatActivity() {
      */
     override fun onRestart() {
         super.onRestart()
-        mBuildingsViewModel.getBuildingList()
+        mBuildingsViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -149,5 +147,16 @@ class BuildingsActivity : AppCompatActivity() {
         val intent = Intent(this@BuildingsActivity, ConferenceRoomActivity::class.java)
         intent.putExtra(Constants.EXTRA_INTENT_DATA, mIntentDataFromActivity)
         startActivity(intent)
+    }
+
+    /**
+     * get token and userId from local storage
+     */
+    fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

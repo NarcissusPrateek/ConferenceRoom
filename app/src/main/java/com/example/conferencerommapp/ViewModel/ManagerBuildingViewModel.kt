@@ -22,9 +22,9 @@ class ManagerBuildingViewModel : ViewModel() {
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
      */
-    fun getBuildingList() {
+    fun getBuildingList(userId: String, token: String) {
         mBuildingsRepository = BuildingsRepository.getInstance()
-        mBuildingsRepository!!.getBuildingList(object: ResponseListener {
+        mBuildingsRepository!!.getBuildingList(userId, token, object: ResponseListener {
             override fun onSuccess(success: Any) {
               mBuildingList.value = success as List<Building>
             }

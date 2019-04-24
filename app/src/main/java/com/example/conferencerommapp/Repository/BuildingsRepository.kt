@@ -4,6 +4,7 @@ import com.example.conferencerommapp.Helper.Constants
 import com.example.conferencerommapp.Helper.ResponseListener
 import com.example.conferencerommapp.Model.Building
 import com.example.globofly.services.ServiceBuilder
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,9 +32,9 @@ class BuildingsRepository {
      * if the response is positive than we will call onSuccess method with response data from server
      * for negative response, we will call onFailure method with response code from server
      */
-    fun getBuildingList(listener: ResponseListener) {
+    fun getBuildingList(userId: String, token: String, listener: ResponseListener) {
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<List<Building>> = service.getBuildingList()
+        val requestCall: Call<List<Building>> = service.getBuildingList(token, userId)
         requestCall.enqueue(object : Callback<List<Building>> {
             override fun onFailure(call: Call<List<Building>>, t: Throwable) {
                 /**

@@ -2,6 +2,7 @@ package com.example.conferencerommapp.Activity
 
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
@@ -70,7 +71,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         mBuildingViewModel.returnMBuildingSuccess().observe(this, Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
-                Toast.makeText(this, getString(R.string.empty_building_list),Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.empty_building_list), Toast.LENGTH_SHORT).show()
             } else {
                 buildingListFromBackend(it)
             }
@@ -78,9 +79,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
         mBuildingViewModel.returnMBuildingFailure().observe(this, Observer {
             progressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
+            if (it == getString(R.string.invalid_token)) {
                 showAlert()
-            }else {
+            } else {
                 ShowToast.show(this, it)
                 finish()
             }
@@ -96,7 +97,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
         mBlockRoomViewModel.returnResponseErrorForBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
+            if (it == getString(R.string.invalid_token)) {
                 showAlert()
             } else {
                 ShowToast.show(this, it)
@@ -119,7 +120,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
                 builder.setPositiveButton(getString(R.string.ok_label)) { _, _ ->
                     blockConfirmed(room)
                 }
-                builder.setNegativeButton(getString(R.string.no)) {_, _ ->
+                builder.setNegativeButton(getString(R.string.no)) { _, _ ->
                     /**
                      * do nothing
                      */
@@ -133,7 +134,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
         mBlockRoomViewModel.returnResponseErrorForConfirmation().observe(this, Observer {
             progressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
+            if (it == getString(R.string.invalid_token)) {
                 showAlert()
             } else {
                 ShowToast.show(this, it)
@@ -149,7 +150,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
         mBlockRoomViewModel.returnResponseErrorForConferenceRoom().observe(this, Observer {
             progressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
+            if (it == getString(R.string.invalid_token)) {
                 showAlert()
             } else {
                 ShowToast.show(this, it)
@@ -196,17 +197,17 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         progressDialog.show()
 
         // make api call
-        mBuildingViewModel.getBuildingList()
+        mBuildingViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
     private fun blocking(room: BlockRoom) {
         progressDialog.show()
-        mBlockRoomViewModel.blockingStatus(room)
+        mBlockRoomViewModel.blockingStatus(room, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     private fun blockConfirmed(mRoom: BlockRoom) {
         progressDialog.show()
-        mBlockRoomViewModel.blockRoom(mRoom)
+        mBlockRoomViewModel.blockRoom(mRoom, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     private fun buildingListFromBackend(it: List<Building>) {
@@ -245,7 +246,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
     fun conferenceRoomListFromBackend(buildingId: Int) {
         progressDialog.show()
-        mBlockRoomViewModel.getRoomList(buildingId)
+        mBlockRoomViewModel.getRoomList(buildingId, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     private fun setSpinnerToConferenceList(it: List<BuildingConference>) {
@@ -263,7 +264,12 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             conferenceid.add(item.roomId)
         }
         conference_Spinner.adapter =
-            ArrayAdapter<String>(this@BlockConferenceRoomActivity, R.layout.spinner_icon, R.id.spinner_text, conferencename)
+            ArrayAdapter<String>(
+                this@BlockConferenceRoomActivity,
+                R.layout.spinner_icon,
+                R.id.spinner_text,
+                conferencename
+            )
         conference_Spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 /**
@@ -423,8 +429,10 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
-                getString(R.string.session_expired_messgae))
+        var dialog = GetAleretDialog.getDialog(
+            this, getString(R.string.session_expired), "Your session is expired!\n" +
+                    getString(R.string.session_expired_messgae)
+        )
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
@@ -442,5 +450,15 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

@@ -1,85 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        tools:context=".RegistrationActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sign_up_input_layout_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textView_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="none"
+                android:maxLines="1"
+                android:drawableStart="@drawable/ic_person_black_24dp"
+                android:drawablePadding="5dp"
+                android:maxLength="20"
+                android:textColor="@color/textColorGray"
+                android:ellipsize="end"
+                android:hint="Name"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/employee_id_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:background="@color/white"
+            app:errorEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edittext_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:maxLines="1"
+                android:textColor="@color/textColorGray"
+                android:inputType="text"
+                android:drawableStart="@drawable/ic_fingerprint_black_24dp"
+                android:drawablePadding="5dp"
+                android:maxLength="20"
+                android:ellipsize="end"
+                android:hint="Employee ID"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:drawablePadding="5dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/spinner_rect_for_add_conference"/>
+
+    <TextView
+            android:id="@+id/error_role_spinner_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ba160c"
+            android:visibility="gone"
+            android:layout_marginStart="11dp"
+            android:textSize="12sp"
+            android:text="Field can't be empty"/>
+
+    <Button android:id="@+id/button_add"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            tools:context=".RegistrationActivity">
+            android:text="SUBMIT"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="26dp"
+            android:textColor="@android:color/white"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/sign_up_input_layout_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:layout_marginTop="10dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textView_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:inputType="none"
-                    android:maxLines="1"
-                    android:drawableStart="@drawable/ic_person_black_24dp"
-                    android:drawablePadding="5dp"
-                    android:maxLength="20"
-                    android:textColor="@color/textColorGray"
-                    android:ellipsize="end"
-                    android:hint="Name"/>
+</LinearLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/employee_id_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@color/white"
-                android:layout_centerHorizontal="true"
-                app:errorEnabled="true"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edittext_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:maxLines="1"
-                    android:textColor="@color/textColorGray"
-                    android:inputType="text"
-                    android:drawableStart="@drawable/ic_fingerprint_black_24dp"
-                    android:drawablePadding="5dp"
-                    android:maxLength="20"
-                    android:ellipsize="end"
-                    android:hint="Employee ID"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <Spinner
-                android:id="@+id/spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:drawablePadding="5dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/spinner_rect_for_add_conference"/>
-
-        <Button android:id="@+id/button_add"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="SUBMIT"
-                android:background="@color/colorPrimary"
-                android:layout_marginTop="24dp"
-                android:textColor="@android:color/white"/>
-
-    </LinearLayout>
-
-</ScrollView>

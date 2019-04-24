@@ -23,9 +23,9 @@ class RegistrationViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun addEmployee(mEmployee: Employee) {
+    fun addEmployee(mEmployee: Employee, userId: String, token: String) {
         mRegistrationRepository = RegistrationRepository.getInstance()
-        mRegistrationRepository!!.addEmployee(mEmployee, object : ResponseListener {
+        mRegistrationRepository!!.addEmployee(mEmployee, userId, token, object : ResponseListener {
             override fun onSuccess(success: Any) {
                 mSuccess.value = success as Int
             }

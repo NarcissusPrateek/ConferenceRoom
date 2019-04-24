@@ -22,9 +22,9 @@ class AddConferenceRoomViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun addConferenceDetails(mAddConference: AddConferenceRoom) {
+    fun addConferenceDetails(mAddConference: AddConferenceRoom, userId: String, token: String) {
         mAddConferenceRepository = AddConferenceRepository.getInstance()
-        mAddConferenceRepository!!.addConferenceDetails(mAddConference, object : ResponseListener {
+        mAddConferenceRepository!!.addConferenceDetails(mAddConference, userId, token, object : ResponseListener {
             override fun onSuccess(success: Any) {
                 mSuccessForAddingRoom.value = success as Int
             }

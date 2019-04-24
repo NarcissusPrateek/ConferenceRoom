@@ -31,12 +31,12 @@ class ConferenceRoomRepository {
      * function will initialize the MutableLivedata Object and than make API Call
      * Passing the Context and model and call API, In return sends the status of LiveData
      */
-    fun getConferenceRoomList(room: FetchConferenceRoom, listener: ResponseListener) {
+    fun getConferenceRoomList(room: FetchConferenceRoom,userId: String, token: String, listener: ResponseListener) {
         /**
          * api call using Retrofit
          */
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<List<ConferenceRoom>> = service.getConferenceRoomList(room)
+        val requestCall: Call<List<ConferenceRoom>> = service.getConferenceRoomList(token, userId, room)
         requestCall.enqueue(object : Callback<List<ConferenceRoom>> {
             override fun onFailure(call: Call<List<ConferenceRoom>>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")

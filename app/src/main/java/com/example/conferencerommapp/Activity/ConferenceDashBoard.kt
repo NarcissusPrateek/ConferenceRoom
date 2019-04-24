@@ -50,7 +50,7 @@ class ConferenceDashBoard : AppCompatActivity() {
         super.onRestart()
         val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
         val buildingId = pref.getInt(Constants.EXTRA_BUILDING_ID, 0)
-        mHrConferenceRoomViewModel.getConferenceRoomList(buildingId)
+        mHrConferenceRoomViewModel.getConferenceRoomList(buildingId, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -96,7 +96,7 @@ class ConferenceDashBoard : AppCompatActivity() {
          */
         var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message),this)
         progressDialog.show()
-        mHrConferenceRoomViewModel.getConferenceRoomList(buildingId)
+        mHrConferenceRoomViewModel.getConferenceRoomList(buildingId, getUserIdFromPreference(), getTokenFromPreference())
         mHrConferenceRoomViewModel.returnConferenceRoomList().observe(this, Observer {
             progressDialog.dismiss()
             conferenceRoomAdapter = ConferenceRecyclerAdapter(it!!)
@@ -143,6 +143,17 @@ class ConferenceDashBoard : AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }
 

@@ -14,64 +14,134 @@ import retrofit2.http.*
 interface ConferenceService {
 
     @GET("api/Building")
-    fun getBuildingList(): Call<List<Building>>
+    fun getBuildingList(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String
+    ): Call<List<Building>>
 
     @POST("api/RoomsWithStatus")
-    fun getConferenceRoomList(@Body availableRoom: FetchConferenceRoom): Call<List<ConferenceRoom>>
+    fun getConferenceRoomList(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body availableRoom: FetchConferenceRoom
+    ): Call<List<ConferenceRoom>>
 
     @GET("api/UserLogin")
-    fun getRequestCode(@Query("email") email: String?): Call<Int>
+    fun getRequestCode(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Query("email") email: String?
+    ): Call<Int>
 
     @GET("api/Dashboard")
-    fun getDashboard(@Query("email") email: String?): Call<List<Dashboard>>
+    fun getDashboard(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Query("email") email: String?
+    ): Call<List<Dashboard>>
 
     @POST("api/UserLogin")
-    fun addEmployee(@Body newEmoployee: Employee): Call<ResponseBody>
+    fun addEmployee(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body newEmoployee: Employee
+    ): Call<ResponseBody>
 
     @POST("api/Booking")
-    fun addBookingDetails(@Body booking: Booking): Call<ResponseBody>
+    fun addBookingDetails(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body booking: Booking
+    ): Call<ResponseBody>
 
     @POST("api/CancelBooking")
-    fun cancelBooking(@Body cancel: CancelBooking): Call<ResponseBody>
+    fun cancelBooking(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body cancel: CancelBooking
+    ): Call<ResponseBody>
 
     @GET("api/Employee")
-    fun getEmployees(): Call<List<EmployeeList>>
+    fun getEmployees(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String
+    ): Call<List<EmployeeList>>
 
     @POST("api/RecurringMeeting")
-    fun addManagerBookingDetails(@Body managerBooking: ManagerBooking): Call<ResponseBody>
+    fun addManagerBookingDetails(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body managerBooking: ManagerBooking
+    ): Call<ResponseBody>
 
     @POST("api/ListOfAvailableRooms")
-    fun getMangerConferenceRoomList(@Body availableRoom: ManagerConference): Call<List<ConferenceRoom>>
+    fun getMangerConferenceRoomList(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body availableRoom: ManagerConference
+    ): Call<List<ConferenceRoom>>
 //    // Pratheek's.....
 
     @POST("api/Building")
-    fun addBuilding(@Body newBuilding: AddBuilding): Call<ResponseBody>
+    fun addBuilding(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body newBuilding: AddBuilding
+    ): Call<ResponseBody>
 
     @POST("api/conference")
-    fun addConference(@Body newConferenceRoom: AddConferenceRoom): Call<ResponseBody>
+    fun addConference(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body newConferenceRoom: AddConferenceRoom
+    ): Call<ResponseBody>
 
     @POST("api/BlockConfirmation")
-    fun blockConfirmation(@Body room: BlockRoom): Call<BlockingConfirmation>
+    fun blockConfirmation(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body room: BlockRoom
+    ): Call<BlockingConfirmation>
 
     @POST("api/blocking")
-    fun blockconference(@Body room: BlockRoom): Call<ResponseBody>
+    fun blockconference(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body room: BlockRoom
+    ): Call<ResponseBody>
 
-    @GET("api/Building")
-    fun getBuildings(): Call<List<BuildingT>>
 
     @GET("api/Building/{id}")
-    fun getBuildingsConference(@Path("id") id: Int): Call<List<BuildingConference>>
+    fun getBuildingsConference(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Path("id") id: Int
+    ): Call<List<BuildingConference>>
 
     @GET("api/blocking")
-    fun getBlockedConference(): Call<List<Blocked>>
+    fun getBlockedConference(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String
+    ): Call<List<Blocked>>
 
     @POST("api/unblocking")
-    fun unBlockingConferenceRoom(@Body room: Unblock): Call<ResponseBody>
+    fun unBlockingConferenceRoom(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body room: Unblock
+    ): Call<ResponseBody>
 
     @GET("api/conference/{id}")
-    fun conferencelist(@Query("buildingId") id: Int): Call<List<ConferenceList>>
+    fun conferencelist(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Query("buildingId") id: Int
+    ): Call<List<ConferenceList>>
 
     @PUT("api/Booking")
-    fun update(@Body updateBooking: UpdateBooking):Call<ResponseBody>
-
+    fun update(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body updateBooking: UpdateBooking
+    ):Call<ResponseBody>
 }

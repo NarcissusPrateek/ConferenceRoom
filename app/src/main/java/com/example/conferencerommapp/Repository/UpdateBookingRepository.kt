@@ -24,9 +24,9 @@ class UpdateBookingRepository{
      * funcation will make an API call to make request for the updation of booking
      * and call the interface method with data from server
      */
-    fun updateBookingDetails(mUpdateBooking: UpdateBooking, listener: ResponseListener) {
+    fun updateBookingDetails(mUpdateBooking: UpdateBooking,userId: String, token: String, listener: ResponseListener) {
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<ResponseBody> = service.update(mUpdateBooking)
+        val requestCall: Call<ResponseBody> = service.update(token, userId, mUpdateBooking)
         requestCall.enqueue(object :Callback<ResponseBody>{
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")

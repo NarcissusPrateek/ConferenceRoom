@@ -26,12 +26,12 @@ class RegistrationRepository {
     /**
      * Passing the Context and model and call API, In return sends the status of LiveData
      */
-    fun addEmployee(mEmployee: Employee, listener: ResponseListener) {
+    fun addEmployee(mEmployee: Employee,userId: String, token: String,  listener: ResponseListener) {
         /**
          * Retrofit Call
          */
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<ResponseBody> = service.addEmployee(mEmployee)
+        val requestCall: Call<ResponseBody> = service.addEmployee(token, userId, mEmployee)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")

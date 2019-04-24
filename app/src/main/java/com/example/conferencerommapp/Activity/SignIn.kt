@@ -106,8 +106,7 @@ class SignIn : AppCompatActivity() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            Log.i("-----------id", account!!.id)
-            saveTokenAndUserIdInSharedPreference(account.idToken, account.id)
+            saveTokenAndUserIdInSharedPreference(account!!.idToken, account.id)
             checkRegistration(account!!.email.toString())
         } catch (e: ApiException) {
             Log.w("Google Sign In Error", "signInResult:failed code=" + e.statusCode)
@@ -116,8 +115,6 @@ class SignIn : AppCompatActivity() {
     }
 
     private fun saveTokenAndUserIdInSharedPreference(idToken: String?, userId: String?) {
-        Log.i("----------token",idToken)
-        Log.i("----------userId",userId)
         val editor = prefs.edit()
         editor.putString("Token", idToken)
         editor.putString("UserId", userId)
@@ -138,7 +135,7 @@ class SignIn : AppCompatActivity() {
      */
     private fun checkRegistration(email: String) {
         progressDialog.show()
-        mCheckRegistrationViewModel.checkRegistration(email, this)
+        mCheckRegistrationViewModel.checkRegistration(email, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -196,5 +193,15 @@ class SignIn : AppCompatActivity() {
         editor.putInt("Code", code)
         editor.apply()
         intentToNextActivity(code)
+    }
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

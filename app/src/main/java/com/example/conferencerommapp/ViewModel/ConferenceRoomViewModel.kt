@@ -28,11 +28,11 @@ class ConferenceRoomViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun getConferenceRoomList(mRoom: FetchConferenceRoom) {
+    fun getConferenceRoomList(mRoom: FetchConferenceRoom, userId: String, token: String) {
         if (mConferenceRoomRepository == null) {
             mConferenceRoomRepository = ConferenceRoomRepository.getInstance()
         }
-        mConferenceRoomRepository!!.getConferenceRoomList(mRoom, object: ResponseListener {
+        mConferenceRoomRepository!!.getConferenceRoomList(mRoom, userId, token, object: ResponseListener {
             override fun onSuccess(success: Any) {
                 mConferenceRoomList.value = success as List<ConferenceRoom>
             }

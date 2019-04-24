@@ -29,9 +29,9 @@ class EmployeeRepository {
     /**
      * function will call the api which will return some data
      */
-    fun getEmployeeList(listener: ResponseListener) {
+    fun getEmployeeList(userId: String, token: String, listener: ResponseListener) {
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<List<EmployeeList>> = service.getEmployees()
+        val requestCall: Call<List<EmployeeList>> = service.getEmployees(token, userId)
         requestCall.enqueue(object : Callback<List<EmployeeList>> {
             override fun onFailure(call: Call<List<EmployeeList>>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")

@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Activity
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -62,7 +63,7 @@ class ManagerSelectMeetingMembers: AppCompatActivity() {
 
     private fun getViewModel() {
         progressDialog.show()
-        mSelectMemberViewModel.getEmployeeList()
+        mSelectMemberViewModel.getEmployeeList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -220,5 +221,15 @@ class ManagerSelectMeetingMembers: AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

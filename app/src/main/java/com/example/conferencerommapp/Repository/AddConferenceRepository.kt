@@ -24,10 +24,10 @@ class AddConferenceRepository {
     }
 
     //Passing the Context and model and call API, In return sends the status of LiveData
-    fun addConferenceDetails(mConferenceRoom : AddConferenceRoom, listener: ResponseListener) {
+    fun addConferenceDetails(mConferenceRoom : AddConferenceRoom,userId: String, token: String, listener: ResponseListener) {
         //Retrofit Call
         val addConferenceRoomService = ServiceBuilder.getObject()
-        val addConferenceRequestCall: Call<ResponseBody> = addConferenceRoomService.addConference(mConferenceRoom)
+        val addConferenceRequestCall: Call<ResponseBody> = addConferenceRoomService.addConference(token, userId, mConferenceRoom)
 
         addConferenceRequestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

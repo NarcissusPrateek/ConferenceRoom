@@ -82,12 +82,12 @@ class RegistrationActivity : AppCompatActivity() {
      */
     private fun validateRoleSpinner(): Boolean {
         return if(mEmployee.role.toString() == "Select Role") {
-            Toast.makeText(this, "Select Role", Toast.LENGTH_SHORT).show()
+            error_role_spinner_text_view.visibility = View.VISIBLE
             false
         }else {
+            error_role_spinner_text_view.visibility = View.GONE
             true
         }
-
     }
     /**
      * validate all data of input fields entered by user
@@ -164,7 +164,7 @@ class RegistrationActivity : AppCompatActivity() {
      */
     private fun addEmployee() {
         progressDialog.show()
-        mRegistrationViewModel.addEmployee(mEmployee)
+        mRegistrationViewModel.addEmployee(mEmployee, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -228,5 +228,16 @@ class RegistrationActivity : AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

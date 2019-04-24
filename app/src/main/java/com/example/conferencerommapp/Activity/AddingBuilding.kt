@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Activity
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
@@ -36,7 +37,6 @@ class AddingBuilding : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding_building)
@@ -57,18 +57,20 @@ class AddingBuilding : AppCompatActivity() {
             addBuild(mAddBuilding)
         }
     }
+
     /**
      * initialize all lateinit variables
      */
-    fun init(){
+    fun init() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddBuildingViewModel = ViewModelProviders.of(this).get(AddBuildingViewModel::class.java)
 
     }
+
     /**
      * observing data for adding Building
      */
-    private fun observeData(){
+    private fun observeData() {
         mAddBuildingViewModel.returnSuccessForAddBuilding().observe(this, Observer {
             progressDialog.dismiss()
             Toasty.success(this, getString(R.string.building_added), Toast.LENGTH_SHORT, true).show()
@@ -77,7 +79,7 @@ class AddingBuilding : AppCompatActivity() {
         })
         mAddBuildingViewModel.returnFailureForAddBuilding().observe(this, Observer {
             progressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
+            if (it == getString(R.string.invalid_token)) {
                 showAlert()
             } else {
                 ShowToast.show(this, it)
@@ -98,11 +100,11 @@ class AddingBuilding : AppCompatActivity() {
      * validation for building employeeList
      */
     private fun validateBuildingName(): Boolean {
-        val input= buildingNameEditText.text.toString().trim()
-        return if(input.isEmpty()) {
+        val input = buildingNameEditText.text.toString().trim()
+        return if (input.isEmpty()) {
             building_name_layout.error = getString(R.string.field_cant_be_empty)
             false
-        }else {
+        } else {
             building_name_layout.error = null
             true
         }
@@ -112,11 +114,11 @@ class AddingBuilding : AppCompatActivity() {
      * validation for building place
      */
     private fun validateBuildingPlace(): Boolean {
-        val input= buildingPlaceEditText.text.toString().trim()
-        return if(input.isEmpty()) {
+        val input = buildingPlaceEditText.text.toString().trim()
+        return if (input.isEmpty()) {
             location_layout.error = getString(R.string.field_cant_be_empty)
             false
-        }else {
+        } else {
             location_layout.error = null
             true
         }
@@ -126,7 +128,7 @@ class AddingBuilding : AppCompatActivity() {
      * validate all input fields
      */
     private fun validateInputs(): Boolean {
-        if(!validateBuildingName() or !validateBuildingPlace()) {
+        if (!validateBuildingName() or !validateBuildingPlace()) {
             return false
         }
         return true
@@ -141,15 +143,17 @@ class AddingBuilding : AppCompatActivity() {
          * Get the progress dialog from GetProgress Helper class
          */
         progressDialog.show()
-        mAddBuildingViewModel.addBuildingDetails(mBuilding)
+        mAddBuildingViewModel.addBuildingDetails(mBuilding, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
-                getString(R.string.session_expired_messgae))
+        var dialog = GetAleretDialog.getDialog(
+            this, getString(R.string.session_expired), "Your session is expired!\n" +
+                    getString(R.string.session_expired_messgae)
+        )
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
@@ -161,11 +165,22 @@ class AddingBuilding : AppCompatActivity() {
      * sign out from application
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+
+    /**
+     * get token and userId from local storage
+     */
+    fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

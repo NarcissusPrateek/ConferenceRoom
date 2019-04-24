@@ -27,13 +27,13 @@ class ManagerBuildingsRepository {
     /**
      * function will call the api which will return some data and we store the data in MutableLivedata Object
      */
-    fun getBuildingList() {
+    fun getBuildingList(userId: String, token: String) {
 
         /**
          * api call using retorfit
          */
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<List<Building>> = service.getBuildingList()
+        val requestCall: Call<List<Building>> = service.getBuildingList(token, userId)
         requestCall.enqueue(object : Callback<List<Building>> {
             override fun onFailure(call: Call<List<Building>>, t: Throwable) {
 

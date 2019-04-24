@@ -35,9 +35,9 @@ class BookingDashboardViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun getBookingList(email: String) {
+    fun getBookingList(email: String, userId: String, token: String) {
         mBookingDashboardRepository = BookingDashboardRepository.getInstance()
-        mBookingDashboardRepository!!.getBookingList(email, object : ResponseListener {
+        mBookingDashboardRepository!!.getBookingList(email, userId, token, object : ResponseListener {
             override fun onSuccess(success: Any) {
                 mBookingList.value = success as List<Dashboard>
             }
@@ -70,9 +70,9 @@ class BookingDashboardViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun cancelBooking(mCancel: CancelBooking) {
+    fun cancelBooking(mCancel: CancelBooking, userId: String, token: String) {
         mBookingDashboardRepository = BookingDashboardRepository.getInstance()
-        mBookingDashboardRepository!!.cancelBooking(mCancel, object : ResponseListener {
+        mBookingDashboardRepository!!.cancelBooking(mCancel, userId, token, object : ResponseListener {
             override fun onFailure(failure: String) {
                 mFailureForCancelBooking.value = failure
             }

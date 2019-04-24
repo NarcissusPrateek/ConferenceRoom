@@ -49,9 +49,9 @@ class BlockRoomViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun blockRoom(mRoom: BlockRoom) {
+    fun blockRoom(mRoom: BlockRoom, userId: String, token: String) {
         mBlockRoomRepository = BlockRoomRepository.getInstance()
-        mBlockRoomRepository!!.blockRoom(mRoom, object: ResponseListener {
+        mBlockRoomRepository!!.blockRoom(mRoom, userId, token,object: ResponseListener {
             override fun onSuccess(success: Any) {
                 mSuccessForBlockRoom.value = success as Int
             }
@@ -79,9 +79,9 @@ class BlockRoomViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun getRoomList(buildingId: Int) {
+    fun getRoomList(buildingId: Int, userId: String, token: String) {
         mBlockRoomRepository = BlockRoomRepository.getInstance()
-        mBlockRoomRepository!!.getRoomList(buildingId, object: ResponseListener {
+        mBlockRoomRepository!!.getRoomList(buildingId, userId, token, object: ResponseListener {
             override fun onSuccess(success: Any) {
                 mConferenceRoomList.value = success as List<BuildingConference>
             }
@@ -110,9 +110,9 @@ class BlockRoomViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun blockingStatus(mRoom: BlockRoom) {
+    fun blockingStatus(mRoom: BlockRoom, userId: String, token: String) {
         mBlockRoomRepository = BlockRoomRepository.getInstance()
-        mBlockRoomRepository!!.blockingStatus(mRoom, object: ResponseListener {
+        mBlockRoomRepository!!.blockingStatus(mRoom, userId, token, object: ResponseListener {
             override fun onSuccess(success: Any) {
                 mConfirmation.value = success as BlockingConfirmation
             }

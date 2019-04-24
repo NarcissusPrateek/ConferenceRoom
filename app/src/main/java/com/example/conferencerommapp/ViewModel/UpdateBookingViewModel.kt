@@ -30,9 +30,9 @@ class UpdateBookingViewModel: ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
      */
-    fun updateBookingDetails(mUpdateBooking: UpdateBooking) {
+    fun updateBookingDetails(mUpdateBooking: UpdateBooking, userId: String, token: String) {
         mUpdateBookingRepository = UpdateBookingRepository.getInstance()
-        mUpdateBookingRepository!!.updateBookingDetails(mUpdateBooking, object: ResponseListener {
+        mUpdateBookingRepository!!.updateBookingDetails(mUpdateBooking, userId, token, object: ResponseListener {
             override fun onSuccess(success: Any) {
                 mSuccessForUpdate.value = success as Int
             }

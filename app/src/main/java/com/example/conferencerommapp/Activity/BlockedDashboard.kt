@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -56,14 +57,14 @@ class BlockedDashboard : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        mBlockedDashboardViewModel.getBlockedList()
+        mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
     private fun loadBlocking() {
 
         var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
-        mBlockedDashboardViewModel.getBlockedList()
+        mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
         mBlockedDashboardViewModel.returnBlockedRoomList().observe(this, Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
@@ -99,11 +100,11 @@ class BlockedDashboard : AppCompatActivity() {
          */
         val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
-        mBlockedDashboardViewModel.unBlockRoom(mRoom)
+        mBlockedDashboardViewModel.unBlockRoom(mRoom, getUserIdFromPreference(), getTokenFromPreference())
         mBlockedDashboardViewModel.returnSuccessCodeForUnBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
             Toasty.success(this, getString(R.string.room_unblocked), Toast.LENGTH_SHORT, true).show()
-            mBlockedDashboardViewModel.getBlockedList()
+            mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
         })
         mBlockedDashboardViewModel.returnFailureCodeForUnBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
@@ -139,5 +140,16 @@ class BlockedDashboard : AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

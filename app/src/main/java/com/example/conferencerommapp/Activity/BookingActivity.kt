@@ -2,6 +2,7 @@ package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
@@ -165,7 +166,7 @@ class BookingActivity : AppCompatActivity() {
     private fun addBooking(mBooking: Booking) {
         mBooking.purpose = purposeEditText.text.toString()
         progressDialog.show()
-        mBookingViewModel.addBookingDetails(mBooking)
+        mBookingViewModel.addBookingDetails(mBooking, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -199,5 +200,16 @@ class BookingActivity : AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

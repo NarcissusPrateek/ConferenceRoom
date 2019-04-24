@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Activity
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -107,7 +108,7 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
     // call function of ViewModel which will make API call
     private fun getViewModel() {
         progressDialog.show()
-        mSelectMemberViewModel.getEmployeeList()
+        mSelectMemberViewModel.getEmployeeList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
     @OnClick(R.id.next_activity)
@@ -168,6 +169,7 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
     /**
      * clear text in search bar whenever clear drawable clicked
      */
+    @SuppressLint("ClickableViewAccessibility")
     private fun EditText.onRightDrawableClicked(onClicked: (view: EditText) -> Unit) {
         this.setOnTouchListener { v, event ->
             var hasConsumed = false
@@ -241,5 +243,15 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

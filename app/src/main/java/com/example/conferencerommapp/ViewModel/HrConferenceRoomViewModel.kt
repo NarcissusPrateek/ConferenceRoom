@@ -12,9 +12,9 @@ class HrConferenceRoomViewModel : ViewModel() {
     var mHrConferenceRoomList = MutableLiveData<List<ConferenceList>>()
     var mFailureCodeForHrConferenceRoom = MutableLiveData<String>()
 
-    fun getConferenceRoomList(buildingId: Int) {
+    fun getConferenceRoomList(buildingId: Int, userId: String, token: String) {
         mHrConferenceRoomRepository = HrConferenceRoomRepository.getInstance()
-        mHrConferenceRoomRepository!!.getConferenceRoomList(buildingId, object : ResponseListener {
+        mHrConferenceRoomRepository!!.getConferenceRoomList(buildingId, userId, token,  object : ResponseListener {
             override fun onSuccess(success: Any) {
                 mHrConferenceRoomList.value = success as List<ConferenceList>
             }

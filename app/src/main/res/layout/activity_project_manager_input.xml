@@ -1,117 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:paddingRight="10dp">
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:paddingRight="10dp" >
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="100">
+            android:orientation="horizontal"
+            android:weightSum="100">
 
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/manager_from_time_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:layout_marginTop="10dp"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                <EditText
-                        android:id="@+id/fromTime_manager"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:editable="false"
-                        android:maxLines="1"
-                        android:textColor="@color/textColorGray"
-                        android:focusable="false"
-                        android:drawableStart="@drawable/ic_schedule_black_24dp"
-                        android:drawablePadding="5dp"
-                        android:maxLength="50"
-                        android:hint="@string/from_time"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/manager_to_time_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                <EditText
-                        android:id="@+id/toTime_manager"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:textColor="@color/textColorGray"
-                        android:editable="false"
-                        android:focusable="false"
-                        android:inputType="text"
-                        android:hint="@string/to_time"
-                        android:drawableStart="@drawable/ic_schedule_black_24dp"
-                        android:drawablePadding="5dp"/>
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-        <LinearLayout
-                android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/manager_from_time_layout"
+                android:layout_width="0dp"
+                android:layout_weight="50"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="100"
-        android:layout_marginTop="10dp"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                app:errorEnabled="true"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/manager_from_date_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/fromTime_manager"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:layout_marginTop="10dp"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                <EditText android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:ems="10"
-                          android:editable="false"
-                          android:focusable="false"
-                          android:textColor="@color/textColorGray"
-                          android:id="@+id/date_manager"
-                          android:hint="@string/from_date"
-                          android:drawableStart="@drawable/ic_today_black_24dp"
-                          android:drawablePadding="5dp"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/manager_to_date_layout"
-                    android:layout_width="0dp"
-                    android:layout_weight="50"
+                    android:ems="10"
+                    android:editable="false"
+                    android:maxLines="1"
+                    android:textColor="@color/textColorGray"
+                    android:focusable="false"
+                    android:drawableStart="@drawable/ic_schedule_black_24dp"
+                    android:drawablePadding="5dp"
+                    android:maxLength="50"
+                    android:hint="@string/from_time"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/manager_to_time_layout"
+                android:layout_width="0dp"
+                android:layout_weight="50"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/toTime_manager"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                <EditText android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:ems="10"
-                          android:focusable="false"
-                          android:textColor="@color/textColorGray"
-                          android:editable="false"
-                          android:id="@+id/to_date_manager"
-                          android:hint="@string/to_date"
-                          android:drawableStart="@drawable/ic_today_black_24dp"
-                          android:drawablePadding="5dp"/>
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-        <TextView
+                    android:ems="10"
+                    android:textColor="@color/textColorGray"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:inputType="text"
+                    android:hint="@string/to_time"
+                    android:drawableStart="@drawable/ic_schedule_black_24dp"
+                    android:drawablePadding="5dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="100"
+            android:layout_marginTop="10dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/manager_from_date_layout"
+                android:layout_width="0dp"
+                android:layout_weight="50"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:textColor="@color/textColorGray"
+                    android:id="@+id/date_manager"
+                    android:hint="@string/from_date"
+                    android:drawableStart="@drawable/ic_today_black_24dp"
+                    android:drawablePadding="5dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/manager_to_date_layout"
+                android:layout_width="0dp"
+                android:layout_weight="50"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:textColor="@color/textColorGray"
+                    android:editable="false"
+                    android:id="@+id/to_date_manager"
+                    android:hint="@string/to_date"
+                    android:drawableStart="@drawable/ic_today_black_24dp"
+                    android:drawablePadding="5dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/select_day"
@@ -119,23 +121,33 @@
             android:layout_marginBottom="5dp"
             android:layout_marginStart="8dp"
             android:textColor="@color/grey"/>
-        <com.google.android.material.card.MaterialCardView
+    <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:padding="5dp"
+            app:cardCornerRadius="5dp">
+        <ca.antonious.materialdaypicker.MaterialDayPicker
+                android:id="@+id/day_picker"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
                 android:padding="5dp"
-                app:cardCornerRadius="5dp">
-            <ca.antonious.materialdaypicker.MaterialDayPicker
-                    android:id="@+id/day_picker"
-                    android:layout_width="match_parent"
-                    android:padding="5dp"
-                    android:layout_height="wrap_content"/>
-        </com.google.android.material.card.MaterialCardView>
+                android:layout_height="wrap_content"/>
+    </com.google.android.material.card.MaterialCardView>
+    <TextView
+            android:id="@+id/error_day_selector_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ba160c"
+            android:visibility="gone"
+            android:layout_marginStart="11dp"
+            android:textSize="12sp"
+            android:text="selected days list can't be empty"/>
+
     <Button android:id="@+id/next_manager"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="NEXT"
-                android:background="@color/colorPrimary"
-                android:layout_marginTop="40dp"
-                android:textColor="@android:color/white"/>
-    </LinearLayout>
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="NEXT"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="40dp"
+            android:textColor="@android:color/white"/>
+</LinearLayout>
 

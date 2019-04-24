@@ -15,9 +15,9 @@ class BlockedDashboardViewModel : ViewModel() {
     var mSuccessCodeForBlockRoom =  MutableLiveData<Int>()
     var mFailureCodeForBlockRoom =  MutableLiveData<String>()
 
-    fun getBlockedList() {
+    fun getBlockedList(userId: String, token: String) {
         mBlockDashboardRepository = BlockDashboardRepository.getInstance()
-        mBlockDashboardRepository!!.getBlockedList(object : ResponseListener {
+        mBlockDashboardRepository!!.getBlockedList(userId, token, object : ResponseListener {
             override fun onSuccess(success: Any) {
                 mBlockedRoomList.value = success as List<Blocked>
             }
@@ -38,9 +38,9 @@ class BlockedDashboardViewModel : ViewModel() {
     }
     //-----------------------------------------------------------------------------------------------------------
 
-    fun unBlockRoom(mRoom: Unblock) {
+    fun unBlockRoom(mRoom: Unblock, userId: String, token: String) {
         mBlockDashboardRepository = BlockDashboardRepository.getInstance()
-        mBlockDashboardRepository!!.unblockRoom(mRoom, object: ResponseListener {
+        mBlockDashboardRepository!!.unblockRoom(mRoom, userId, token, object: ResponseListener {
             override fun onSuccess(success: Any) {
                 mSuccessCodeForBlockRoom.value = success as Int
             }

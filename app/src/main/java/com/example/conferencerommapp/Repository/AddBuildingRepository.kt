@@ -31,9 +31,9 @@ class AddBuildingRepository {
     /**
      * make API call and calls the methods of interface
      */
-    fun addBuildingDetails(mAddBuilding: AddBuilding, listener: ResponseListener) {
+    fun addBuildingDetails(mAddBuilding: AddBuilding, userId: String, token: String, listener: ResponseListener) {
         val addBuildingService: ConferenceService = ServiceBuilder.getObject()
-        val addBuildingRequestCall: Call<ResponseBody> = addBuildingService.addBuilding(mAddBuilding)
+        val addBuildingRequestCall: Call<ResponseBody> = addBuildingService.addBuilding(token, userId, mAddBuilding)
         addBuildingRequestCall.enqueue(object : Callback<ResponseBody> {
             // Negative response
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

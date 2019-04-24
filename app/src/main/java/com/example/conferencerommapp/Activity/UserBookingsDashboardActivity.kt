@@ -80,7 +80,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             progressDialog.dismiss()
             Toasty.success(this, getString(R.string.cancelled_successful), Toast.LENGTH_SHORT, true).show()
             // make api call to get the updated list of booking after cancellation
-            mBookingDashBoardViewModel.getBookingList(acct.email.toString())
+            mBookingDashBoardViewModel.getBookingList(acct.email.toString(), getUserIdFromPreference(), getTokenFromPreference())
         })
 
         mBookingDashBoardViewModel.returnCancelFailed().observe(this, Observer {
@@ -208,7 +208,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     private fun loadDashboard() {
         val email = acct.email.toString()
         progressDialog.show()
-        mBookingDashBoardViewModel.getBookingList(email)
+        mBookingDashBoardViewModel.getBookingList(email, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -217,7 +217,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     override fun onRestart() {
         super.onRestart()
         val acct = GoogleSignIn.getLastSignedInAccount(application)
-        mBookingDashBoardViewModel.getBookingList(acct!!.email.toString())
+        mBookingDashBoardViewModel.getBookingList(acct!!.email.toString(), getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -403,7 +403,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      */
     private fun cancelBooking(mCancel: CancelBooking) {
         progressDialog.show()
-        mBookingDashBoardViewModel.cancelBooking(mCancel)
+        mBookingDashBoardViewModel.cancelBooking(mCancel, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -466,6 +466,17 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         }
         var builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
+    }
+
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 
 

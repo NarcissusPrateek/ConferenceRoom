@@ -49,17 +49,19 @@ class AddingConference : AppCompatActivity() {
         observeData()
 
     }
+
     /**
      * initialize all lateinit variables
      */
-    fun init(){
+    fun init() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddConferenceRoomViewModel = ViewModelProviders.of(this).get(AddConferenceRoomViewModel::class.java)
     }
+
     /**
      * observing data for adding conference
      */
-    fun observeData(){
+    fun observeData() {
         mAddConferenceRoomViewModel.returnSuccessForAddingRoom().observe(this, Observer {
             progressDialog.dismiss()
             Toasty.success(this, getString(R.string.room_add_success), Toast.LENGTH_SHORT, true).show()
@@ -86,14 +88,15 @@ class AddingConference : AppCompatActivity() {
      * function will set the BlockConferenceRoomActivity Value for the capacity
      */
     private fun setSpinnerForCapacity() {
-        val options = mutableListOf("Select Room Capacity","2", "4", "6", "8", "10", "12", "14", "16")
+        val options = mutableListOf("Select Room Capacity", "2", "4", "6", "8", "10", "12", "14", "16")
         var adapter = ArrayAdapter<String>(this, R.layout.spinner_icon, R.id.spinner_text, options)
         capacitySpinner.adapter = adapter
 
-        capacitySpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+        capacitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
                 capacity = options[position]
             }
+
             override fun onNothingSelected(adapterView: AdapterView<*>) {
                 capacity = getString(R.string.select_room_capacity)
             }
@@ -118,10 +121,10 @@ class AddingConference : AppCompatActivity() {
      */
     private fun validateRoomName(): Boolean {
         val input = conferenceRoomEditText.text.toString().trim()
-        return if(input.isEmpty()) {
+        return if (input.isEmpty()) {
             room_name_layout_name.error = getString(R.string.field_cant_be_empty)
             false
-        }else {
+        } else {
             room_name_layout_name.error = null
             true
         }
@@ -131,10 +134,10 @@ class AddingConference : AppCompatActivity() {
      * validation for spinner
      */
     private fun validateSpinner(): Boolean {
-        return if(capacity == getString(R.string.select_room_capacity)) {
+        return if (capacity == getString(R.string.select_room_capacity)) {
             Toast.makeText(this, getString(R.string.select_capacity), Toast.LENGTH_SHORT).show()
             false
-        }else {
+        } else {
             true
         }
     }
@@ -143,7 +146,7 @@ class AddingConference : AppCompatActivity() {
      * validate all input fields
      */
     private fun validateInputs(): Boolean {
-        if(!validateRoomName() or !validateSpinner()) {
+        if (!validateRoomName() or !validateSpinner()) {
             return false
         }
         return true
@@ -154,7 +157,7 @@ class AddingConference : AppCompatActivity() {
      */
     private fun addRoom(mConferenceRoom: AddConferenceRoom) {
         progressDialog.show()
-        mAddConferenceRoomViewModel.addConferenceDetails(mConferenceRoom)
+        mAddConferenceRoomViewModel.addConferenceDetails(mConferenceRoom, getUserIdFromPreference(), getTokenFromPreference())
 
     }
 
@@ -162,8 +165,10 @@ class AddingConference : AppCompatActivity() {
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
-                getString(R.string.session_expired_messgae))
+        var dialog = GetAleretDialog.getDialog(
+            this, getString(R.string.session_expired), "Your session is expired!\n" +
+                    getString(R.string.session_expired_messgae)
+        )
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
@@ -181,5 +186,15 @@ class AddingConference : AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+    /**
+     * get token and userId from local storage
+     */
+    fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

@@ -3,7 +3,6 @@ package com.example.conferencerommapp.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
-import android.text.TextUtils
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -18,7 +17,8 @@ import com.example.conferencerommapp.Helper.GetAleretDialog
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import kotlinx.android.synthetic.main.activity_project_manager_input.*
-import kotlinx.android.synthetic.main.activity_user_inputs.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Suppress("NAME_SHADOWING", "DEPRECATION")
 class ProjectManagerInputActivity : AppCompatActivity() {
@@ -32,6 +32,9 @@ class ProjectManagerInputActivity : AppCompatActivity() {
     @BindView(R.id.date_manager)
     lateinit var dateFromEditText: EditText
     private var listOfDays = ArrayList<String>()
+    private var dataList = ArrayList<String>()
+    private var fromTimeList = ArrayList<String>()
+    private var toTimeList = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +45,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + "Booking Details" + "</font>")
         setPickerToEditTexts()
     }
-
-
 
 
     /**
@@ -92,6 +93,9 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * validate from time for non empty condition
+     */
     private fun validateFromTime(): Boolean {
         var input = fromTimeEditText.text.toString().trim()
         return if (input.isEmpty()) {
@@ -103,6 +107,9 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * validate to-time for non empty condition
+     */
     private fun validateToTime(): Boolean {
         var input = toTimeEditText.text.toString().trim()
         return if (input.isEmpty()) {
@@ -114,6 +121,9 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * validate to-date for non empty condition
+     */
     private fun validateToDate(): Boolean {
         var input = dateFromEditText.text.toString().trim()
         return if (input.isEmpty()) {
@@ -125,6 +135,9 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * validate from-date for non empty condition
+     */
     private fun validateFromDate(): Boolean {
         var input = dateToEditText.text.toString().trim()
         return if (input.isEmpty()) {
@@ -136,14 +149,17 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * validate day selector for non empty condition
+     */
     private fun validateSelectedDayList(): Boolean {
-        if(day_picker.selectedDays.isEmpty()) {
-            Toast.makeText(this, getString(R.string.select_days), Toast.LENGTH_SHORT).show()
+        if (day_picker.selectedDays.isEmpty()) {
+            error_day_selector_text_view.visibility = View.VISIBLE
             return false
         }
+        error_day_selector_text_view.visibility = View.GONE
         return true
     }
-
 
 
     /**
@@ -151,7 +167,10 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      */
     private fun validate(): Boolean {
 
-        if(!validateFromTime() or !validateToTime() or !validateFromDate() or !validateToDate() or !validateSelectedDayList()) {
+        if (!validateFromTime() or !validateToTime() or !validateFromDate() or !validateToDate() or !validateSelectedDayList()) {
+            return false
+        } else if (dataList.isEmpty()) {
+            Toast.makeText(this, "No dates founds for selected days!", Toast.LENGTH_SHORT).show()
             return false
         }
         return true
@@ -240,7 +259,17 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         mSetIntentData.toDate = dateToEditText.text.toString().trim()
         mSetIntentData.listOfDays.clear()
         getListOfSelectedDays()
-        mSetIntentData.listOfDays.addAll(listOfDays)
+        getDateAccordingToDay(
+            fromTimeEditText.text.toString(),
+            toTimeEditText.text.toString(),
+            dateFromEditText.text.toString(),
+            dateToEditText.text.toString(),
+            listOfDays
+        )
+        mSetIntentData.fromTimeList.clear()
+        mSetIntentData.toTimeList.clear()
+        mSetIntentData.fromTimeList.addAll(fromTimeList)
+        mSetIntentData.toTimeList.addAll(toTimeList)
         val buildingIntent = Intent(this@ProjectManagerInputActivity, ManagerBuildingsActivity::class.java)
         buildingIntent.putExtra(Constants.EXTRA_INTENT_DATA, mSetIntentData)
         startActivity(buildingIntent)
@@ -253,6 +282,65 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         listOfDays.clear()
         for (day in day_picker.selectedDays) {
             listOfDays.add("${day}")
+        }
+    }
+
+
+    /**
+     * get all date for each day selected by user in between from date and To date
+     */
+    private fun getDateAccordingToDay(
+        start: String,
+        end: String,
+        fromDate: String,
+        toDate: String,
+        listOfDays: ArrayList<String>
+    ) {
+        dataList.clear()
+        try {
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val d1 = simpleDateFormat.parse(fromDate)
+            val d2 = simpleDateFormat.parse(toDate)
+            val c1 = Calendar.getInstance()
+            val c2 = Calendar.getInstance()
+            c1.time = d1
+            c2.time = d2
+            while (c2.after(c1)) {
+                if (listOfDays.contains(
+                        c1.getDisplayName(
+                            Calendar.DAY_OF_WEEK,
+                            Calendar.LONG_FORMAT,
+                            Locale.US
+                        ).toUpperCase()
+                    )
+                ) {
+                    dataList.add(simpleDateFormat.format(c1.time).toString())
+                }
+                c1.add(Calendar.DATE, 1)
+            }
+            if (listOfDays.contains(
+                    c2.getDisplayName(
+                        Calendar.DAY_OF_WEEK,
+                        Calendar.LONG_FORMAT,
+                        Locale.US
+                    ).toUpperCase()
+                )
+            ) {
+                //dataList.add(simpleDateFormat.format(c1.time).toString())
+            }
+            getLists(start, end)
+        } catch (e: Exception) {
+            Toast.makeText(this@ProjectManagerInputActivity, e.message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    /**
+     * this function returns all fromdate list and todate list
+     */
+    private fun getLists(start: String, end: String) {
+        for (item in dataList) {
+            fromTimeList.add("$item $start")
+            toTimeList.add("$item $end")
         }
     }
 }

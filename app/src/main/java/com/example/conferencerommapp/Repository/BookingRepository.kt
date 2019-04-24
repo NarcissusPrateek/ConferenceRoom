@@ -32,12 +32,12 @@ class BookingRepository {
      * function will initialize the MutableLivedata Object and than call a function for api call
      * Passing the Context and model and call API, In return sends the status of LiveData
      */
-    fun addBookingDetails(mBooking: Booking, listener: ResponseListener) {
+    fun addBookingDetails(mBooking: Booking,userId: String, token: String, listener: ResponseListener) {
         /**
          * api call using retorfit
          */
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<ResponseBody> = service.addBookingDetails(mBooking)
+        val requestCall: Call<ResponseBody> = service.addBookingDetails(token, userId, mBooking)
         requestCall.enqueue(object : Callback<ResponseBody> {
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {

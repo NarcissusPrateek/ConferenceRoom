@@ -3,6 +3,7 @@
 package com.example.conferencerommapp.Activity
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html
@@ -57,7 +58,7 @@ class BuildingDashboard : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        mBuildingsViewModel.getBuildingList()
+        mBuildingsViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -74,13 +75,13 @@ class BuildingDashboard : AppCompatActivity() {
     private fun observeData() {
         mBuildingsViewModel.returnMBuildingSuccess().observe(this, Observer {
             mProgressDialog.dismiss()
-            when(it){
-                null->{
+            when (it) {
+                null -> {
                     Toast.makeText(this, getString(R.string.internal_server_error), Toast.LENGTH_SHORT).show()
                 }
                 else -> {
-                    if(!it.isEmpty()) {
-                        buildingAdapter = BuildingAdapter(this,it,object : BuildingAdapter.BtnClickListener {
+                    if (!it.isEmpty()) {
+                        buildingAdapter = BuildingAdapter(this, it, object : BuildingAdapter.BtnClickListener {
                             override fun onBtnClick(buildingId: String?, buildingname: String?) {
                                 val intent = Intent(this@BuildingDashboard, ConferenceDashBoard::class.java)
                                 intent.putExtra(Constants.EXTRA_BUILDING_ID, buildingId)
@@ -94,9 +95,9 @@ class BuildingDashboard : AppCompatActivity() {
         })
         mBuildingsViewModel.returnMBuildingFailure().observe(this, Observer {
             mProgressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
+            if (it == getString(R.string.invalid_token)) {
                 showAlert()
-            }else {
+            } else {
                 ShowToast.show(this, it)
                 finish()
             }
@@ -107,18 +108,20 @@ class BuildingDashboard : AppCompatActivity() {
     /**
      * setting the adapter by passing the data into it and implementing a Interface BtnClickListner of BuildingAdapter class
      */
-     private fun getViewModel() {
+    private fun getViewModel() {
         mProgressDialog.show()
         // making API call
-        mBuildingsViewModel.getBuildingList()
+        mBuildingsViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
-                getString(R.string.session_expired_messgae))
+        var dialog = GetAleretDialog.getDialog(
+            this, getString(R.string.session_expired), "Your session is expired!\n" +
+                    getString(R.string.session_expired_messgae)
+        )
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
@@ -136,5 +139,16 @@ class BuildingDashboard : AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

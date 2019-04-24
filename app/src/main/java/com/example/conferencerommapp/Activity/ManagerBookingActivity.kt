@@ -2,10 +2,10 @@ package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
-import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -137,9 +137,9 @@ class ManagerBookingActivity : AppCompatActivity() {
         })
         mManagerBookingViewModel.returnFailureForBooking().observe(this, Observer {
             progressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
+            if (it == getString(R.string.invalid_token)) {
                 showAlert()
-            }else {
+            } else {
                 ShowToast.show(this, it)
                 finish()
             }
@@ -152,7 +152,7 @@ class ManagerBookingActivity : AppCompatActivity() {
      */
     private fun addBooking() {
         progressDialog.show()
-        mManagerBookingViewModel.addBookingDetails(mManagerBooking)
+        mManagerBookingViewModel.addBookingDetails(mManagerBooking, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     /**
@@ -168,8 +168,10 @@ class ManagerBookingActivity : AppCompatActivity() {
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
-                getString(R.string.session_expired_messgae))
+        var dialog = GetAleretDialog.getDialog(
+            this, getString(R.string.session_expired), "Your session is expired!\n" +
+                    getString(R.string.session_expired_messgae)
+        )
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
@@ -187,6 +189,17 @@ class ManagerBookingActivity : AppCompatActivity() {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
             }
+    }
+
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }
 

@@ -33,12 +33,12 @@ class BookingDashboardRepository {
      * function will make api call for making a booking
      * and call the interface method with data from server
      */
-    fun getBookingList(email: String, listener: ResponseListener) {
+    fun getBookingList(email: String,userId: String, token: String, listener: ResponseListener) {
         /**
          * API call using retrofit
          */
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<List<Dashboard>> = service.getDashboard(email)
+        val requestCall: Call<List<Dashboard>> = service.getDashboard(token, userId, email)
         requestCall.enqueue(object : Callback<List<Dashboard>> {
             override fun onFailure(call: Call<List<Dashboard>>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")
@@ -58,12 +58,12 @@ class BookingDashboardRepository {
     /**
      * function will make the API Call and call the interface method with data from server
      */
-    fun cancelBooking(mCancel: CancelBooking, listener: ResponseListener) {
+    fun cancelBooking(mCancel: CancelBooking,userId: String, token: String,  listener: ResponseListener) {
         /**
          * api call using retrofit
          */
         val service = ServiceBuilder.getObject()
-        var requestCall: Call<ResponseBody> = service.cancelBooking(mCancel)
+        var requestCall: Call<ResponseBody> = service.cancelBooking(token, userId, mCancel)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")

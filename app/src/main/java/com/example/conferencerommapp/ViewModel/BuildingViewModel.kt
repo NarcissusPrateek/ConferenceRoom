@@ -27,9 +27,9 @@ class BuildingViewModel : ViewModel() {
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will update the values of MutableLiveData objects according to the response from server
      */
-    fun getBuildingList() {
+    fun getBuildingList(userId: String, token: String) {
         mBuildingsRepository = BuildingsRepository.getInstance()
-        mBuildingsRepository!!.getBuildingList(object: ResponseListener {
+        mBuildingsRepository!!.getBuildingList(userId, token, object: ResponseListener {
             override fun onFailure(failure: String) {
                     errorCodeFromServer.value = failure
             }

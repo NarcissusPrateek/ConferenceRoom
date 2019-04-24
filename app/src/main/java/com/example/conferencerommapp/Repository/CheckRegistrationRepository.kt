@@ -29,12 +29,12 @@ class CheckRegistrationRepository {
     /**
      * function will initialize the MutableLivedata Object and than call a function for api call
      */
-    fun checkRegistration(mEmail: String, listener: ResponseListener, mContext: Context)  {
+    fun checkRegistration(mEmail: String,userId: String, token: String, listener: ResponseListener)  {
         /**
          * api call using retrofit
          */
-        val service = ServiceBuilder.getObjectWithContext(mContext)
-        val requestCall: Call<Int> = service.getRequestCode(mEmail)
+        val service = ServiceBuilder.getObject()
+        val requestCall: Call<Int> = service.getRequestCode(token, userId, mEmail)
         requestCall.enqueue(object : Callback<Int> {
             override fun onFailure(call: Call<Int>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")

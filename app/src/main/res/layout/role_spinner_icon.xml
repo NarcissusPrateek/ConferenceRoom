@@ -6,14 +6,16 @@
               android:layout_height="match_parent">
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             android:id="@+id/icon"
-            android:src="@drawable/role"/>
+            android:paddingTop="4dp"
+            android:src="@drawable/arrow_pointing_to_right"/>
 
     <TextView
             android:id="@+id/spinner_text"
-            android:paddingLeft="16dp"
+            android:paddingLeft="14dp"
+            android:paddingTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

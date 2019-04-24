@@ -136,7 +136,6 @@ class UserInputActivity : AppCompatActivity() {
     private fun validateSpinner(): Boolean {
        if(capacity == "Select Room Capacity") {
            error_spinner_text_view.visibility = View.VISIBLE
-           Toast.makeText(this, getString(R.string.select_capacity), Toast.LENGTH_SHORT).show()
            return false
        }
         error_spinner_text_view.visibility = View.GONE
