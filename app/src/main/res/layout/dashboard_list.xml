@@ -32,7 +32,7 @@
 
         <LinearLayout
                 android:id="@+id/linearlayout"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -116,22 +116,25 @@
                     android:background="@color/grey"/>
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="wrap_content"
+                          android:weightSum="100"
                           android:orientation="horizontal">
                 <com.google.android.material.button.MaterialButton
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:text="Show Members"
                         android:textColor="@color/colorPrimary"
                         android:id="@+id/btnshow"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="45"
                         android:layout_height="wrap_content"/>
                 <com.google.android.material.button.MaterialButton
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:text="Cancel"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginRight="20dp"
                         android:textColor="#F00"
                         android:id="@+id/btnCancel"
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="55"
                         android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>

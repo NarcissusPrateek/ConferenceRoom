@@ -46,7 +46,6 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     private lateinit var mBookingDashBoardViewModel: BookingDashboardViewModel
     private lateinit var acct: GoogleSignInAccount
     private lateinit var progressDialog: ProgressDialog
-    lateinit var contextOfApplication: Context
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
@@ -58,17 +57,10 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     }
 
     fun init() {
-        contextOfApplication = applicationContext
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         acct = GoogleSignIn.getLastSignedInAccount(application)!!
         mBookingDashBoardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
     }
-
-    fun getContextOfApplicationFromActivity(): Context {
-        return contextOfApplication
-    }
-
-
     /**
      * all observer for LiveData
      */
@@ -478,8 +470,6 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     private fun getUserIdFromPreference(): String {
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
-
-
 }
 
 

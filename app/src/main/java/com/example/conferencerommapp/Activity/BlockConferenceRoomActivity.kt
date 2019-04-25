@@ -44,7 +44,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     var room = BlockRoom()
     private lateinit var mBuildingViewModel: BuildingViewModel
     private lateinit var progressDialog: ProgressDialog
-    private var mBuuildingName = "Select Building"
+    private var mBuildingName = "Select Building"
     private var mRoomName = "Select Room"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -238,7 +238,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 room.bId = itemsId[position]
-                mBuuildingName = items[position]
+                mBuildingName = items[position]
                 conferenceRoomListFromBackend(itemsId[position])
             }
         }
@@ -346,10 +346,11 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
      * validate building spinner
      */
     private fun validateBuildingSpinner(): Boolean {
-        return if (mBuuildingName == "Select Building") {
-            Toast.makeText(this, "Select Building!", Toast.LENGTH_SHORT).show()
+        return if (mBuildingName == "Select Building") {
+            error_spinner_building_text_view.visibility = View.VISIBLE
             false
         } else {
+            error_spinner_building_text_view.visibility = View.INVISIBLE
             true
         }
     }
@@ -359,9 +360,10 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
      */
     private fun validateRoomSpinner(): Boolean {
         return if (mRoomName == "Select Room") {
-            Toast.makeText(this, "Select Conference Room!", Toast.LENGTH_SHORT).show()
+            error_spinner_room_text_view.visibility = View.VISIBLE
             false
         } else {
+            error_spinner_room_text_view.visibility = View.INVISIBLE
             true
         }
     }

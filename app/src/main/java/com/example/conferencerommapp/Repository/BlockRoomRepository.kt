@@ -41,7 +41,6 @@ class BlockRoomRepository {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 listener.onFailure("Internal Server Code!")
             }
-
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.code() == Constants.OK_RESPONSE) {
                    listener.onSuccess(response.code())

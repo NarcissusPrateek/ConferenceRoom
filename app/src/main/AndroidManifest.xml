@@ -25,6 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".Activity.SignInwithSilentClient">
+        </activity>
         <activity
                 android:name=".Activity.UserInputActivity"
                 android:label="Input"
@@ -90,7 +92,10 @@
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".SignIn"
-                android:theme="@style/AppTheme.NoActionBar"/>
+                android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
         <activity
                 android:name=".Activity.BookingActivity"
                 android:label="Booking"

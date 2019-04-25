@@ -69,8 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="8dp"
             app:errorEnabled="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
@@ -91,8 +90,17 @@
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
             android:drawablePadding="5dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/spinner_rect"/>
+    <TextView
+            android:id="@+id/error_spinner_building_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ba160c"
+            android:visibility="invisible"
+            android:layout_marginStart="11dp"
+            android:textSize="12sp"
+            android:text="Select building"/>
 
 
     <Spinner
@@ -102,8 +110,17 @@
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
             android:drawablePadding="5dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/spinner_rect"/>
+    <TextView
+            android:id="@+id/error_spinner_room_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ba160c"
+            android:visibility="invisible"
+            android:layout_marginStart="11dp"
+            android:textSize="12sp"
+            android:text="Select room"/>
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -111,7 +128,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="11dp"
             app:errorEnabled="true"
             android:focusableInTouchMode="true"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -131,7 +148,7 @@
     <Button
             android:id="@+id/block_conference"
             android:text="Block"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 </LinearLayout>

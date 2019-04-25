@@ -41,7 +41,6 @@ class SignIn : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sign_in_activity)
         ButterKnife.bind(this)
-        init()
         initialize()
         observeData()
     }
@@ -56,6 +55,8 @@ class SignIn : AppCompatActivity() {
      */
     fun initialize() {
         prefs = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
+        mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
         initializeGoogleSignIn()
         setAnimationToLayout()
     }
@@ -107,7 +108,7 @@ class SignIn : AppCompatActivity() {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             saveTokenAndUserIdInSharedPreference(account!!.idToken, account.id)
-            checkRegistration(account!!.email.toString())
+            checkRegistration(account.email.toString())
         } catch (e: ApiException) {
             Log.w("Google Sign In Error", "signInResult:failed code=" + e.statusCode)
         }
@@ -138,13 +139,7 @@ class SignIn : AppCompatActivity() {
         mCheckRegistrationViewModel.checkRegistration(email, getUserIdFromPreference(), getTokenFromPreference())
     }
 
-    /**
-     * initialize all lateinit variables
-     */
-    fun init() {
-        progressDialog =  GetProgress.getProgressDialog(getString(R.string.progress_message), this)
-        mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
-    }
+
 
     /**
      * observe data from server

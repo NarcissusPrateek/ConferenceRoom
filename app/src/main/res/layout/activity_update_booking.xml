@@ -39,25 +39,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:textColor="@color/nonEditableValues"
-                android:focusable="false"
-                android:editable="false"
-                android:id="@+id/date_update"
-                android:hint="Date"
-                android:drawableStart="@drawable/ic_today_black_24dp"
-                android:drawableLeft="@drawable/ic_today_black_24dp"
-                android:drawablePadding="5dp"/>
-    </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:layout_marginTop="8dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
                 android:focusable="false"
                 android:editable="false"
                 android:textColor="@color/nonEditableValues"
@@ -83,6 +64,25 @@
                 android:hint="Room name"
                 android:drawableStart="@drawable/ic_room_black_24dp"
                 android:drawableLeft="@drawable/ic_room_black_24dp"
+                android:drawablePadding="5dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginTop="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:textColor="@color/nonEditableValues"
+                android:focusable="false"
+                android:editable="false"
+                android:id="@+id/date_update"
+                android:hint="Date"
+                android:drawableStart="@drawable/ic_today_black_24dp"
+                android:drawableLeft="@drawable/ic_today_black_24dp"
                 android:drawablePadding="5dp"/>
     </com.google.android.material.textfield.TextInputLayout>
 

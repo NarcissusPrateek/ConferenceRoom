@@ -30,7 +30,7 @@
                 app:fab_colorPressed="@color/colorPrimary1"
                 app:menu_colorPressed="@color/colorPrimary"
                 app:fab_colorNormal="@color/colorPrimary"
-                android:src="@drawable/ic_block_white_24dp"
+                android:src="@drawable/ic_add_black_24dp"
                 android:id="@+id/maintenance"
                 app:fab_label="Block"
                 android:layout_alignParentEnd="true"

@@ -169,9 +169,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
 
         if (!validateFromTime() or !validateToTime() or !validateFromDate() or !validateToDate() or !validateSelectedDayList()) {
             return false
-        } else if (dataList.isEmpty()) {
-            Toast.makeText(this, "No dates founds for selected days!", Toast.LENGTH_SHORT).show()
-            return false
         }
         return true
     }
@@ -252,6 +249,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * set data to the object which is used to send data from this activity to another activity and pass the intent
      */
     private fun goToBuildingsActivity() {
+
         val mSetIntentData = GetIntentDataFromActvity()
         mSetIntentData.fromTime = fromTimeEditText.text.toString().trim()
         mSetIntentData.toTime = toTimeEditText.text.toString().trim()
@@ -270,9 +268,14 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         mSetIntentData.toTimeList.clear()
         mSetIntentData.fromTimeList.addAll(fromTimeList)
         mSetIntentData.toTimeList.addAll(toTimeList)
-        val buildingIntent = Intent(this@ProjectManagerInputActivity, ManagerBuildingsActivity::class.java)
-        buildingIntent.putExtra(Constants.EXTRA_INTENT_DATA, mSetIntentData)
-        startActivity(buildingIntent)
+
+        if (dataList.isEmpty()) {
+            Toast.makeText(this, "No dates founds for selected days!", Toast.LENGTH_SHORT).show()
+        } else {
+            val buildingIntent = Intent(this@ProjectManagerInputActivity, ManagerBuildingsActivity::class.java)
+            buildingIntent.putExtra(Constants.EXTRA_INTENT_DATA, mSetIntentData)
+            startActivity(buildingIntent)
+        }
     }
 
     /**
