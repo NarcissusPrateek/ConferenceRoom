@@ -148,7 +148,6 @@ class DashBoardAdapter(
         holder.roomNameTextView.text = dashboardItemList[position].CName
         holder.purposeTextView.text = dashboardItemList[position].Purpose
         holder.showButton.setOnClickListener {
-            Log.i("----------employee",""+dashboardItemList[position])
             setMeetingMembers(position)
         }
     }
@@ -225,6 +224,7 @@ class DashBoardAdapter(
         mGetIntentDataFromActivity.roomName = dashboardItemList[position].CName
         mGetIntentDataFromActivity.roomId = dashboardItemList[position].CId.toString()
         mGetIntentDataFromActivity.date = fromDate[0]
+        mGetIntentDataFromActivity.bookingId = dashboardItemList[position].bookingIdList[0]
         mGetIntentDataFromActivity.fromTime = dashboardItemList[position].FromTime
         mGetIntentDataFromActivity.toTime = dashboardItemList[position].ToTime
         mGetIntentDataFromActivity.cCMail = dashboardItemList[position].cCMail

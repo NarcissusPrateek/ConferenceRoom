@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -52,10 +51,14 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         ButterKnife.bind(this)
         init()
         setNavigationViewItem()
-        loadDashboard()
         observeData()
+        loadDashboard()
+
     }
 
+    /**
+     * Initialize all late init fields
+     */
     fun init() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         acct = GoogleSignIn.getLastSignedInAccount(application)!!
@@ -90,12 +93,10 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             progressDialog.dismiss()
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
-                //Glide.with(this).load(R.drawable.yoga_lady_croped).into(empty_view)
                 dashBord_recyclerView1.visibility = View.GONE
                 r1_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
             } else {
                 empty_view.visibility = View.GONE
-                //textView_no_events.visibility = View.GONE
                 dashBord_recyclerView1.visibility = View.VISIBLE
             }
             setFilteredDataToAdapter(it)
@@ -108,6 +109,13 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 ShowToast.show(this, it)
             }
         })
+    }
+
+    private fun setRefereshedToken() {
+        var token = GoogleSignIn.getLastSignedInAccount(this)!!.idToken
+        var editor = getSharedPreferences("myPref", Context.MODE_PRIVATE).edit()
+        editor.putString("Token", token)
+        editor.apply()
     }
 
     @OnClick(R.id.user_input)
@@ -179,13 +187,13 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      */
     private fun setItemInDrawerByRole() {
         val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
-        val code = pref.getInt("Code", 10)
-        if (code != 11) {
+        val code = pref.getInt("Code", Constants.EMPLOYEE_CODE)
+        if (code != Constants.HR_CODE) {
             val navMenu = nav_view.menu
             navMenu.findItem(R.id.HR).isVisible = false
             navMenu.findItem(R.id.hr_add).isVisible = false
         }
-        if (code != 12) {
+        if (code != Constants.MANAGER_CODE) {
             val navMenu = nav_view.menu
             navMenu.findItem(R.id.project_manager).isVisible = false
         }
@@ -317,10 +325,9 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 }
                 builder.setNegativeButton(getString(R.string.cancel)) { _, _ ->
                 }
-                //Setting the Uodate Options
+                //Setting the Update Options
                 builder.setNeutralButton("Update") { _, _ ->
-
-                    updateRecurringBookings(finalList, position)
+                    updateRecurringBookings(finalList, position, which)
                 }
                 val dialog: AlertDialog = builder.create()
                 dialog.setCancelable(false)
@@ -334,7 +341,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     }
 
     // Passing Intent to the UpdateBooking Activity
-    private fun updateRecurringBookings(finalList: ArrayList<Manager>, position: Int) {
+    private fun updateRecurringBookings(finalList: ArrayList<Manager>, position: Int, positionOfId: Int) {
         val mGetIntentDataFromActvity = GetIntentDataFromActvity()
         val fromTime = finalList[position].FromTime
         val dateFrom = fromTime!!.split("T")
@@ -346,6 +353,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         mGetIntentDataFromActvity.fromTime = finalList[position].FromTime
         mGetIntentDataFromActvity.toTime = finalList[position].ToTime
         mGetIntentDataFromActvity.cCMail = finalList[position].cCMail
+        mGetIntentDataFromActvity.bookingId = finalList[position].bookingIdList[positionOfId]
         val updateBookingActivityButton = Intent(this, UpdateBookingActivity::class.java)
         updateBookingActivityButton.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActvity)
         startActivity(updateBookingActivityButton)
@@ -412,6 +420,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 ) {
                     i.fromlist.add(item.fromTime!!)
                     i.Status.add(item.status!!)
+                    i.bookingIdList.add(item.bookingId!!)
                     flag = 1
                     break
                 }
@@ -426,6 +435,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 final.FromTime = item.fromTime
                 final.ToTime = item.toTime
                 final.Email = item.email
+                final.bookingIdList.add(item.bookingId!!)
                 final.Status.add(item.status!!)
                 final.cCMail = item.cCMail
                 final.fromlist.add(item.fromTime!!.split("T")[0])

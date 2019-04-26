@@ -18,8 +18,6 @@
                 android:layout_marginTop="50dp"
                 android:src="@drawable/meeting111"
                 />
-                   <!--android:src="@drawable/nineleapslogo1"-->
-
         <TextView
                 android:textColor="@color/lightdarkOrange"
                 android:layout_width="375dp"
@@ -32,16 +30,17 @@
     </LinearLayout>
     <LinearLayout
             android:id="@+id/l2"
-            android:layout_marginTop="135dp"
+            android:padding="8dp"
+            android:layout_marginBottom="24dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|bottom"
+            android:gravity="center|bottom"
             android:orientation="vertical">
 
         <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_button"
                 android:layout_width="wrap_content"
-                android:layout_gravity="bottom"
                 android:layout_height="wrap_content"
         />
 

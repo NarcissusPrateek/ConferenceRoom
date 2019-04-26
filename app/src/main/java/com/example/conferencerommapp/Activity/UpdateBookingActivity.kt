@@ -4,14 +4,14 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
 import android.text.TextUtils
-import android.util.Log
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
@@ -25,6 +25,10 @@ import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.UpdateBookingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import es.dmoral.toasty.Toasty
+
+
+
+
 
 class UpdateBookingActivity : AppCompatActivity() {
 
@@ -59,13 +63,19 @@ class UpdateBookingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_update_booking)
         val actionBar = supportActionBar
         actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.update) + "</font>")
-        mIntentDataFromActivity = getIntentData()
         ButterKnife.bind(this)
-
+        mIntentDataFromActivity = getIntentData()
         init()
         observerData()
+        setStatusOfBooking(mIntentDataFromActivity.bookingId)
         setValuesInEditText(mIntentDataFromActivity)
         setEditTextPicker()
+    }
+
+    // call method of view model
+    private fun setStatusOfBooking(bookingId: Int?) {
+        progressDialog.show()
+        mUpdateBookingViewModel.changeStatus(bookingId!!, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     private fun addDataToObjects(mIntentDataFromActivity: GetIntentDataFromActvity) {
@@ -186,6 +196,20 @@ class UpdateBookingActivity : AppCompatActivity() {
                 ShowToast.show(this, it)
             }
         })
+
+        mUpdateBookingViewModel.returnStatusChanged().observe(this, Observer {
+            progressDialog.dismiss()
+        })
+
+        mUpdateBookingViewModel.returnStatusChangeFailed().observe(this, Observer {
+            progressDialog.dismiss()
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+            }
+            finish()
+        })
     }
 
     private fun validate(): Boolean {
@@ -226,9 +250,14 @@ class UpdateBookingActivity : AppCompatActivity() {
         newFromTime.text = simpleDateFormatForTime1.format(simpleDateFormatForTime.parse(mfromtime[1]))
             .toEditable()//oldFromTime.toString().toEditable()
         newToTime.text = simpleDateFormatForTime1.format(simpleDateFormatForTime.parse(mtotime[1])).toEditable()
-        date.text = mdate.toEditable()
+        date.text = FormatDate.formatDate(mdate).toEditable()
         buildingName.text = mIntentDataFromActivity.buildingName!!.toEditable()
         roomName.text = mIntentDataFromActivity.roomName!!.toEditable()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        mUpdateBookingViewModel.changeStatus(getIntentData().bookingId!!, getUserIdFromPreference(), getTokenFromPreference())
     }
 
 
@@ -272,5 +301,13 @@ class UpdateBookingActivity : AppCompatActivity() {
 
     private fun getUserIdFromPreference(): String {
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        mUpdateBookingViewModel.changeStatus(getIntentData().bookingId!!, getUserIdFromPreference(), getTokenFromPreference())
+        startActivity(Intent(this@UpdateBookingActivity, UserBookingsDashboardActivity::class.java))
+        finish()
+        return true
     }
 }

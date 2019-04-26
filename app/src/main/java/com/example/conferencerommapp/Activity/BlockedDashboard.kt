@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Activity
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -30,24 +31,31 @@ class BlockedDashboard : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     private lateinit var blockedAdapter: BlockedDashboardNew
     private lateinit var mBlockedDashboardViewModel: BlockedDashboardViewModel
+    private lateinit var progressDialog: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_blocked_dashboard)
+        ButterKnife.bind(this)
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Blocked_Rooms) + "</font>")
-
-        ButterKnife.bind(this)
-        mBlockedDashboardViewModel = ViewModelProviders.of(this).get(BlockedDashboardViewModel::class.java)
+        init()
         loadBlocking()
+    }
 
+    /**
+     * Initialize late init fields
+     */
+    fun init() {
+        mBlockedDashboardViewModel = ViewModelProviders.of(this).get(BlockedDashboardViewModel::class.java)
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
     }
 
 
     @OnClick(R.id.maintenance)
     fun blockConferenceActivity() {
-        val maintenanceintent = Intent(applicationContext, BlockConferenceRoomActivity::class.java)
-        startActivity(maintenanceintent)
+        val maintenanceIntent = Intent(applicationContext, BlockConferenceRoomActivity::class.java)
+        startActivity(maintenanceIntent)
     }
 
     override fun onBackPressed() {
@@ -61,17 +69,17 @@ class BlockedDashboard : AppCompatActivity() {
     }
 
     private fun loadBlocking() {
-
-        var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
         mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
         mBlockedDashboardViewModel.returnBlockedRoomList().observe(this, Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
                 empty_view_blocked.visibility = View.VISIBLE
-                empty_view_blocked.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                r2_block_dashboard.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                //empty_view_blocked.setBackgroundColor(Color.parseColor("#FFFFFF"))
             } else {
                 empty_view_blocked.visibility = View.GONE
+                r2_block_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
             }
             blockedAdapter = BlockedDashboardNew(
                 it,
@@ -90,6 +98,7 @@ class BlockedDashboard : AppCompatActivity() {
                 showAlert()
             } else {
                 ShowToast.show(this, it)
+                finish()
             }
         })
     }
@@ -98,7 +107,6 @@ class BlockedDashboard : AppCompatActivity() {
         /**
          * getting Progress Dialog
          */
-        val progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         progressDialog.show()
         mBlockedDashboardViewModel.unBlockRoom(mRoom, getUserIdFromPreference(), getTokenFromPreference())
         mBlockedDashboardViewModel.returnSuccessCodeForUnBlockRoom().observe(this, Observer {

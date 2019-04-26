@@ -34,8 +34,12 @@ class Constants {
          */
         var IP_ADDRESS = "http://192.168.1.197/CRB/"
 
-        const val INTERNAL_SERVER_ERROR = 555
-
         const val SOME_EXCEPTION = 400
+
+        const val HR_CODE = 11
+
+        const val MANAGER_CODE = 12
+
+        const val EMPLOYEE_CODE = 10
     }
 }

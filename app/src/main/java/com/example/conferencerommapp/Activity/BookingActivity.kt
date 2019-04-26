@@ -153,7 +153,7 @@ class BookingActivity : AppCompatActivity() {
     fun setDataToTextView(mBookingDetails: GetIntentDataFromActvity, userName: String) {
         fromTimeTextView.text =
             mBookingDetails.fromTime!!.split(" ")[1] + " - " + mBookingDetails.toTime!!.split(" ")[1]
-        dateTextView.text = mBookingDetails.date!!
+        dateTextView.text = FormatDate.formatDate(mBookingDetails.date!!)
         roomNameTextView.text = mBookingDetails.roomName!!
         buildingNameTextView.text = mBookingDetails.buildingName!!
         employeeNameTextView.text = userName

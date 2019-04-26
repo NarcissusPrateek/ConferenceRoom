@@ -26,6 +26,8 @@ class UpdateBookingViewModel: ViewModel() {
      */
     var mFailureForUpdate =  MutableLiveData<String>()
 
+    var mSuccessForStatusChange = MutableLiveData<Int>()
+    var mFailureForStatusChange = MutableLiveData<String>()
     /**
      * function will initialize the repository object and calls the method of repository which will make the api call
      * and function will return the value for MutableLivedata
@@ -56,5 +58,34 @@ class UpdateBookingViewModel: ViewModel() {
      */
     fun returnUpdateFailed(): MutableLiveData<String> {
         return mFailureForUpdate
+    }
+
+
+    fun changeStatus(mBookignId: Int, userId: String, token: String) {
+        mUpdateBookingRepository = UpdateBookingRepository.getInstance()
+        mUpdateBookingRepository!!.changeStatusForEditBooking(mBookignId, userId, token, object: ResponseListener {
+            override fun onSuccess(success: Any) {
+                mSuccessForStatusChange.value = success as Int
+            }
+
+            override fun onFailure(failure: String) {
+                mFailureForStatusChange.value = failure
+            }
+
+        })
+    }
+
+    /**
+     * function will return the MutableLiveData of Int
+     */
+    fun returnStatusChanged(): MutableLiveData<Int> {
+        return mSuccessForStatusChange
+    }
+
+    /**
+     * function will return the MutableLiveData of Int if something went wrong at server
+     */
+    fun returnStatusChangeFailed(): MutableLiveData<String> {
+        return mFailureForStatusChange
     }
 }

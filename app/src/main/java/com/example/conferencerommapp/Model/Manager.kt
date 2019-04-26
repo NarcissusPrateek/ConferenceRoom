@@ -12,6 +12,7 @@ class Manager {
     var fromlist = ArrayList<String>()
     var Name: List<String>? = null
     var cCMail: List<String>? = null
+    var bookingIdList = ArrayList<Int>()
     override fun toString(): String {
         return "Manager(FromTime=$FromTime, ToTime=$ToTime, BName=$BName, CId=$CId, CName=$CName, Purpose=$Purpose, Email=$Email, Status=$Status, fromlist=$fromlist, Name=$Name, cCMail=$cCMail)"
     }

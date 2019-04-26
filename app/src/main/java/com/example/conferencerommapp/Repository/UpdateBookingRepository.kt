@@ -9,7 +9,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UpdateBookingRepository{
+class UpdateBookingRepository {
     companion object {
         var mUpdateBookingRepository: UpdateBookingRepository? = null
         fun getInstance(): UpdateBookingRepository {
@@ -24,10 +24,10 @@ class UpdateBookingRepository{
      * funcation will make an API call to make request for the updation of booking
      * and call the interface method with data from server
      */
-    fun updateBookingDetails(mUpdateBooking: UpdateBooking,userId: String, token: String, listener: ResponseListener) {
+    fun updateBookingDetails(mUpdateBooking: UpdateBooking, userId: String, token: String, listener: ResponseListener) {
         val service = ServiceBuilder.getObject()
         val requestCall: Call<ResponseBody> = service.update(token, userId, mUpdateBooking)
-        requestCall.enqueue(object :Callback<ResponseBody>{
+        requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")
             }
@@ -36,17 +36,40 @@ class UpdateBookingRepository{
 
                 if (response.isSuccessful) {
                     listener.onSuccess(response.code())
-                }
-                else {
+                } else {
                     try {
                         listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
 
-                    }catch (e: Exception) {
+                    } catch (e: Exception) {
 
                     }
                 }
             }
         })
 
+    }
+
+    /**
+     * api call for change status
+     */
+    fun changeStatusForEditBooking(mBookingId: Int, userId: String, token: String, listener: ResponseListener) {
+        val service = ServiceBuilder.getObject()
+        val requestCall: Call<ResponseBody> = service.chengerStatusOfEditBooking(token, userId, mBookingId)
+        requestCall.enqueue(object : Callback<ResponseBody> {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                listener.onFailure("Internal Server Error!")
+            }
+
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    listener.onSuccess(response.code())
+                } else {
+                    try {
+                        listener.onFailure(JSONObject(response.errorBody()!!.string()).getString("Message"))
+                    } catch (e: Exception) {
+                    }
+                }
+            }
+        })
     }
 }

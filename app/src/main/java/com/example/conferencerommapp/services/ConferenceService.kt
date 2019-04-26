@@ -13,6 +13,13 @@ import retrofit2.http.*
 
 interface ConferenceService {
 
+    @PUT("api/ChangeStatus")
+    fun chengerStatusOfEditBooking(
+        @Header("Token") token: String,
+        @Header("UserId") userId: String,
+        @Body bookId: Int
+    ):Call<ResponseBody>
+
     @GET("api/Building")
     fun getBuildingList(
         @Header("Token") token: String,
@@ -25,6 +32,7 @@ interface ConferenceService {
         @Header("UserId") userId: String,
         @Body availableRoom: FetchConferenceRoom
     ): Call<List<ConferenceRoom>>
+
 
     @GET("api/UserLogin")
     fun getRequestCode(

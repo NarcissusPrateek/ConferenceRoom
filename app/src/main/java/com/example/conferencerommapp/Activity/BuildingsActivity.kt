@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Html.fromHtml
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
 import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import es.dmoral.toasty.Toasty
 
 @Suppress("DEPRECATION")
@@ -84,18 +86,19 @@ class BuildingsActivity : AppCompatActivity() {
             progressDialog.dismiss()
             if(it == getString(R.string.invalid_token)) {
                 showAlert()
+               // setRefereshedToken()
+               // Toast.makeText(this, "try again", Toast.LENGTH_SHORT).show()
             } else {
                 ShowToast.show(this, it)
                 finish()
             }
         })
     }
-
-
     /**
      * show dialog for session expired!
      */
     private fun showAlert() {
+
         var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
                 getString(R.string.session_expired_messgae))
         dialog.setPositiveButton(R.string.ok) { _, _ ->
@@ -158,5 +161,13 @@ class BuildingsActivity : AppCompatActivity() {
 
     fun getUserIdFromPreference(): String {
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
+    }
+
+    private fun setRefereshedToken() {
+        var token = GoogleSignIn.getLastSignedInAccount(this)!!.idToken
+        Log.i("----------refreshed", "" + token)
+        var editor = getSharedPreferences("myPref", Context.MODE_PRIVATE).edit()
+        editor.putString("Token", token)
+        editor.apply()
     }
 }

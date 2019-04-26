@@ -31,6 +31,9 @@ data class Dashboard (
     var name: List<String>? = null,
 
     @SerializedName("cCMail")
-    var cCMail: List<String>? = null
+    var cCMail: List<String>? = null,
+
+    @SerializedName("bookingId")
+    var bookingId: Int? = null
 )
 

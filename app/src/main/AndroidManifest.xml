@@ -93,7 +93,6 @@
         <activity
                 android:name=".SignIn"
                 android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
 
         <activity
