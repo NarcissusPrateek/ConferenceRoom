@@ -29,7 +29,10 @@ import com.example.conferencerommapp.ViewModel.BlockRoomViewModel
 import com.example.conferencerommapp.ViewModel.BuildingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.activity_registration.*
 import kotlinx.android.synthetic.main.activity_spinner.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 @Suppress("NAME_SHADOWING", "DEPRECATION")
 class BlockConferenceRoomActivity : AppCompatActivity() {
@@ -409,9 +412,27 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * validate the purpose using regrex
+     */
+
+    private fun validatePurposeRegrex():Boolean{
+
+        val purposePattern: String = "^[A-Za-z]+"
+        val pattern: Pattern = Pattern.compile(purposePattern)
+        val matcher: Matcher = pattern.matcher(purposeEditText.text)
+        //        return matcher.matches()
+        return if(!matcher.matches()){
+            purpose_layout.error = getString(R.string.invalid_purpose_name)
+            false
+        }
+        else{
+            true
+        }
+    }
 
     private fun validateInput(): Boolean {
-        if (!validateFromTime() or !validateToTime() or !validateDate() or !validatePurpose() or !validateBuildingSpinner() or !validateRoomSpinner()) {
+        if (!validateFromTime() or !validateToTime() or !validateDate() or !validatePurpose() or !validateBuildingSpinner() or !validateRoomSpinner() or !validatePurposeRegrex()) {
             return false
         }
         return true
@@ -479,14 +500,14 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(
+        val dialog = GetAleretDialog.getDialog(
             this, getString(R.string.session_expired), "Your session is expired!\n" +
                     getString(R.string.session_expired_messgae)
         )
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
 
@@ -494,8 +515,8 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
      * sign out from application
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()

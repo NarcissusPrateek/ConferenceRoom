@@ -141,7 +141,7 @@ class RegistrationActivity : AppCompatActivity() {
     private fun getValueFromRoleSpinner() {
 
         val employeeRole = resources.getStringArray(R.array.role)
-        var adapter = ArrayAdapter<String>(this, R.layout.role_spinner_icon, R.id.spinner_text, employeeRole)
+        val adapter = ArrayAdapter<String>(this, R.layout.role_spinner_icon, R.id.spinner_text, employeeRole)
         employeeRoleSpinner.adapter = adapter
         employeeRoleSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -229,12 +229,12 @@ class RegistrationActivity : AppCompatActivity() {
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
                 getString(R.string.session_expired_messgae))
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
 
@@ -242,8 +242,8 @@ class RegistrationActivity : AppCompatActivity() {
      * sign out from application
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
