@@ -129,7 +129,12 @@
     <string name="session_expired">Session Expired!</string>
     <string name="session_expired_messgae">Login again to continue...</string>
     <string name="invalid_token">Invalid Token</string>
-
+    <string name="start_time">Start-Time</string>
+    <string name="end_time">End-Time</string>
+    <string name="start_date">Start-Date</string>
+    <string name="end_date">End-Date</string>
+    <string name="reason">Purpose</string>
+    <string name="block">Block</string>
 
     <string-array name="role">
         <item>Select Role</item>

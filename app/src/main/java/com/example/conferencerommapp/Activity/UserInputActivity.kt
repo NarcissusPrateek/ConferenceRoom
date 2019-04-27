@@ -2,7 +2,9 @@ package com.example.conferencerommapp.Activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html.fromHtml
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -40,9 +42,15 @@ class UserInputActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title =
             fromHtml("<font font-size = \"23px\" color=\"#FFFFFF\">" + getString(R.string.Booking_Details) + "</font>")
-        setPickerToEditText()
+        init()
     }
 
+    private fun init() {
+        setPickerToEditText()
+        textChangeListenerOnDateEditText()
+        textChangeListenerOnFromTimeEditText()
+        textChangeListenerOnToTimeEditText()
+    }
 
     /**
      * function will invoke whenever the button is hit
@@ -90,6 +98,7 @@ class UserInputActivity : AppCompatActivity() {
         capacity_spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
                 capacity = options[position]
+                error_spinner_text_view.visibility = View.GONE
             }
             override fun onNothingSelected(adapterView: AdapterView<*>) {
                 capacity = getString(R.string.select_room_capacity)
@@ -134,7 +143,7 @@ class UserInputActivity : AppCompatActivity() {
      * validation for spinner
      */
     private fun validateSpinner(): Boolean {
-       if(capacity == "Select Room Capacity") {
+       if(capacity == getString(R.string.select_room_capacity)) {
            error_spinner_text_view.visibility = View.VISIBLE
            return false
        }
@@ -241,6 +250,61 @@ class UserInputActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Toast.makeText(this@UserInputActivity, getString(R.string.details_invalid), Toast.LENGTH_LONG).show()
         }
+    }
+
+    /**
+     * add text change listener for the from time edit text
+     */
+    private fun textChangeListenerOnFromTimeEditText() {
+        fromTimeEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateFromTime()
+            }
+        })
+    }
+    /**
+     * add text change listener for the to time edit text
+     */
+    private fun textChangeListenerOnToTimeEditText() {
+        toTimeEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateToTime()
+            }
+        })
+    }
+    /**
+     * add text change listener for the date edit text
+     */
+    private fun textChangeListenerOnDateEditText() {
+        dateEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateDate()
+            }
+        })
     }
 }
 

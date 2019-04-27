@@ -4,7 +4,9 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html
+import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -37,13 +39,13 @@ class AddingConference : AppCompatActivity() {
     private var mConferenceRoom = AddConferenceRoom()
     private lateinit var progressDialog: ProgressDialog
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding_conference)
         ButterKnife.bind(this)
         val actionBar = supportActionBar
         actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Add_Room) + "</font>")
+        textChangeListenerOnRoomName()
         setSpinnerForCapacity()
         init()
         observeData()
@@ -95,6 +97,7 @@ class AddingConference : AppCompatActivity() {
         capacitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
                 capacity = options[position]
+                error_capacity_text_view.visibility = View.INVISIBLE
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {
@@ -135,9 +138,10 @@ class AddingConference : AppCompatActivity() {
      */
     private fun validateSpinner(): Boolean {
         return if (capacity == getString(R.string.select_room_capacity)) {
-            Toast.makeText(this, getString(R.string.select_capacity), Toast.LENGTH_SHORT).show()
+            error_capacity_text_view.visibility = View.VISIBLE
             false
         } else {
+            error_capacity_text_view.visibility = View.INVISIBLE
             true
         }
     }
@@ -196,5 +200,25 @@ class AddingConference : AppCompatActivity() {
 
     fun getUserIdFromPreference(): String {
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
+    }
+
+
+    /**
+     * add text change listener for the room name
+     */
+    private fun textChangeListenerOnRoomName() {
+        conferenceRoomEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateRoomName()
+            }
+        })
     }
 }

@@ -4,7 +4,9 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html.fromHtml
+import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -44,8 +46,49 @@ class AddingBuilding : AppCompatActivity() {
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Add_Buildings) + "</font>")
         ButterKnife.bind(this)
         init()
+        textChangeListenerOnBuildingName()
+        textChangeListenerOnBuildingPlace()
         observeData()
     }
+
+    /**
+     * add text change listener for the building Name
+     */
+    private fun textChangeListenerOnBuildingName() {
+        buildingNameEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateBuildingName()
+            }
+        })
+    }
+
+    /**
+     * add text change listener for the building place
+     */
+    private fun textChangeListenerOnBuildingPlace() {
+        buildingPlaceEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateBuildingPlace()
+            }
+        })
+    }
+
 
     /**
      * function will invoke whenever the add button is clicked
@@ -183,4 +226,5 @@ class AddingBuilding : AppCompatActivity() {
     fun getUserIdFromPreference(): String {
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
+
 }

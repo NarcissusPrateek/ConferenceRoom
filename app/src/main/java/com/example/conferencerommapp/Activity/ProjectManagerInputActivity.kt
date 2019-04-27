@@ -2,7 +2,9 @@ package com.example.conferencerommapp.Activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html.fromHtml
+import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -43,7 +45,16 @@ class ProjectManagerInputActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + "Booking Details" + "</font>")
+        init()
+
+    }
+
+    private fun init() {
         setPickerToEditTexts()
+        textChangeListenerOnFromTimeEditText()
+        textChangeListenerOnToTimeEditText()
+        textChangeListenerOnFromDateEditText()
+        textChangeListenerOnToDateEditText()
     }
 
 
@@ -345,5 +356,79 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             fromTimeList.add("$item $start")
             toTimeList.add("$item $end")
         }
+    }
+
+    /**
+     * add text change listener for the start time edit text
+     */
+    private fun textChangeListenerOnFromTimeEditText() {
+        fromTimeEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateFromTime()
+            }
+        })
+    }
+    /**
+     * add text change listener for the end time edit text
+     */
+    private fun textChangeListenerOnToTimeEditText() {
+        toTimeEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateToTime()
+            }
+        })
+    }
+    /**
+     * add text change listener for the start edit text
+     */
+    private fun textChangeListenerOnFromDateEditText() {
+        dateFromEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateToDate()
+
+            }
+        })
+    }
+    /**
+     * add text change listener for the end date edit text
+     */
+    private fun textChangeListenerOnToDateEditText() {
+        dateToEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateFromDate()
+            }
+        })
     }
 }
