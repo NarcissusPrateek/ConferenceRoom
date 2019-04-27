@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" formatted="true" translatable="true">Nineleaps</string>
+    <string name="app_name" formatted="true" translatable="true">leaps</string>
     <string name="make_an_order">Make an order</string>
     <string name="Add_Buildings">Add Buildings</string>
     <string name="Bookings">Bookings</string>
@@ -38,7 +38,6 @@
     <string name="Registration">Registration</string>
     <string name="Block">Block Room</string>
     <string name="details_invalid">Details are Invalid!!!</string>
-    <string name="preference">myPref</string>
     <string name="ok">OK</string>
     <string name="server_error">Some Internal server Error!</string>
     <string name="server_not_found">Server not found!! Please try again after some time</string>
@@ -127,10 +126,23 @@
     <string name="select_room_capacity">Select Room Capacity</string>
     <string name="server_client_id">861287179604-0bl5rqopv0mip6ssob9bis5iqpb7e2nh.apps.googleusercontent.com</string>
     <string name="server_client_id_partial">412993903680-c42t2d0vb3a5rm500scouka9h3ok2eqq.apps.googleusercontent.com</string>
+    <string name="start_time">Start-Time</string>
+    <string name="end_time">End-Time</string>
+    <string name="start_date">Start-Date</string>
+    <string name="end_date">End-Date</string>
+    <string name="reason">Purpose</string>
+    <string name="block">Block</string>
+    <string name="not_set">Not Set</string>
+    <string name="token">Token</string>
+    <string name="user_id">UserId</string>
+    <string name="preference">myPref</string>
     <string name="session_expired">Session Expired!</string>
     <string name="session_expired_messgae">Login again to continue...</string>
     <string name="invalid_token">Invalid Token</string>
-
+    <string name="invalid_building_name">Invalid Building Name</string>
+    <string name="invalid_building_place">Invalid Building Place</string>
+    <string name="invalid_emp_id">Invalid Employee Id</string>
+    <string name="invalid_purpose_name">Invalid Purpose Name</string>
 
     <string-array name="role">
         <item>Select Role</item>
