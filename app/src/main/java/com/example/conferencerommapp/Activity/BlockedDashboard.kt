@@ -43,7 +43,7 @@ class BlockedDashboard : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Blocked_Rooms) + "</font>")
         init()
-       // observeData()
+        observeData()
         loadBlocking()
     }
     /**
@@ -56,59 +56,59 @@ class BlockedDashboard : AppCompatActivity() {
 
     /**
      * observing data for BlockDashboardList
-//     */
-//    private fun observeData(){
-//        /**
-//         * observing data for BlockDashboardList
-//         */
-//        mBlockedDashboardViewModel.returnBlockedRoomList().observe(this, Observer {
-//            progressDialog.dismiss()
-//            if (it.isEmpty()) {
-//                empty_view_blocked.visibility = View.VISIBLE
-//                r2_block_dashboard.setBackgroundColor(Color.parseColor("#FFFFFF"))
-//                //empty_view_blocked.setBackgroundColor(Color.parseColor("#FFFFFF"))
-//            } else {
-//                empty_view_blocked.visibility = View.GONE
-//                r2_block_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
-//            }
-//            blockedAdapter = BlockedDashboardNew(
-//                it,
-//                this,
-//                object: BlockedDashboardNew.UnblockRoomListener {
-//                    override fun onClickOfUnblock(mRoom: Unblock) {
-//                        unblockRoom(mRoom)
-//                    }
-//                })
-//            recyclerView.adapter = blockedAdapter
-//
-//        })
-//        mBlockedDashboardViewModel.returnFailureCodeFromBlockedApi().observe(this, Observer {
-//            progressDialog.dismiss()
-//            if(it == getString(R.string.invalid_token)) {
-//                showAlert()
-//            } else {
-//                ShowToast.show(this, it)
-//                finish()
-//            }
-//        })
-//        /**
-//         * observing data for Unblocking
-//          */
-//        mBlockedDashboardViewModel.returnSuccessCodeForUnBlockRoom().observe(this, Observer {
-//            progressDialog.dismiss()
-//            Toasty.success(this, getString(R.string.room_unblocked), Toast.LENGTH_SHORT, true).show()
-//            mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
-//        })
-//        mBlockedDashboardViewModel.returnFailureCodeForUnBlockRoom().observe(this, Observer {
-//            progressDialog.dismiss()
-//            if(it == getString(R.string.invalid_token)) {
-//                showAlert()
-//            }else {
-//                ShowToast.show(this, it)
-//            }
-//
-//        })
-//    }
+     */
+    private fun observeData(){
+        /**
+         * observing data for BlockDashboardList
+         */
+        mBlockedDashboardViewModel.returnBlockedRoomList().observe(this, Observer {
+            progressDialog.dismiss()
+            if (it.isEmpty()) {
+                empty_view_blocked.visibility = View.VISIBLE
+                r2_block_dashboard.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                //empty_view_blocked.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            } else {
+                empty_view_blocked.visibility = View.GONE
+                r2_block_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
+            }
+            blockedAdapter = BlockedDashboardNew(
+                it,
+                this,
+                object: BlockedDashboardNew.UnblockRoomListener {
+                    override fun onClickOfUnblock(mRoom: Unblock) {
+                        unblockRoom(mRoom)
+                    }
+                })
+            recyclerView.adapter = blockedAdapter
+
+        })
+        mBlockedDashboardViewModel.returnFailureCodeFromBlockedApi().observe(this, Observer {
+            progressDialog.dismiss()
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            } else {
+                ShowToast.show(this, it)
+                finish()
+            }
+        })
+        /**
+         * observing data for Unblocking
+          */
+        mBlockedDashboardViewModel.returnSuccessCodeForUnBlockRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            Toasty.success(this, getString(R.string.room_unblocked), Toast.LENGTH_SHORT, true).show()
+            mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
+        })
+        mBlockedDashboardViewModel.returnFailureCodeForUnBlockRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+            }
+
+        })
+    }
 
     @OnClick(R.id.maintenance)
     fun blockConferenceActivity() {
