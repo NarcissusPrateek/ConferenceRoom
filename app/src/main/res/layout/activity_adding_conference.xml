@@ -49,6 +49,16 @@
                 android:drawablePadding="5dp"
                 android:layout_marginTop="25dp"
                 android:background="@drawable/spinner_rect_for_add_conference"/>
+        <TextView
+                android:id="@+id/error_capacity_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ba160c"
+                android:visibility="invisible"
+                android:layout_marginStart="11dp"
+                android:textSize="12sp"
+                android:text="Select capacity"/>
+
 
         <Button android:id="@+id/add_conference_room"
                 android:layout_width="fill_parent"

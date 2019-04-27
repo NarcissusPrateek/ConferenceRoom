@@ -18,5 +18,6 @@
     <color name="dayPressed">#303F9F</color>
     <color name="daySelected">#0072bc</color>
     <color name="dayDeselected">@android:color/darker_gray</color>
+    <color name="error_color">#ba160c</color>
 
 </resources>

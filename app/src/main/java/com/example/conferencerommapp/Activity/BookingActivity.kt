@@ -5,7 +5,9 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html.fromHtml
+import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -77,6 +79,7 @@ class BookingActivity : AppCompatActivity() {
         acct = GoogleSignIn.getLastSignedInAccount(applicationContext)!!
         // getting view model object
         mBookingViewModel = ViewModelProviders.of(this).get(BookingViewModel::class.java)
+        textChangeListenerOnPurposeEditText()
     }
 
     /**
@@ -227,5 +230,24 @@ class BookingActivity : AppCompatActivity() {
 
     private fun getUserIdFromPreference(): String {
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
+    }
+
+    /**
+     * add text change listener for the purpose edit text
+     */
+    private fun textChangeListenerOnPurposeEditText() {
+        purposeEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateInput()
+            }
+        })
     }
 }

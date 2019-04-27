@@ -122,7 +122,7 @@ class UpdateBookingActivity : AppCompatActivity() {
                 val (elapsed, elapsed2) = ConvertTimeInMillis.calculateTimeInMilliseconds(
                     startTime,
                     endTime,
-                    date.text.toString()
+                    mIntentDataFromActivity.date.toString()
                 )
                 /**
                  * if the elapsed2 < 0 that means the from time is less than the current time. In that case

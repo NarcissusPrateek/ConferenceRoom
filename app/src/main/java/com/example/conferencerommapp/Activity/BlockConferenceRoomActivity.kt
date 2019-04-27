@@ -5,7 +5,9 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html.fromHtml
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -72,7 +74,10 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         mBuildingViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
         mBlockRoomViewModel = ViewModelProviders.of(this).get(BlockRoomViewModel::class.java)
-
+        textChangeListenerOnDateEditText()
+        textChangeListenerOnFromTimeEditText()
+        textChangeListenerOnToTimeEditText()
+        textChangeListenerOnPurposeEditText()
     }
     /**
      * observing data for building list
@@ -278,6 +283,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 room.bId = itemsId[position]
                 mBuildingName = items[position]
+                error_spinner_building_text_view.visibility = View.INVISIBLE
                 conferenceRoomListFromBackend(itemsId[position])
             }
         }
@@ -317,6 +323,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 room.cId = conferenceid[position]
                 mRoomName = conferencename[position]
+                error_spinner_room_text_view.visibility = View.INVISIBLE
             }
         }
 
@@ -525,4 +532,80 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
     private fun getUserIdFromPreference(): String {
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
+
+    /**
+     * add text change listener for the start time edit text
+     */
+    private fun textChangeListenerOnFromTimeEditText() {
+        fromTimeEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateFromTime()
+            }
+        })
+    }
+    /**
+     * add text change listener for the end time edit text
+     */
+    private fun textChangeListenerOnToTimeEditText() {
+        toTimeEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateToTime()
+            }
+        })
+    }
+    /**
+     * add text change listener for the start edit text
+     */
+    private fun textChangeListenerOnDateEditText() {
+        dateEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validateDate()
+
+            }
+        })
+    }
+
+    /**
+     * add text change listener for the purpose edit text
+     */
+    private fun textChangeListenerOnPurposeEditText() {
+        purposeEditText.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                // nothing here
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // nothing here
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validatePurpose()
+            }
+        })
+    }
+
 }
