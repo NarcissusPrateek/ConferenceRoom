@@ -97,7 +97,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * validate from time for non empty condition
      */
     private fun validateFromTime(): Boolean {
-        var input = fromTimeEditText.text.toString().trim()
+        val input = fromTimeEditText.text.toString().trim()
         return if (input.isEmpty()) {
             manager_from_time_layout.error = getString(R.string.field_cant_be_empty)
             false
@@ -111,7 +111,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * validate to-time for non empty condition
      */
     private fun validateToTime(): Boolean {
-        var input = toTimeEditText.text.toString().trim()
+        val input = toTimeEditText.text.toString().trim()
         return if (input.isEmpty()) {
             manager_to_time_layout.error = getString(R.string.field_cant_be_empty)
             false
@@ -125,7 +125,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * validate to-date for non empty condition
      */
     private fun validateToDate(): Boolean {
-        var input = dateFromEditText.text.toString().trim()
+        val input = dateFromEditText.text.toString().trim()
         return if (input.isEmpty()) {
             manager_from_date_layout.error = getString(R.string.field_cant_be_empty)
             false
@@ -139,7 +139,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * validate from-date for non empty condition
      */
     private fun validateFromDate(): Boolean {
-        var input = dateToEditText.text.toString().trim()
+        val input = dateToEditText.text.toString().trim()
         return if (input.isEmpty()) {
             manager_to_date_layout.error = getString(R.string.field_cant_be_empty)
             false

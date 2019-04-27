@@ -84,7 +84,7 @@ class UserInputActivity : AppCompatActivity() {
      */
     private fun setCapacitySpinner() {
         val options = mutableListOf("Select Room Capacity","2", "4", "6", "8", "10", "12", "14", "16")
-        var adapter = ArrayAdapter<String>(this, R.layout.spinner_icon, R.id.spinner_text, options)
+        val adapter = ArrayAdapter<String>(this, R.layout.spinner_icon, R.id.spinner_text, options)
         capacity_spinner.adapter = adapter
 
         capacity_spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
@@ -98,7 +98,7 @@ class UserInputActivity : AppCompatActivity() {
     }
 
     private fun validateFromTime(): Boolean {
-        var input = fromTimeEditText.text.toString().trim()
+        val input = fromTimeEditText.text.toString().trim()
         return if (input.isEmpty()) {
             from_time_layout.error = getString(R.string.field_cant_be_empty)
             false
@@ -109,7 +109,7 @@ class UserInputActivity : AppCompatActivity() {
     }
 
     private fun validateToTime(): Boolean {
-        var input = toTimeEditText.text.toString().trim()
+        val input = toTimeEditText.text.toString().trim()
         return if (input.isEmpty()) {
             to_time_layout.error = getString(R.string.field_cant_be_empty)
             false
@@ -120,7 +120,7 @@ class UserInputActivity : AppCompatActivity() {
     }
 
     private fun validateDate(): Boolean {
-        var input = dateEditText.text.toString().trim()
+        val input = dateEditText.text.toString().trim()
         return if (input.isEmpty()) {
             date_layout.error = getString(R.string.field_cant_be_empty)
             false

@@ -32,6 +32,9 @@ import kotlinx.android.synthetic.main.activity_spinner.*
 @Suppress("NAME_SHADOWING", "DEPRECATION")
 class BlockConferenceRoomActivity : AppCompatActivity() {
 
+    /**
+     * Declaring Global variables and butterknife
+     */
     @BindView(R.id.fromTime_b)
     lateinit var fromTimeEditText: EditText
     @BindView(R.id.toTime_b)
@@ -59,15 +62,19 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * initialize all lateinit variables
+     */
     fun init() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         mBuildingViewModel = ViewModelProviders.of(this).get(BuildingViewModel::class.java)
         mBlockRoomViewModel = ViewModelProviders.of(this).get(BlockRoomViewModel::class.java)
 
     }
-
+    /**
+     * observing data for building list
+     */
     private fun observeData() {
-        // observe data for building list
         mBuildingViewModel.returnMBuildingSuccess().observe(this, Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
@@ -159,13 +166,19 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * function will invoke whenever the block button is pressed
+     */
+
     @OnClick(R.id.block_conference)
     fun blockButton() {
         if (validateInput()) {
             validationOnDataEnteredByUser()
         }
     }
-
+    /**
+     *  set values to the different properties of object which is required for api call
+     */
     private fun addDataToObject() {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
         room.email = acct!!.email
@@ -176,6 +189,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * set the date and time picker
+     */
     private fun setDialogsToInputFields() {
 
         fromTimeEditText.setOnClickListener {
@@ -192,7 +208,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
 
 
     }
-
+    /**
+     * function calls the ViewModel of getbuilding
+     */
     private fun getBuilding() {
         progressDialog.show()
 
@@ -200,16 +218,31 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         mBuildingViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
+    /**
+     * function calls the ViewModel of blocking
+     */
     private fun blocking(room: BlockRoom) {
         progressDialog.show()
         mBlockRoomViewModel.blockingStatus(room, getUserIdFromPreference(), getTokenFromPreference())
     }
-
+    /**
+     * function calls the ViewModel of blockingConfirmed
+     */
     private fun blockConfirmed(mRoom: BlockRoom) {
         progressDialog.show()
         mBlockRoomViewModel.blockRoom(mRoom, getUserIdFromPreference(), getTokenFromPreference())
     }
+    /**
+     * function calls the ViewModel of getConference for the Selected Building
+     */
+    fun conferenceRoomListFromBackend(buildingId: Int) {
+        progressDialog.show()
+        mBlockRoomViewModel.getRoomList(buildingId, getUserIdFromPreference(), getTokenFromPreference())
+    }
 
+    /**
+     *Setting the empty text to the Spinner if the data is empty
+     */
     private fun buildingListFromBackend(it: List<Building>) {
         if (it.isEmpty()) {
             Toasty.info(this, R.string.empty_building_list, Toast.LENGTH_SHORT, true).show()
@@ -218,6 +251,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Setting the Building Data to the Spinner if the data is not empty
+     */
     private fun sendDataForSpinner(it: List<Building>) {
         val items = mutableListOf<String>()
         val itemsId = mutableListOf<Int>()
@@ -244,11 +280,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         }
     }
 
-    fun conferenceRoomListFromBackend(buildingId: Int) {
-        progressDialog.show()
-        mBlockRoomViewModel.getRoomList(buildingId, getUserIdFromPreference(), getTokenFromPreference())
-    }
-
+    /**
+     * Setting the Conference Data to the Spinner
+     */
     private fun setSpinnerToConferenceList(it: List<BuildingConference>) {
         val conferencename = mutableListOf<String>()
         val conferenceid = mutableListOf<Int>()
@@ -368,6 +402,7 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         }
     }
 
+
     private fun validateInput(): Boolean {
         if (!validateFromTime() or !validateToTime() or !validateDate() or !validatePurpose() or !validateBuildingSpinner() or !validateRoomSpinner()) {
             return false
@@ -375,6 +410,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         return true
     }
 
+    /**
+     * Validating the from-time and to-time having the conditions
+     */
     private fun validationOnDataEnteredByUser() {
         val minmilliseconds: Long = 900000
         val maxmilliseconds: Long = 14400000
@@ -422,6 +460,9 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Adding the data to the objects
+     */
     private fun blockRoom() {
         addDataToObject()
         blocking(room)

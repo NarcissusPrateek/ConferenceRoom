@@ -126,6 +126,7 @@
     <string name="room_capacity">Room Capacity</string>
     <string name="select_room_capacity">Select Room Capacity</string>
     <string name="server_client_id">861287179604-0bl5rqopv0mip6ssob9bis5iqpb7e2nh.apps.googleusercontent.com</string>
+    <string name="server_client_id_partial">412993903680-c42t2d0vb3a5rm500scouka9h3ok2eqq.apps.googleusercontent.com</string>
     <string name="session_expired">Session Expired!</string>
     <string name="session_expired_messgae">Login again to continue...</string>
     <string name="invalid_token">Invalid Token</string>

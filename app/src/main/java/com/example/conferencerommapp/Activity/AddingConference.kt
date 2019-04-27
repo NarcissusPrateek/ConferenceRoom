@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.activity_adding_conference.*
 
 @Suppress("DEPRECATION")
 class AddingConference : AppCompatActivity() {
-
     /**
      * Declaring Global variables and butterknife
      */
@@ -47,9 +46,7 @@ class AddingConference : AppCompatActivity() {
         setSpinnerForCapacity()
         init()
         observeData()
-
     }
-
     /**
      * initialize all lateinit variables
      */
@@ -57,7 +54,6 @@ class AddingConference : AppCompatActivity() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddConferenceRoomViewModel = ViewModelProviders.of(this).get(AddConferenceRoomViewModel::class.java)
     }
-
     /**
      * observing data for adding conference
      */
@@ -69,10 +65,13 @@ class AddingConference : AppCompatActivity() {
         })
         mAddConferenceRoomViewModel.returnFailureForAddingRoom().observe(this, Observer {
             progressDialog.dismiss()
-            ShowToast.show(this, it)
+            if (it == getString(R.string.invalid_token)) {
+                showAlert()
+            } else {
+                ShowToast.show(this, it)
+            }
         })
     }
-
     /**
      * function will invoke whenever the add button is clicked
      */
@@ -83,15 +82,13 @@ class AddingConference : AppCompatActivity() {
             addRoom(mConferenceRoom)
         }
     }
-
     /**
      * function will set the BlockConferenceRoomActivity Value for the capacity
      */
     private fun setSpinnerForCapacity() {
         val options = mutableListOf("Select Room Capacity", "2", "4", "6", "8", "10", "12", "14", "16")
-        var adapter = ArrayAdapter<String>(this, R.layout.spinner_icon, R.id.spinner_text, options)
+        val adapter = ArrayAdapter<String>(this, R.layout.spinner_icon, R.id.spinner_text, options)
         capacitySpinner.adapter = adapter
-
         capacitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, id: Long) {
                 capacity = options[position]
@@ -102,7 +99,6 @@ class AddingConference : AppCompatActivity() {
             }
         }
     }
-
     /**
      *  set values to the different properties of object which is required for api call
      */
@@ -112,10 +108,7 @@ class AddingConference : AppCompatActivity() {
         mConferenceRoom.bId = buildingId
         mConferenceRoom.roomName = conferenceRoomEditText.text.toString().trim()
         mConferenceRoom.capacity = capacity.toInt()
-
-
     }
-
     /**
      * validation for room employeeList
      */
@@ -129,7 +122,6 @@ class AddingConference : AppCompatActivity() {
             true
         }
     }
-
     /**
      * validation for spinner
      */
@@ -141,7 +133,6 @@ class AddingConference : AppCompatActivity() {
             true
         }
     }
-
     /**
      * validate all input fields
      */
@@ -151,37 +142,33 @@ class AddingConference : AppCompatActivity() {
         }
         return true
     }
-
     /**
      * function calls the ViewModel of addingConference and data into the database
      */
     private fun addRoom(mConferenceRoom: AddConferenceRoom) {
         progressDialog.show()
         mAddConferenceRoomViewModel.addConferenceDetails(mConferenceRoom, getUserIdFromPreference(), getTokenFromPreference())
-
     }
-
     /**
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(
+        val dialog = GetAleretDialog.getDialog(
             this, getString(R.string.session_expired), "Your session is expired!\n" +
                     getString(R.string.session_expired_messgae)
         )
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
-
     /**
      * sign out from application
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()

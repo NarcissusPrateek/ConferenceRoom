@@ -27,6 +27,9 @@ import kotlinx.android.synthetic.main.activity_blocked_dashboard.*
 @Suppress("DEPRECATION")
 class BlockedDashboard : AppCompatActivity() {
 
+    /**
+     * Declaring Global variables and butterknife
+     */
     @BindView(R.id.block_recyclerView)
     lateinit var recyclerView: RecyclerView
     private lateinit var blockedAdapter: BlockedDashboardNew
@@ -40,6 +43,7 @@ class BlockedDashboard : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Blocked_Rooms) + "</font>")
         init()
+        observeData()
         loadBlocking()
     }
 
@@ -51,26 +55,13 @@ class BlockedDashboard : AppCompatActivity() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
     }
 
-
-    @OnClick(R.id.maintenance)
-    fun blockConferenceActivity() {
-        val maintenanceIntent = Intent(applicationContext, BlockConferenceRoomActivity::class.java)
-        startActivity(maintenanceIntent)
-    }
-
-    override fun onBackPressed() {
-        startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
-        finish()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
-    }
-
-    private fun loadBlocking() {
-        progressDialog.show()
-        mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
+    /**
+     * observing data for BlockDashboardList
+     */
+    private fun observeData(){
+        /**
+         * observing data for BlockDashboardList
+         */
         mBlockedDashboardViewModel.returnBlockedRoomList().observe(this, Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
@@ -101,14 +92,9 @@ class BlockedDashboard : AppCompatActivity() {
                 finish()
             }
         })
-    }
-
-    fun unblockRoom(mRoom: Unblock) {
         /**
-         * getting Progress Dialog
-         */
-        progressDialog.show()
-        mBlockedDashboardViewModel.unBlockRoom(mRoom, getUserIdFromPreference(), getTokenFromPreference())
+         * observing data for Unblocking
+          */
         mBlockedDashboardViewModel.returnSuccessCodeForUnBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
             Toasty.success(this, getString(R.string.room_unblocked), Toast.LENGTH_SHORT, true).show()
@@ -125,16 +111,53 @@ class BlockedDashboard : AppCompatActivity() {
         })
     }
 
+    @OnClick(R.id.maintenance)
+    fun blockConferenceActivity() {
+        val maintenanceIntent = Intent(applicationContext, BlockConferenceRoomActivity::class.java)
+        startActivity(maintenanceIntent)
+    }
+
+    /**
+     * Redirects to the UserBookingDashBoardActivity
+     */
+    override fun onBackPressed() {
+        startActivity(Intent(this, UserBookingsDashboardActivity::class.java))
+        finish()
+    }
+    /**
+     * function calls the ViewModel of blocking on Restart the Activity
+     */
+    override fun onRestart() {
+        super.onRestart()
+        mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
+    }
+    /**
+     * function calls the ViewModel of blockedList
+     */
+    private fun loadBlocking() {
+        progressDialog.show()
+        mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
+
+    }
+
+    /**
+     * function calls the ViewModel of Unblock
+     */
+    fun unblockRoom(mRoom: Unblock) {
+        progressDialog.show()
+        mBlockedDashboardViewModel.unBlockRoom(mRoom, getUserIdFromPreference(), getTokenFromPreference())
+    }
+
     /**
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
                 getString(R.string.session_expired_messgae))
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
 
@@ -142,8 +165,8 @@ class BlockedDashboard : AppCompatActivity() {
      * sign out from application
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()

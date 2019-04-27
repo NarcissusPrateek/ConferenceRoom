@@ -64,7 +64,6 @@ class AddingBuilding : AppCompatActivity() {
     fun init() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddBuildingViewModel = ViewModelProviders.of(this).get(AddBuildingViewModel::class.java)
-
     }
 
     /**
@@ -75,7 +74,6 @@ class AddingBuilding : AppCompatActivity() {
             progressDialog.dismiss()
             Toasty.success(this, getString(R.string.building_added), Toast.LENGTH_SHORT, true).show()
             finish()
-
         })
         mAddBuildingViewModel.returnFailureForAddBuilding().observe(this, Observer {
             progressDialog.dismiss()
@@ -86,7 +84,6 @@ class AddingBuilding : AppCompatActivity() {
             }
         })
     }
-
     /**
      *  set values to the different properties of object which is required for api call
      */
@@ -94,8 +91,6 @@ class AddingBuilding : AppCompatActivity() {
         mAddBuilding.buildingName = buildingNameEditText.text.toString().trim()
         mAddBuilding.place = buildingPlaceEditText.text.toString().trim()
     }
-
-
     /**
      * validation for building employeeList
      */
@@ -109,7 +104,6 @@ class AddingBuilding : AppCompatActivity() {
             true
         }
     }
-
     /**
      * validation for building place
      */
@@ -123,7 +117,6 @@ class AddingBuilding : AppCompatActivity() {
             true
         }
     }
-
     /**
      * validate all input fields
      */
@@ -133,7 +126,6 @@ class AddingBuilding : AppCompatActivity() {
         }
         return true
     }
-
     /**
      * function calls the ViewModel of addingBuilding and send data to the backend
      */
@@ -150,17 +142,16 @@ class AddingBuilding : AppCompatActivity() {
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(
+        val dialog = GetAleretDialog.getDialog(
             this, getString(R.string.session_expired), "Your session is expired!\n" +
                     getString(R.string.session_expired_messgae)
         )
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
-
     /**
      * sign out from application
      */
@@ -172,7 +163,6 @@ class AddingBuilding : AppCompatActivity() {
                 finish()
             }
     }
-
     /**
      * get token and userId from local storage
      */

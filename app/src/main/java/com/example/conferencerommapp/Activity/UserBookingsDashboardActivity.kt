@@ -111,13 +111,9 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         })
     }
 
-    private fun setRefereshedToken() {
-        var token = GoogleSignIn.getLastSignedInAccount(this)!!.idToken
-        var editor = getSharedPreferences("myPref", Context.MODE_PRIVATE).edit()
-        editor.putString("Token", token)
-        editor.apply()
-    }
-
+    /**
+     * On Click on Floating Action Button goes to UserInputActivity
+     */
     @OnClick(R.id.user_input)
     fun userInputActivityFloatingActionButton() {
         startActivity(Intent(this@UserBookingsDashboardActivity, UserInputActivity::class.java))
@@ -385,7 +381,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      */
     fun showMeetingMembers(mEmployeeList: List<String>) {
         val arrayListOfNames = ArrayList<String>()
-        for (item in mEmployeeList!!) {
+        for (item in mEmployeeList) {
             arrayListOfNames.add(item)
         }
         val listItems = arrayOfNulls<String>(arrayListOfNames.size)
@@ -461,12 +457,12 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
                 getString(R.string.session_expired_messgae))
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
 
