@@ -77,8 +77,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
                 Toasty.info(this, getString(R.string.room_not_available), Toast.LENGTH_SHORT, true).show()
                 finish()
             }else {
-
-                var filteredList = getFilteredList(it)
+                val filteredList = getFilteredList(it)
                 mCustomAdapter = ConferenceRoomAdapter(
                     filteredList,
                     object : ConferenceRoomAdapter.BtnClickListener {
@@ -106,7 +105,7 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      * filter the list based on objects
      */
     private fun getFilteredList(it: List<ConferenceRoom>?): List<ConferenceRoom> {
-        var filteredListOfRooms = ArrayList<ConferenceRoom>()
+        val filteredListOfRooms = ArrayList<ConferenceRoom>()
         for(room in it!!) {
             if(filteredListOfRooms.isEmpty()) {
                 filteredListOfRooms.add(room)
@@ -155,12 +154,12 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
                 getString(R.string.session_expired_messgae))
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
 
@@ -168,8 +167,8 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
      * sign out from application
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()

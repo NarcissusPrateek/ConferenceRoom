@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Activity
 
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -35,6 +36,8 @@ class ManagerSelectMeetingMembers: AppCompatActivity() {
     lateinit var searchEditText: EditText
     private lateinit var mSelectMemberViewModel: SelectMemberViewModel
     lateinit var progressDialog: ProgressDialog
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_meeting_members)
@@ -105,14 +108,14 @@ class ManagerSelectMeetingMembers: AppCompatActivity() {
             return
         }
         var emailString = ""
-        var size = selectedName.size
+        val size = selectedName.size
         selectedEmail.indices.forEach { index ->
             emailString += selectedEmail[index]
             if(index != (size - 1)) {
                 emailString += ","
             }
         }
-        var mGetIntentDataFromActivity = getIntentData()
+        val mGetIntentDataFromActivity = getIntentData()
         mGetIntentDataFromActivity.emailOfSelectedEmployees = emailString
         val intent = Intent(this@ManagerSelectMeetingMembers, ManagerBookingActivity::class.java)
         intent.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActivity)
@@ -148,6 +151,7 @@ class ManagerSelectMeetingMembers: AppCompatActivity() {
     /**
      * clear text in search bar whenever clear drawable clicked
      */
+    @SuppressLint("ClickableViewAccessibility")
     private fun EditText.onRightDrawableClicked(onClicked: (view: EditText) -> Unit) {
         this.setOnTouchListener { v, event ->
             var hasConsumed = false
@@ -195,19 +199,19 @@ class ManagerSelectMeetingMembers: AppCompatActivity() {
                 filterName.add(s)
             }
         }
-        customAdapter!!.filterList(filterName)
+        customAdapter.filterList(filterName)
     }
 
     /**
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
                 getString(R.string.session_expired_messgae))
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
 
@@ -215,8 +219,8 @@ class ManagerSelectMeetingMembers: AppCompatActivity() {
      * sign out from application
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()

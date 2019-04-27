@@ -75,7 +75,7 @@ class SignIn : AppCompatActivity() {
     private fun initializeGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
-            .requestIdToken(getString(R.string.server_client_id))
+            .requestIdToken(getString(R.string.server_client_id_partial))
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
@@ -106,6 +106,7 @@ class SignIn : AppCompatActivity() {
      */
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
+
             val account = completedTask.getResult(ApiException::class.java)
             saveTokenAndUserIdInSharedPreference(account!!.idToken, account.id)
             checkRegistration(account.email.toString())

@@ -56,10 +56,6 @@ class ConferenceRoomActivity : AppCompatActivity() {
      * get the object of ViewModel class and by using this object we call the api and set the observer on the function
      */
     private fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity, mFetchRoom: FetchConferenceRoom) {
-        /**
-         * get progress dialog
-         */
-
         progressDialog.show()
         mConferenceRoomViewModel.getConferenceRoomList(mFetchRoom, getUserIdFromPreference(), getTokenFromPreference())
     }
@@ -140,26 +136,15 @@ class ConferenceRoomActivity : AppCompatActivity() {
     }
 
     /**
-     * show alert dialog when rooms are not available
-     */
-    fun showAlertDialog() {
-        val mDialog = GetAleretDialog.getDialog(this, getString(R.string.status), getString(R.string.room_not_available))
-        mDialog.setPositiveButton(getString(R.string.ok)) {_,_->
-            finish()
-        }
-        GetAleretDialog.showDialog(mDialog)
-    }
-
-    /**
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
                 getString(R.string.session_expired_messgae))
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
 
@@ -167,8 +152,8 @@ class ConferenceRoomActivity : AppCompatActivity() {
      * sign out from application
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()

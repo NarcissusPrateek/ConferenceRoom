@@ -23,6 +23,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_registration.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 @Suppress("DEPRECATION")
@@ -90,10 +92,28 @@ class RegistrationActivity : AppCompatActivity() {
         }
     }
     /**
+     * validate the empId using regrex
+     */
+
+    private fun validateEmpIdRegrex():Boolean{
+
+            val empIdPattern: String = "^[Nn][Ll][Ii][-][0-9][0-9][0-9]"
+            val pattern: Pattern = Pattern.compile(empIdPattern)
+            val matcher: Matcher = pattern.matcher(employeeIdEditText.text)
+    //        return matcher.matches()
+        return if(!matcher.matches()){
+            employee_id_layout.error = "Invalid Employee Id"
+            false
+        }
+        else{
+            true
+            }
+        }
+    /**
      * validate all data of input fields entered by user
      */
     private fun validateInput(): Boolean {
-        if(!validateId() or !validateRoleSpinner()) {
+        if(!validateId() or !validateRoleSpinner() or !validateEmpIdRegrex()) {
             return false
         }
         return true

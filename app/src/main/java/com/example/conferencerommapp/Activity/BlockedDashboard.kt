@@ -40,7 +40,6 @@ class BlockedDashboard : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Blocked_Rooms) + "</font>")
         init()
-        observeData()
         loadBlocking()
     }
 
@@ -69,12 +68,15 @@ class BlockedDashboard : AppCompatActivity() {
         mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
-    private fun observeData() {
+    private fun loadBlocking() {
+        progressDialog.show()
+        mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
         mBlockedDashboardViewModel.returnBlockedRoomList().observe(this, Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
                 empty_view_blocked.visibility = View.VISIBLE
                 r2_block_dashboard.setBackgroundColor(Color.parseColor("#FFFFFF"))
+                //empty_view_blocked.setBackgroundColor(Color.parseColor("#FFFFFF"))
             } else {
                 empty_view_blocked.visibility = View.GONE
                 r2_block_dashboard.setBackgroundColor(Color.parseColor("#F7F7F7"))
@@ -99,6 +101,14 @@ class BlockedDashboard : AppCompatActivity() {
                 finish()
             }
         })
+    }
+
+    fun unblockRoom(mRoom: Unblock) {
+        /**
+         * getting Progress Dialog
+         */
+        progressDialog.show()
+        mBlockedDashboardViewModel.unBlockRoom(mRoom, getUserIdFromPreference(), getTokenFromPreference())
         mBlockedDashboardViewModel.returnSuccessCodeForUnBlockRoom().observe(this, Observer {
             progressDialog.dismiss()
             Toasty.success(this, getString(R.string.room_unblocked), Toast.LENGTH_SHORT, true).show()
@@ -113,19 +123,6 @@ class BlockedDashboard : AppCompatActivity() {
             }
 
         })
-    }
-    private fun loadBlocking() {
-        progressDialog.show()
-        mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
-    }
-
-    fun unblockRoom(mRoom: Unblock) {
-        /**
-         * getting Progress Dialog
-         */
-        progressDialog.show()
-        mBlockedDashboardViewModel.unBlockRoom(mRoom, getUserIdFromPreference(), getTokenFromPreference())
-
     }
 
     /**

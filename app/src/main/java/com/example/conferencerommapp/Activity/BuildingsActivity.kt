@@ -70,9 +70,9 @@ class BuildingsActivity : AppCompatActivity() {
                 customAdapter = BuildingAdapter(this,
                     it!!,
                     object : BuildingAdapter.BtnClickListener {
-                        override fun onBtnClick(buildingId: String?, buildingname: String?) {
+                        override fun onBtnClick(buildingId: String?, buildingName: String?) {
                             mIntentDataFromActivity.buildingId = buildingId
-                            mIntentDataFromActivity.buildingName = buildingname
+                            mIntentDataFromActivity.buildingName = buildingName
                             goToConferenceRoomActivity(mIntentDataFromActivity)
                         }
                     }
@@ -99,20 +99,20 @@ class BuildingsActivity : AppCompatActivity() {
      */
     private fun showAlert() {
 
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
                 getString(R.string.session_expired_messgae))
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
     /**
      * sign out logic
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
@@ -164,9 +164,9 @@ class BuildingsActivity : AppCompatActivity() {
     }
 
     private fun setRefereshedToken() {
-        var token = GoogleSignIn.getLastSignedInAccount(this)!!.idToken
+        val token = GoogleSignIn.getLastSignedInAccount(this)!!.idToken
         Log.i("----------refreshed", "" + token)
-        var editor = getSharedPreferences("myPref", Context.MODE_PRIVATE).edit()
+        val editor = getSharedPreferences("myPref", Context.MODE_PRIVATE).edit()
         editor.putString("Token", token)
         editor.apply()
     }

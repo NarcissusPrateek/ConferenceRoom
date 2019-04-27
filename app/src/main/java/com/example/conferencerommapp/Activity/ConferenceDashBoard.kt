@@ -1,5 +1,6 @@
 package com.example.conferencerommapp.Activity
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -25,6 +26,8 @@ class ConferenceDashBoard : AppCompatActivity() {
     @BindView(R.id.conference_list)
     lateinit var recyclerView: RecyclerView
     var buildingId: Int = 0
+    lateinit var progressDialog: ProgressDialog
+
     private lateinit var mHrConferenceRoomViewModel: HrConferenceRoomViewModel
     private lateinit var conferenceRoomAdapter: ConferenceRecyclerAdapter
 
@@ -34,18 +37,44 @@ class ConferenceDashBoard : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Conference_Rooms) + "</font>")
-
         ButterKnife.bind(this)
         buildingId = getIntentData()
-
-        mHrConferenceRoomViewModel = ViewModelProviders.of(this).get(HrConferenceRoomViewModel::class.java)
+        init()
+        observeData()
         getConference(buildingId)
     }
 
+    fun init(){
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message),this)
+        mHrConferenceRoomViewModel = ViewModelProviders.of(this).get(HrConferenceRoomViewModel::class.java)
+    }
+
+    private fun observeData(){
+        mHrConferenceRoomViewModel.returnConferenceRoomList().observe(this, Observer {
+            progressDialog.dismiss()
+            conferenceRoomAdapter = ConferenceRecyclerAdapter(it!!)
+            if (it.isEmpty()) {
+                empty_view_blocked1.visibility = View.VISIBLE
+                empty_view_blocked1.setBackgroundColor(Color.parseColor("#FFFFFF"))
+            } else {
+                empty_view_blocked1.visibility = View.GONE
+                recyclerView.adapter = conferenceRoomAdapter
+            }
+        })
+        mHrConferenceRoomViewModel.returnFailureForConferenceRoom().observe(this, Observer {
+            progressDialog.dismiss()
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+                finish()
+            }
+
+        })
+    }
     /**
      * Restart the Activity
      */
-
     override fun onRestart() {
         super.onRestart()
         val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
@@ -74,7 +103,6 @@ class ConferenceDashBoard : AppCompatActivity() {
     /**
      * Passing Intent and shared preference
      */
-
     private fun goToNextActivity(buildingId: Int) {
 
         val pref = getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE)
@@ -94,42 +122,21 @@ class ConferenceDashBoard : AppCompatActivity() {
         /**
          * getting Progress Dialog
          */
-        var progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message),this)
         progressDialog.show()
         mHrConferenceRoomViewModel.getConferenceRoomList(buildingId, getUserIdFromPreference(), getTokenFromPreference())
-        mHrConferenceRoomViewModel.returnConferenceRoomList().observe(this, Observer {
-            progressDialog.dismiss()
-            conferenceRoomAdapter = ConferenceRecyclerAdapter(it!!)
-            if (it.isEmpty()) {
-                empty_view_blocked1.visibility = View.VISIBLE
-                empty_view_blocked1.setBackgroundColor(Color.parseColor("#FFFFFF"))
-            } else {
-                empty_view_blocked1.visibility = View.GONE
-                recyclerView.adapter = conferenceRoomAdapter
-            }
-        })
-        mHrConferenceRoomViewModel.returnFailureForConferenceRoom().observe(this, Observer {
-            progressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
-                showAlert()
-            }else {
-                ShowToast.show(this, it)
-                finish()
-            }
 
-        })
     }
 
     /**
      * show dialog for session expired
      */
     private fun showAlert() {
-        var dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
                 getString(R.string.session_expired_messgae))
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }
-        var builder = GetAleretDialog.showDialog(dialog)
+        val builder = GetAleretDialog.showDialog(dialog)
         ColorOfDialogButton.setColorOfDialogButton(builder)
     }
 
@@ -137,8 +144,8 @@ class ConferenceDashBoard : AppCompatActivity() {
      * sign out from application
      */
     private fun signOut() {
-        var mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
-        mGoogleSignInClient!!.signOut()
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
             .addOnCompleteListener(this) {
                 startActivity(Intent(applicationContext, SignIn::class.java))
                 finish()
