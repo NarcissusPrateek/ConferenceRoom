@@ -102,7 +102,7 @@ class RegistrationActivity : AppCompatActivity() {
             val matcher: Matcher = pattern.matcher(employeeIdEditText.text)
     //        return matcher.matches()
         return if(!matcher.matches()){
-            employee_id_layout.error = "Invalid Employee Id"
+            employee_id_layout.error = getString(R.string.invalid_emp_id)
             false
         }
         else{

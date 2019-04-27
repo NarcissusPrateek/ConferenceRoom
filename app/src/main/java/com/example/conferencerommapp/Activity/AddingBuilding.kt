@@ -174,7 +174,7 @@ class AddingBuilding : AppCompatActivity() {
         val matcher: Matcher = pattern.matcher(buildingNameEditText.text)
         //        return matcher.matches()
         return if(!matcher.matches()){
-            building_name_layout.error = getString(R.string.invalid_purpose_name)
+            building_name_layout.error = getString(R.string.invalid_building_name)
             false
         }
         else{
@@ -188,7 +188,7 @@ class AddingBuilding : AppCompatActivity() {
         val matcher: Matcher = pattern.matcher(buildingPlaceEditText.text)
         //        return matcher.matches()
         return if(!matcher.matches()){
-            location_layout.error = getString(R.string.invalid_purpose_name)
+            location_layout.error = getString(R.string.invalid_building_place)
             false
         }
         else{
