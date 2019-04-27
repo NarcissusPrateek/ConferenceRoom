@@ -20,6 +20,9 @@ import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.AddBuildingViewModel
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_adding_building.*
+import kotlinx.android.synthetic.main.activity_spinner.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 @Suppress("DEPRECATION")
 class AddingBuilding : AppCompatActivity() {
@@ -118,10 +121,42 @@ class AddingBuilding : AppCompatActivity() {
         }
     }
     /**
+     * validate the purpose using regrex
+     */
+
+    private fun validateBuildingNameRegrex():Boolean{
+
+        val purposePattern: String = "^[A-Za-z]+"
+        val pattern: Pattern = Pattern.compile(purposePattern)
+        val matcher: Matcher = pattern.matcher(buildingNameEditText.text)
+        //        return matcher.matches()
+        return if(!matcher.matches()){
+            building_name_layout.error = getString(R.string.invalid_purpose_name)
+            false
+        }
+        else{
+            true
+        }
+    }
+    private fun validateBuildingPlaceRegrex():Boolean{
+
+        val purposePattern: String = "^[A-Za-z]+"
+        val pattern: Pattern = Pattern.compile(purposePattern)
+        val matcher: Matcher = pattern.matcher(buildingPlaceEditText.text)
+        //        return matcher.matches()
+        return if(!matcher.matches()){
+            location_layout.error = getString(R.string.invalid_purpose_name)
+            false
+        }
+        else{
+            true
+        }
+    }
+    /**
      * validate all input fields
      */
     private fun validateInputs(): Boolean {
-        if (!validateBuildingName() or !validateBuildingPlace()) {
+        if (!validateBuildingName() or !validateBuildingPlace() or !validateBuildingNameRegrex() or !validateBuildingPlaceRegrex()) {
             return false
         }
         return true

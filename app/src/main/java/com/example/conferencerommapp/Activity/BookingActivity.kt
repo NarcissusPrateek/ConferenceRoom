@@ -27,7 +27,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_booking.*
+import kotlinx.android.synthetic.main.activity_spinner.*
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 @Suppress("DEPRECATION")
 class BookingActivity : AppCompatActivity() {
@@ -102,7 +105,7 @@ class BookingActivity : AppCompatActivity() {
      */
     @OnClick(R.id.book_button)
     fun bookMeeting() {
-        if (validateInput()) {
+        if (validateInput() and validatePurposeRegrex()) {
             addBooking(mBooking)
         }
     }
@@ -136,7 +139,20 @@ class BookingActivity : AppCompatActivity() {
             true
         }
     }
+    private fun validatePurposeRegrex():Boolean{
 
+        val purposePattern: String = "^[A-Za-z]+"
+        val pattern: Pattern = Pattern.compile(purposePattern)
+        val matcher: Matcher = pattern.matcher(purposeEditText.text)
+        //        return matcher.matches()
+        return if(!matcher.matches()){
+            purpose_edit_layout.error = getString(R.string.invalid_purpose_name)
+            false
+        }
+        else{
+            true
+        }
+    }
 
     /**
      * get that data from intent
