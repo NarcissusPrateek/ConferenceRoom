@@ -42,7 +42,6 @@ class BlockedDashboard : AppCompatActivity() {
         init()
         loadBlocking()
     }
-
     /**
      * Initialize late init fields
      */
