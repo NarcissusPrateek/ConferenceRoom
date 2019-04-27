@@ -4,21 +4,20 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
-import android.text.Html
+import android.text.Html.fromHtml
 import android.text.TextWatcher
 import android.view.MotionEvent
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Helper.*
-import com.example.conferencerommapp.Model.Employee
 import com.example.conferencerommapp.Model.EmployeeList
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
@@ -28,6 +27,7 @@ import com.google.android.material.chip.Chip
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_select_meeting_members.*
 
+@Suppress("DEPRECATION")
 class SelectMeetingMembersActivity : AppCompatActivity() {
 
     private val employeeList = ArrayList<EmployeeList>()
@@ -49,7 +49,7 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         val actionBar = supportActionBar
-        actionBar!!.title = Html.fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.select_participipants) + "</font>")
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.select_participipants) + "</font>")
 
         init()
         getViewModel()
@@ -118,7 +118,7 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
            return
        }
         var emailString = ""
-        var size = selectedName.size
+        val size = selectedName.size
         selectedEmail.indices.forEach { index ->
             emailString += selectedEmail[index]
             if(index != (size - 1)) {
@@ -126,7 +126,7 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
             }
         }
         mGetIntentDataFromActivity.emailOfSelectedEmployees = emailString
-        var intent = Intent(this@SelectMeetingMembersActivity, BookingActivity::class.java)
+        val intent = Intent(this@SelectMeetingMembersActivity, BookingActivity::class.java)
         intent.putExtra(Constants.EXTRA_INTENT_DATA, mGetIntentDataFromActivity)
         startActivity(intent)
     }
