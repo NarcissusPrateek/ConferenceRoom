@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" formatted="true" translatable="true">Nineleaps</string>
+    <string name="app_name" formatted="true" translatable="true">leaps</string>
     <string name="make_an_order">Make an order</string>
     <string name="Add_Buildings">Add Buildings</string>
     <string name="Bookings">Bookings</string>
@@ -38,7 +38,6 @@
     <string name="Registration">Registration</string>
     <string name="Block">Block Room</string>
     <string name="details_invalid">Details are Invalid!!!</string>
-    <string name="preference">myPref</string>
     <string name="ok">OK</string>
     <string name="server_error">Some Internal server Error!</string>
     <string name="server_not_found">Server not found!! Please try again after some time</string>
@@ -136,6 +135,10 @@
     <string name="end_date">End-Date</string>
     <string name="reason">Purpose</string>
     <string name="block">Block</string>
+    <string name="not_set">Not Set</string>
+    <string name="token">Token</string>
+    <string name="user_id">UserId</string>
+    <string name="preference">myPref</string>
 
     <string-array name="role">
         <item>Select Role</item>

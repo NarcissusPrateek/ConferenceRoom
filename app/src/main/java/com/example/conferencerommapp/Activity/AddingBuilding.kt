@@ -210,11 +210,11 @@ class AddingBuilding : AppCompatActivity() {
      * get token and userId from local storage
      */
     fun getTokenFromPreference(): String {
-        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+        return getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE).getString(getString(R.string.token), getString(R.string.not_set))!!
     }
 
     fun getUserIdFromPreference(): String {
-        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
+        return getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE).getString(getString(R.string.user_id), getString(R.string.not_set))!!
     }
 
 }

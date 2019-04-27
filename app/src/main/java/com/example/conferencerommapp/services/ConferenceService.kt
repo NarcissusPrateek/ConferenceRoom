@@ -17,7 +17,7 @@ interface ConferenceService {
     fun chengerStatusOfEditBooking(
         @Header("Token") token: String,
         @Header("UserId") userId: String,
-        @Body bookId: Int
+        @Body mEditBookingStatus: EditBookingStatus
     ):Call<ResponseBody>
 
     @GET("api/Building")

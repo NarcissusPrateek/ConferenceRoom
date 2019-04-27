@@ -1,6 +1,7 @@
 package com.example.conferencerommapp.Repository
 
 import com.example.conferencerommapp.Helper.ResponseListener
+import com.example.conferencerommapp.Model.EditBookingStatus
 import com.example.conferencerommapp.Model.UpdateBooking
 import com.example.globofly.services.ServiceBuilder
 import okhttp3.ResponseBody
@@ -52,9 +53,9 @@ class UpdateBookingRepository {
     /**
      * api call for change status
      */
-    fun changeStatusForEditBooking(mBookingId: Int, userId: String, token: String, listener: ResponseListener) {
+    fun changeStatusForEditBooking(mEditBookingStatus: EditBookingStatus, userId: String, token: String, listener: ResponseListener) {
         val service = ServiceBuilder.getObject()
-        val requestCall: Call<ResponseBody> = service.chengerStatusOfEditBooking(token, userId, mBookingId)
+        val requestCall: Call<ResponseBody> = service.chengerStatusOfEditBooking(token, userId, mEditBookingStatus)
         requestCall.enqueue(object : Callback<ResponseBody> {
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 listener.onFailure("Internal Server Error!")

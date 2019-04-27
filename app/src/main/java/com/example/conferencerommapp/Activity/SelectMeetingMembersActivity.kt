@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html.fromHtml
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.EditText
 import android.widget.Toast
@@ -55,6 +57,7 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
         getViewModel()
         observeData()
         setClickListenerOnEditText()
+        Log.i("------------", searchEditText.compoundDrawables.toString())
         //clear search edit text data
         searchEditText.onRightDrawableClicked {
             it.text.clear()
@@ -201,11 +204,11 @@ class SelectMeetingMembersActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(editable: Editable) {
+
                 filter(editable.toString())
             }
         })
     }
-
 
     /**
      * filter matched data from employee list and set updated list to adapter

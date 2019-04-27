@@ -1,11 +1,10 @@
 package com.example.conferencerommapp.ViewModel
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.conferencerommapp.Helper.ResponseListener
+import com.example.conferencerommapp.Model.EditBookingStatus
 import com.example.conferencerommapp.Model.UpdateBooking
-import com.example.conferencerommapp.Repository.BookingDashboardRepository
 import com.example.conferencerommapp.Repository.UpdateBookingRepository
 
 
@@ -61,9 +60,9 @@ class UpdateBookingViewModel: ViewModel() {
     }
 
 
-    fun changeStatus(mBookignId: Int, userId: String, token: String) {
+    fun changeStatus(mEditBookingStatus: EditBookingStatus, userId: String, token: String) {
         mUpdateBookingRepository = UpdateBookingRepository.getInstance()
-        mUpdateBookingRepository!!.changeStatusForEditBooking(mBookignId, userId, token, object: ResponseListener {
+        mUpdateBookingRepository!!.changeStatusForEditBooking(mEditBookingStatus, userId, token, object: ResponseListener {
             override fun onSuccess(success: Any) {
                 mSuccessForStatusChange.value = success as Int
             }

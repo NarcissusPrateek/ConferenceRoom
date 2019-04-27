@@ -18,6 +18,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Helper.*
+import com.example.conferencerommapp.Model.EditBookingStatus
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.Model.UpdateBooking
 import com.example.conferencerommapp.R
@@ -75,7 +76,8 @@ class UpdateBookingActivity : AppCompatActivity() {
     // call method of view model
     private fun setStatusOfBooking(bookingId: Int?) {
         progressDialog.show()
-        mUpdateBookingViewModel.changeStatus(bookingId!!, getUserIdFromPreference(), getTokenFromPreference())
+        var mEditBookingStatus = EditBookingStatus(bookingId!!, true)
+        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
     }
 
     private fun addDataToObjects(mIntentDataFromActivity: GetIntentDataFromActvity) {
@@ -257,7 +259,8 @@ class UpdateBookingActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        mUpdateBookingViewModel.changeStatus(getIntentData().bookingId!!, getUserIdFromPreference(), getTokenFromPreference())
+        var mEditBookingStatus = EditBookingStatus(getIntentData().bookingId!!, false)
+        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
     }
 
 
@@ -305,7 +308,8 @@ class UpdateBookingActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        mUpdateBookingViewModel.changeStatus(getIntentData().bookingId!!, getUserIdFromPreference(), getTokenFromPreference())
+        var mEditBookingStatus = EditBookingStatus(getIntentData().bookingId!!, false)
+        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
         startActivity(Intent(this@UpdateBookingActivity, UserBookingsDashboardActivity::class.java))
         finish()
         return true
