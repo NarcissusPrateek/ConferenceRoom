@@ -97,11 +97,13 @@ class RegistrationActivity : AppCompatActivity() {
 
     private fun validateEmpIdRegrex():Boolean{
 
-            val empIdPattern: String = "^[Nn][Ll][Ii][-][0-9][0-9][0-9]"
+            val empIdInternPattern: String = "^[Nn][Ll][Ii][-][0-9][0-9][0-9]$"
+            val empIdPattern:String = "^[Nn][Ll][-][0-9][0-9][0-9]\$"
             val pattern: Pattern = Pattern.compile(empIdPattern)
-            val matcher: Matcher = pattern.matcher(employeeIdEditText.text)
-    //        return matcher.matches()
-        return if(!matcher.matches()){
+            val pattern_Intern: Pattern = Pattern.compile(empIdInternPattern)
+            val matcher: Matcher = pattern.matcher(employeeIdEditText.text.trim())
+            val matcher_intern : Matcher = pattern_Intern.matcher(employeeIdEditText.text.trim())
+        return if(!matcher.matches() && !matcher_intern.matches()){
             employee_id_layout.error = getString(R.string.invalid_emp_id)
             false
         }

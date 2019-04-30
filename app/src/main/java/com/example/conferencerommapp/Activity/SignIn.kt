@@ -29,17 +29,13 @@ import com.google.android.gms.tasks.Task
 class SignIn : AppCompatActivity() {
 
     private var RC_SIGN_IN = 0
-    @BindView(R.id.l1)
-    lateinit var linearLayoutUp: LinearLayout
-    @BindView(R.id.l2)
-    lateinit var linearLayoutDown: LinearLayout
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private lateinit var prefs: SharedPreferences
     private lateinit var progressDialog: ProgressDialog
     private lateinit var mCheckRegistrationViewModel: CheckRegistrationViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.sign_in_activity)
+        setContentView(R.layout.activity_signin_new)
         ButterKnife.bind(this)
         initialize()
         observeData()
@@ -58,7 +54,7 @@ class SignIn : AppCompatActivity() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
         initializeGoogleSignIn()
-        setAnimationToLayout()
+
     }
 
     /**
@@ -75,18 +71,12 @@ class SignIn : AppCompatActivity() {
     private fun initializeGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
-            .requestIdToken(getString(R.string.server_client_id))
+            .requestIdToken(getString(R.string.server_client_id_partial))
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
-    /**
-     * set aniimation for the login activity
-     */
-    private fun setAnimationToLayout() {
-        linearLayoutUp.animation = loadAnimation(this, R.anim.uotodown)
-        linearLayoutDown.animation = loadAnimation(this, R.anim.downtoup)
-    }
+
 
 
     /**

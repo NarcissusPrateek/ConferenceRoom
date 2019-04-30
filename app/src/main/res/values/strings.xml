@@ -141,7 +141,7 @@
     <string name="invalid_token">Invalid Token</string>
     <string name="invalid_building_name">Invalid Building Name</string>
     <string name="invalid_building_place">Invalid Building Place</string>
-    <string name="invalid_emp_id">Invalid Employee Id</string>
+    <string name="invalid_emp_id">Please enter in NLI-XXX or NL-XXX</string>
     <string name="invalid_purpose_name">Invalid Purpose Name</string>
     <string name="refresh_token">refresh_token</string>
     <string name="access_token">access_token</string>
