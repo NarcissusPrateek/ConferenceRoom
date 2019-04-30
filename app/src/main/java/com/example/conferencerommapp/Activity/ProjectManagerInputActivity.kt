@@ -1,5 +1,7 @@
 package com.example.conferencerommapp.Activity
 
+import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -9,15 +11,16 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnClick
-import com.example.conferencerommapp.Helper.Constants
-import com.example.conferencerommapp.Helper.ConvertTimeInMillis
-import com.example.conferencerommapp.Helper.DateAndTimePicker
-import com.example.conferencerommapp.Helper.GetAleretDialog
+import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.Model.GetIntentDataFromActvity
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.SignIn
+import com.example.conferencerommapp.ViewModel.ManagerBuildingViewModel
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_project_manager_input.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,6 +36,12 @@ class ProjectManagerInputActivity : AppCompatActivity() {
     lateinit var dateToEditText: EditText
     @BindView(R.id.date_manager)
     lateinit var dateFromEditText: EditText
+    private lateinit var mManagerBuildingViewModel: ManagerBuildingViewModel
+    private lateinit var mCustomAdapter: BuildingAdapter
+    @BindView(R.id.building_recycler_view)
+    lateinit var mRecyclerView: RecyclerView
+    private lateinit var progressDialog: ProgressDialog
+    private lateinit var mIntentDataFromActivity: GetIntentDataFromActvity
     private var listOfDays = ArrayList<String>()
     private var dataList = ArrayList<String>()
     private var fromTimeList = ArrayList<String>()
@@ -42,36 +51,23 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_project_manager_input)
         ButterKnife.bind(this)
-
-        val actionBar = supportActionBar
-        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + "Booking Details" + "</font>")
         init()
-
+        observerData()
+        getViewModel()
     }
 
     private fun init() {
+        val actionBar = supportActionBar
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>")
+        mManagerBuildingViewModel = ViewModelProviders.of(this).get(ManagerBuildingViewModel::class.java)
+        progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        mIntentDataFromActivity = GetIntentDataFromActvity()
         setPickerToEditTexts()
         textChangeListenerOnFromTimeEditText()
         textChangeListenerOnToTimeEditText()
         textChangeListenerOnFromDateEditText()
         textChangeListenerOnToDateEditText()
     }
-
-
-    /**
-     * on Button click
-     */
-    @OnClick(R.id.next_manager)
-    fun onViewClicked(view: View) {
-        when (view.id) {
-            R.id.next_manager -> {
-                if (validate()) {
-                    applyValidationOnDateAndTime()
-                }
-            }
-        }
-    }
-
 
     /**
      * set date and time pickers to edittext fields
@@ -168,7 +164,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             error_day_selector_text_view.visibility = View.VISIBLE
             return false
         }
-        error_day_selector_text_view.visibility = View.GONE
+        error_day_selector_text_view.visibility = View.INVISIBLE
         return true
     }
 
@@ -177,7 +173,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * this function ensures that user entered values for all editable fields
      */
     private fun validate(): Boolean {
-
         if (!validateFromTime() or !validateToTime() or !validateFromDate() or !validateToDate() or !validateSelectedDayList()) {
             return false
         }
@@ -205,7 +200,6 @@ class ProjectManagerInputActivity : AppCompatActivity() {
         /**
          * setting a aalert dialog instance for the current context
          */
-
         val builder = android.app.AlertDialog.Builder(this@ProjectManagerInputActivity)
         builder.setTitle("Check...")
         try {
@@ -229,7 +223,7 @@ class ProjectManagerInputActivity : AppCompatActivity() {
                 builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                 }
                 GetAleretDialog.showDialog(builder)
-            } else if ((minMilliseconds <= elapsed) && (maxMilliseconds >= elapsed)) {
+            } else if (minMilliseconds <= elapsed) {
                 if (ConvertTimeInMillis.calculateDateInMilliseconds(
                         dateFromEditText.text.toString(),
                         dateToEditText.text.toString()
@@ -260,13 +254,11 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * set data to the object which is used to send data from this activity to another activity and pass the intent
      */
     private fun goToBuildingsActivity() {
-
-        val mSetIntentData = GetIntentDataFromActvity()
-        mSetIntentData.fromTime = fromTimeEditText.text.toString().trim()
-        mSetIntentData.toTime = toTimeEditText.text.toString().trim()
-        mSetIntentData.date = dateFromEditText.text.toString().trim()
-        mSetIntentData.toDate = dateToEditText.text.toString().trim()
-        mSetIntentData.listOfDays.clear()
+        mIntentDataFromActivity.fromTime = fromTimeEditText.text.toString().trim()
+        mIntentDataFromActivity.toTime = toTimeEditText.text.toString().trim()
+        mIntentDataFromActivity.date = dateFromEditText.text.toString().trim()
+        mIntentDataFromActivity.toDate = dateToEditText.text.toString().trim()
+        mIntentDataFromActivity.listOfDays.clear()
         getListOfSelectedDays()
         getDateAccordingToDay(
             fromTimeEditText.text.toString(),
@@ -275,16 +267,16 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             dateToEditText.text.toString(),
             listOfDays
         )
-        mSetIntentData.fromTimeList.clear()
-        mSetIntentData.toTimeList.clear()
-        mSetIntentData.fromTimeList.addAll(fromTimeList)
-        mSetIntentData.toTimeList.addAll(toTimeList)
+        mIntentDataFromActivity.fromTimeList.clear()
+        mIntentDataFromActivity.toTimeList.clear()
+        mIntentDataFromActivity.fromTimeList.addAll(fromTimeList)
+        mIntentDataFromActivity.toTimeList.addAll(toTimeList)
 
         if (dataList.isEmpty()) {
             Toast.makeText(this, "No dates founds for selected days!", Toast.LENGTH_SHORT).show()
         } else {
-            val buildingIntent = Intent(this@ProjectManagerInputActivity, ManagerBuildingsActivity::class.java)
-            buildingIntent.putExtra(Constants.EXTRA_INTENT_DATA, mSetIntentData)
+            val buildingIntent = Intent(this@ProjectManagerInputActivity, ManagerConferenceRoomActivity::class.java)
+            buildingIntent.putExtra(Constants.EXTRA_INTENT_DATA, mIntentDataFromActivity)
             startActivity(buildingIntent)
         }
     }
@@ -428,6 +420,84 @@ class ProjectManagerInputActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 validateFromDate()
+            }
+        })
+    }
+
+    /**
+     * show dialog for session expired
+     */
+    private fun showAlert() {
+        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
+                getString(R.string.session_expired_messgae))
+        dialog.setPositiveButton(R.string.ok) { _, _ ->
+            signOut()
+        }
+        val builder = GetAleretDialog.showDialog(dialog)
+        ColorOfDialogButton.setColorOfDialogButton(builder)
+    }
+
+    /**
+     * sign out from application
+     */
+    private fun signOut() {
+        val mGoogleSignInClient = GoogleGSO.getGoogleSignInClient(this)
+        mGoogleSignInClient.signOut()
+            .addOnCompleteListener(this) {
+                startActivity(Intent(applicationContext, SignIn::class.java))
+                finish()
+            }
+    }
+    /**
+     * get token and userId from local storage
+     */
+    private fun getTokenFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+    }
+
+    private fun getUserIdFromPreference(): String {
+        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
+    }
+
+    /**
+     * set the observer on a method of viewmodel getBuildingList which will observe the data from the api
+     * after that whenever data changes it will set a adapter to recyclerview
+     */
+    private fun getViewModel() {
+        progressDialog.show()
+        mManagerBuildingViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
+
+    }
+
+    //observe data from view model
+    private fun observerData() {
+        mManagerBuildingViewModel.returnBuildingSuccess().observe(this, androidx.lifecycle.Observer {
+            progressDialog.dismiss()
+            if (it.isEmpty()) {
+                Toasty.info(this, getString(R.string.empty_building_list), Toast.LENGTH_SHORT, true).show()
+            } else {
+                mCustomAdapter = BuildingAdapter(this,
+                    it!!,
+                    object : BuildingAdapter.BtnClickListener {
+                        override fun onBtnClick(buildingId: String?, buildingName: String?) {
+                            mIntentDataFromActivity.buildingId = buildingId
+                            mIntentDataFromActivity.buildingName = buildingName
+                            if (validate()) {
+                                applyValidationOnDateAndTime()
+                            }
+                        }
+                    }
+                )
+                mRecyclerView.adapter = mCustomAdapter
+            }
+        })
+        mManagerBuildingViewModel.returnBuildingFailure().observe(this, androidx.lifecycle.Observer {
+            progressDialog.dismiss()
+            if(it == getString(R.string.invalid_token)) {
+                showAlert()
+            }else {
+                ShowToast.show(this, it)
+                finish()
             }
         })
     }

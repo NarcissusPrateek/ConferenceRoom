@@ -9,13 +9,20 @@
         android:id="@+id/r1_dashboard"
         android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_marginTop="55dp"
-            android:layout_width="match_parent"
+            android:id="@+id/booking_refresh_layout"
             android:layout_height="match_parent"
-            android:id="@+id/dashBord_recyclerView1"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/dashboard_list"/>
+            android:layout_width="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/dashBord_recyclerView1"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/dashboard_list"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <ImageView
             android:id="@+id/empty_view"
             android:layout_width="359dp"
@@ -38,3 +45,5 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 </RelativeLayout>
+
+

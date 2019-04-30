@@ -3,6 +3,7 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -137,17 +138,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ba160c"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_marginStart="11dp"
             android:textSize="12sp"
             android:text="selected days list can't be empty"/>
 
-    <Button android:id="@+id/next_manager"
-            android:layout_width="fill_parent"
+
+    <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NEXT"
-            android:background="@color/colorPrimary"
-            android:layout_marginTop="40dp"
-            android:textColor="@android:color/white"/>
+            android:text="@string/select_building"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/grey"/>
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/building_recycler_view"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/list_item"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>
 

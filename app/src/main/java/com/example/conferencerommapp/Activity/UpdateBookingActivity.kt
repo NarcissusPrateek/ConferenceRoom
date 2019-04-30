@@ -27,10 +27,6 @@ import com.example.conferencerommapp.ViewModel.UpdateBookingViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import es.dmoral.toasty.Toasty
 
-
-
-
-
 class UpdateBookingActivity : AppCompatActivity() {
 
     private lateinit var mUpdateBookingViewModel: UpdateBookingViewModel
@@ -258,9 +254,10 @@ class UpdateBookingActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         var mEditBookingStatus = EditBookingStatus(getIntentData().bookingId!!, false)
         mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
+        startActivity(Intent(this@UpdateBookingActivity, UserBookingsDashboardActivity::class.java))
+        finish()
     }
 
 

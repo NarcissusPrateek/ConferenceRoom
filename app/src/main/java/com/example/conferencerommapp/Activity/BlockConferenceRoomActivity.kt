@@ -412,27 +412,8 @@ class BlockConferenceRoomActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * validate the purpose using regrex
-     */
-
-    private fun validatePurposeRegrex():Boolean{
-
-        val purposePattern: String = "^[A-Za-z]+"
-        val pattern: Pattern = Pattern.compile(purposePattern)
-        val matcher: Matcher = pattern.matcher(purposeEditText.text)
-        //        return matcher.matches()
-        return if(!matcher.matches()){
-            purpose_layout.error = getString(R.string.invalid_purpose_name)
-            false
-        }
-        else{
-            true
-        }
-    }
-
     private fun validateInput(): Boolean {
-        if (!validateFromTime() or !validateToTime() or !validateDate() or !validatePurpose() or !validateBuildingSpinner() or !validateRoomSpinner() or !validatePurposeRegrex()) {
+        if (!validateFromTime() or !validateToTime() or !validateDate() or !validatePurpose() or !validateBuildingSpinner() or !validateRoomSpinner()) {
             return false
         }
         return true

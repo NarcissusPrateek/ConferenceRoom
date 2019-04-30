@@ -24,7 +24,6 @@ import es.dmoral.toasty.Toasty
 @Suppress("DEPRECATION")
 class ManagerConferenceRoomActivity : AppCompatActivity() {
 
-
     private lateinit var mManagerConferenceRoomViewModel: ManagerConferenceRoomViewModel
     private lateinit var mCustomAdapter: ConferenceRoomAdapter
     private lateinit var mGetIntentDataFromActivity: GetIntentDataFromActvity
@@ -77,9 +76,10 @@ class ManagerConferenceRoomActivity : AppCompatActivity() {
                 Toasty.info(this, getString(R.string.room_not_available), Toast.LENGTH_SHORT, true).show()
                 finish()
             }else {
-                val filteredList = getFilteredList(it)
+                //val filteredList = getFilteredList(it)
                 mCustomAdapter = ConferenceRoomAdapter(
-                    filteredList,
+                    it,
+                    //filteredList,
                     object : ConferenceRoomAdapter.BtnClickListener {
                         override fun onBtnClick(roomId: String?, roomname: String?) {
                             mGetIntentDataFromActvity.roomName = roomname

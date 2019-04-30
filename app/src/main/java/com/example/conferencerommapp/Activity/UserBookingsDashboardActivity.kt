@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.bumptech.glide.Glide
@@ -40,6 +42,8 @@ import java.text.SimpleDateFormat
 @Suppress("DEPRECATION")
 class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    @BindView(R.id.booking_refresh_layout)
+    lateinit var refreshLayout: SwipeRefreshLayout
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var finalList = ArrayList<Manager>()
     private lateinit var mBookingDashBoardViewModel: BookingDashboardViewModel
@@ -59,10 +63,24 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     /**
      * Initialize all late init fields
      */
+    @SuppressLint("ResourceAsColor")
     fun init() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
         acct = GoogleSignIn.getLastSignedInAccount(application)!!
         mBookingDashBoardViewModel = ViewModelProviders.of(this).get(BookingDashboardViewModel::class.java)
+        refreshLayout.setColorSchemeColors(R.color.colorPrimary)
+        refreshOnPullDown()
+    }
+
+
+    /**
+     * add refresh listener on pull down
+     */
+    private fun refreshOnPullDown() {
+        refreshLayout.setOnRefreshListener {
+            refreshLayout.isRefreshing = false
+            mBookingDashBoardViewModel.getBookingList(acct.email!!, getUserIdFromPreference(), getTokenFromPreference())
+        }
     }
     /**
      * all observer for LiveData
@@ -298,9 +316,8 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         val listItems = arrayOfNulls<String>(arrayList.size)
         arrayList.toArray(listItems)
         val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.dates_of_meeting))
         builder.setItems(listItems) { _, which ->
-            if (finalList[position].Status[which] == "Cancelled") {
+            if (finalList[position].Status[which] == getString(R.string.cancelled)) {
                 Toasty.info(this, getString(R.string.cancelled_by_hr), Toast.LENGTH_SHORT, true).show()
             } else {
                 val builder = GetAleretDialog.getDialog(

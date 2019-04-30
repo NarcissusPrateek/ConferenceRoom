@@ -30,7 +30,7 @@ import java.util.regex.Pattern
 class AddingBuilding : AppCompatActivity() {
 
     /**
-     * Declaring Global variables and butterknife
+     * Declaring Global variables and binned view for using butter knife
      */
     @BindView(R.id.edit_text_building_name)
     lateinit var buildingNameEditText: EditText
@@ -138,7 +138,7 @@ class AddingBuilding : AppCompatActivity() {
         mAddBuilding.place = buildingPlaceEditText.text.toString().trim()
     }
     /**
-     * validation for building employeeList
+     * validation for field building name for empty condition
      */
     private fun validateBuildingName(): Boolean {
         val input = buildingNameEditText.text.toString().trim()
@@ -151,7 +151,7 @@ class AddingBuilding : AppCompatActivity() {
         }
     }
     /**
-     * validation for building place
+     * validation for building place for empty condition
      */
     private fun validateBuildingPlace(): Boolean {
         val input = buildingPlaceEditText.text.toString().trim()
@@ -163,43 +163,13 @@ class AddingBuilding : AppCompatActivity() {
             true
         }
     }
-    /**
-     * validate the purpose using regrex
-     */
 
-    private fun validateBuildingNameRegrex():Boolean{
 
-        val purposePattern: String = "^[A-Za-z]+"
-        val pattern: Pattern = Pattern.compile(purposePattern)
-        val matcher: Matcher = pattern.matcher(buildingNameEditText.text)
-        //        return matcher.matches()
-        return if(!matcher.matches()){
-            building_name_layout.error = getString(R.string.invalid_building_name)
-            false
-        }
-        else{
-            true
-        }
-    }
-    private fun validateBuildingPlaceRegrex():Boolean{
-
-        val purposePattern: String = "^[A-Za-z]+"
-        val pattern: Pattern = Pattern.compile(purposePattern)
-        val matcher: Matcher = pattern.matcher(buildingPlaceEditText.text)
-        //        return matcher.matches()
-        return if(!matcher.matches()){
-            location_layout.error = getString(R.string.invalid_building_place)
-            false
-        }
-        else{
-            true
-        }
-    }
     /**
      * validate all input fields
      */
     private fun validateInputs(): Boolean {
-        if (!validateBuildingName() or !validateBuildingPlace() or !validateBuildingNameRegrex() or !validateBuildingPlaceRegrex()) {
+        if (!validateBuildingName() or !validateBuildingPlace()) {
             return false
         }
         return true
@@ -217,7 +187,7 @@ class AddingBuilding : AppCompatActivity() {
     }
 
     /**
-     * show dialog for session expired
+     * show dialog when session expired
      */
     private fun showAlert() {
         val dialog = GetAleretDialog.getDialog(

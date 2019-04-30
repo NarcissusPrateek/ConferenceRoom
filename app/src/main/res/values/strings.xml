@@ -57,8 +57,8 @@
     <string name="invalid_date">Invalid Date</string>
     <string name="invalid_capacity">Invalid capacity</string>
     <string name="invalid">Invalid</string>
-    <string name="time_validation_message">From-Time must be greater than To-Time and the meeting time must be less than
-        4 Hours
+    <string name="time_validation_message">Meeting time must be more than
+        15 minutes...
     </string>
     <string name="invalid_fromtime">From-Time must be greater than the current time</string>
     <string name="status">Status</string>
@@ -143,6 +143,9 @@
     <string name="invalid_building_place">Invalid Building Place</string>
     <string name="invalid_emp_id">Invalid Employee Id</string>
     <string name="invalid_purpose_name">Invalid Purpose Name</string>
+    <string name="refresh_token">refresh_token</string>
+    <string name="access_token">access_token</string>
+    <string name="select_building">Select Building</string>
 
     <string-array name="role">
         <item>Select Role</item>
