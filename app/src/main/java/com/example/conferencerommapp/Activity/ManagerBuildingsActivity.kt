@@ -26,6 +26,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
     @BindView(R.id.building_recycler_view)
     lateinit var mRecyclerView: RecyclerView
     private lateinit var progressDialog: ProgressDialog
+    private lateinit var mIntentDataFromActivity: GetIntentDataFromActvity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class ManagerBuildingsActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Buildings) + "</font>")
         init()
-        loadBuildings()
+        //loadBuildings()
     }
 
     /**
@@ -46,22 +47,11 @@ class ManagerBuildingsActivity : AppCompatActivity() {
         mManagerBuildingViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
     }
 
-    private fun loadBuildings() {
-        val mGetIntentDataFromActivity = getIntentData()
-        getViewModel(mGetIntentDataFromActivity)
-    }
 
-    private fun getIntentData(): GetIntentDataFromActvity {
-        return intent.extras!!.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
-    }
 
-    /**
-     * set the observer on a method of viewmodel getBuildingList which will observe the data from the api
-     * after that whenever data changes it will set a adapter to recyclerview
-     */
-    private fun getViewModel(mIntentDataFromActivity: GetIntentDataFromActvity) {
-        progressDialog.show()
-        mManagerBuildingViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
+
+
+    private fun observerData() {
         mManagerBuildingViewModel.returnBuildingSuccess().observe(this, androidx.lifecycle.Observer {
             progressDialog.dismiss()
             if (it.isEmpty()) {
@@ -89,6 +79,16 @@ class ManagerBuildingsActivity : AppCompatActivity() {
                 finish()
             }
         })
+    }
+
+    /**
+     * set the observer on a method of viewmodel getBuildingList which will observe the data from the api
+     * after that whenever data changes it will set a adapter to recyclerview
+     */
+    private fun getViewModel() {
+        progressDialog.show()
+        mManagerBuildingViewModel.getBuildingList(getUserIdFromPreference(), getTokenFromPreference())
+
     }
 
     /**

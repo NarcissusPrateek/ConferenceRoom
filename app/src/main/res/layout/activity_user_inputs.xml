@@ -7,44 +7,63 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="20dp"
-        android:layout_marginTop="10dp"
         android:paddingRight="20dp"
+        android:layout_marginTop="10dp"
         tools:context=".Activity.BlockConferenceRoomActivity">
-    <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/from_time_layout"
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:errorEnabled="true"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/fromTime"
-                android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/from_time_layout"
+                android:layout_width="0dp"
+                android:layout_weight="50"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:textColor="@color/textColorGray"
-                android:drawableStart="@drawable/ic_schedule_black_24dp"
-                android:drawablePadding="8dp"
-                android:hint="Start-Time"/>
-    </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/to_time_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:layout_marginTop="8dp"
-            app:errorEnabled="true"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/toTime"
-                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/fromTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:editable="false"
+                    android:maxLines="1"
+                    android:textColor="@color/textColorGray"
+                    android:focusable="false"
+                    android:drawableStart="@drawable/ic_schedule_black_24dp"
+                    android:drawablePadding="5dp"
+                    android:maxLength="50"
+                    android:hint="@string/start_time"/>
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/to_time_layout"
+                android:layout_width="0dp"
+                android:layout_weight="50"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:hint="End-Time"
-                android:textColor="@color/textColorGray"
-                android:drawableStart="@drawable/ic_schedule_black_24dp"
-                android:drawablePadding="8dp"/>
-    </com.google.android.material.textfield.TextInputLayout>
+                android:background="@color/white"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                app:errorEnabled="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/toTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:textColor="@color/textColorGray"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:inputType="text"
+                    android:hint="@string/end_time"
+                    android:drawableStart="@drawable/ic_schedule_black_24dp"
+                    android:drawablePadding="5dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
     <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/date_layout"
             android:layout_width="match_parent"
@@ -59,16 +78,14 @@
                 android:focusable="false"
                 android:id="@+id/date"
                 android:textColor="@color/textColorGray"
-                android:hint="Date"
+                android:hint="@string/date"
                 android:drawableStart="@drawable/ic_today_black_24dp"
                 android:drawablePadding="8dp"/>
     </com.google.android.material.textfield.TextInputLayout>
-
-
     <Spinner
             android:id="@+id/capacity_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
             android:textAlignment="center"
@@ -80,18 +97,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#ba160c"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_marginStart="11dp"
             android:textSize="12sp"
             android:text="Field can't be empty"/>
 
-    <Button
-            android:id="@+id/next"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="NEXT"
-            android:background="@color/colorPrimary"
-            android:layout_marginTop="52dp"
-            android:textColor="@android:color/white"/>
-</LinearLayout>
 
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_building"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/grey"/>
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/building_recycler_view"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/list_item"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

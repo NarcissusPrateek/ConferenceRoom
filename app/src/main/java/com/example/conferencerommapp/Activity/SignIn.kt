@@ -76,6 +76,7 @@ class SignIn : AppCompatActivity() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
             .requestIdToken(getString(R.string.server_client_id))
+            .requestServerAuthCode(getString(R.string.server_client_id))
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
@@ -108,7 +109,7 @@ class SignIn : AppCompatActivity() {
         try {
 
             val account = completedTask.getResult(ApiException::class.java)
-            saveTokenAndUserIdInSharedPreference(account!!.idToken, account.id)
+            saveTokenAndUserIdInSharedPreference(account!!.idToken, account.id, account.serverAuthCode)
             checkRegistration(account.email.toString())
         } catch (e: ApiException) {
             Log.w("Google Sign In Error", "signInResult:failed code=" + e.statusCode)
@@ -116,10 +117,11 @@ class SignIn : AppCompatActivity() {
 
     }
 
-    private fun saveTokenAndUserIdInSharedPreference(idToken: String?, userId: String?) {
+    private fun saveTokenAndUserIdInSharedPreference(idToken: String?, userId: String?, serverAuthCOde: String?) {
         val editor = prefs.edit()
-        editor.putString("Token", idToken)
-        editor.putString("UserId", userId)
+        editor.putString(getString(R.string.token), idToken)
+        editor.putString(getString(R.string.user_id), userId)
+        editor.putString(getString(R.string.refresh_token), serverAuthCOde)
         editor.apply()
     }
 
@@ -194,10 +196,10 @@ class SignIn : AppCompatActivity() {
      * get token and userId from local storage
      */
     private fun getTokenFromPreference(): String {
-        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
+        return getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE).getString(getString(R.string.token), getString(R.string.not_set))!!
     }
 
     private fun getUserIdFromPreference(): String {
-        return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
+        return getSharedPreferences(getString(R.string.preference), Context.MODE_PRIVATE).getString(getString(R.string.user_id), getString(R.string.not_set))!!
     }
 }

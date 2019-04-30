@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_adding_conference.*
 @Suppress("DEPRECATION")
 class AddingConference : AppCompatActivity() {
     /**
-     * Declaring Global variables and butterknife
+     * Declaring Global variables and binned butter knife
      */
     var capacity = "Select Room Capacity"
     @BindView(R.id.conference_Name)

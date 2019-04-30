@@ -13,11 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.example.conferencerommapp.Helper.*
 import com.example.conferencerommapp.R
+import com.example.conferencerommapp.R.color.*
 import com.example.conferencerommapp.SignIn
 import com.example.conferencerommapp.ViewModel.BlockedDashboardViewModel
 import es.dmoral.toasty.Toasty
@@ -32,6 +34,8 @@ class BlockedDashboard : AppCompatActivity() {
      */
     @BindView(R.id.block_recyclerView)
     lateinit var recyclerView: RecyclerView
+    @BindView(R.id.block_dashboard_refresh_layout)
+    lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var blockedAdapter: BlockedDashboardNew
     private lateinit var mBlockedDashboardViewModel: BlockedDashboardViewModel
     private lateinit var progressDialog: ProgressDialog
@@ -49,9 +53,19 @@ class BlockedDashboard : AppCompatActivity() {
     /**
      * Initialize late init fields
      */
+    @SuppressLint("ResourceAsColor")
     fun init() {
         mBlockedDashboardViewModel = ViewModelProviders.of(this).get(BlockedDashboardViewModel::class.java)
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message), this)
+        refreshLayout.setColorSchemeColors(colorPrimary)
+        refreshOnPull()
+    }
+
+    private fun refreshOnPull() {
+        refreshLayout.setOnRefreshListener {
+            refreshLayout.isRefreshing = false
+            mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
+        }
     }
 
     /**
@@ -136,7 +150,6 @@ class BlockedDashboard : AppCompatActivity() {
     private fun loadBlocking() {
         progressDialog.show()
         mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
-
     }
 
     /**

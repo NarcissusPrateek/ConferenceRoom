@@ -152,4 +152,9 @@ interface ConferenceService {
         @Header("UserId") userId: String,
         @Body updateBooking: UpdateBooking
     ):Call<ResponseBody>
+
+    @GET("api/AccessToken")
+    fun getAccessToken(
+        @Body refreshToken: RefreshToken
+    ): Call<RefreshToken>
 }
