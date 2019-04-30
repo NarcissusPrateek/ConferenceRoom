@@ -4,28 +4,54 @@
         xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical"
         android:layout_width="match_parent"
         android:theme="@style/sighin"
-        android:background="#D0CBCA	"
+        android:background="@color/black"
         android:layout_height="match_parent">
 
     <ImageView
-            android:layout_width="298dp"
-            android:layout_height="453dp"
+            android:background="@drawable/bg31"
+            android:layout_width="match_parent"
+            android:alpha="0.3"
+            android:id="@+id/image"
+            android:layout_height="match_parent"/>
+    <TextView
+            android:text="Sign In"
+            android:textSize="28sp"
+            android:padding="8dp"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:fontFamily="casual"
+            android:layout_margin="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="51dp"
-            android:layout_marginStart="51dp"
-            android:id="@+id/imageView"
-            android:layout_marginTop="2dp"/>
+    <TextView
+            android:layout_centerInParent="true"
+            android:fontFamily="casual"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:textSize="28sp"
+            android:id="@+id/title"
+            android:text="Conference Room Booking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    <TableRow
+            android:layout_width="250dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
 
+            android:layout_height="1dp"
+            android:layout_below="@id/title"
+            android:background="#FFF" android:layout_centerVertical="true"/>
 
-    <com.google.android.gms.common.SignInButton
+    <com.shobhitpuri.custombuttons.GoogleSignInButton
             android:id="@+id/sign_in_button"
-            android:layout_width="155dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="101dp"
-            android:layout_marginStart="121dp"
-
-            android:layout_marginTop="61dp"
-            android:layout_below="@+id/imageView"></com.google.android.gms.common.SignInButton>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/google_sign_up"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="40dp"
+            android:fontFamily="casual"
+            android:background="#ddffff"
+            app:isDarkTheme="false"/>
 </RelativeLayout>
