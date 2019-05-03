@@ -64,7 +64,7 @@ class UpdateBookingActivity : AppCompatActivity() {
         mIntentDataFromActivity = getIntentData()
         init()
         observerData()
-        setStatusOfBooking(mIntentDataFromActivity.bookingId)
+        //setStatusOfBooking(mIntentDataFromActivity.bookingId)
         setValuesInEditText(mIntentDataFromActivity)
         setEditTextPicker()
     }
@@ -82,6 +82,7 @@ class UpdateBookingActivity : AppCompatActivity() {
         mUpdateBooking.cCMail = mIntentDataFromActivity.cCMail!!.joinToString()
         mUpdateBooking.roomId = mIntentDataFromActivity.roomId!!.toInt()
         mUpdateBooking.roomName = mIntentDataFromActivity.roomName!!
+        mUpdateBooking.bookingId = mIntentDataFromActivity.bookingId
         mUpdateBooking.newfromTime = (date.text.toString() + " " + newFromTime.text.toString()).trim()
         mUpdateBooking.newtotime = (date.text.toString() + " " + newToTime.text.toString()).trim()
         mUpdateBooking.fromTime = (date.text.toString() + " " + oldFromTime.toString()).trim()
@@ -253,12 +254,12 @@ class UpdateBookingActivity : AppCompatActivity() {
         roomName.text = mIntentDataFromActivity.roomName!!.toEditable()
     }
 
-    override fun onBackPressed() {
-        var mEditBookingStatus = EditBookingStatus(getIntentData().bookingId!!, false)
-        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
-        startActivity(Intent(this@UpdateBookingActivity, UserBookingsDashboardActivity::class.java))
-        finish()
-    }
+//    override fun onBackPressed() {
+//        var mEditBookingStatus = EditBookingStatus(getIntentData().bookingId!!, false)
+//        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
+//        startActivity(Intent(this@UpdateBookingActivity, UserBookingsDashboardActivity::class.java))
+//        finish()
+//    }
 
 
     private fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
@@ -303,12 +304,12 @@ class UpdateBookingActivity : AppCompatActivity() {
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        var mEditBookingStatus = EditBookingStatus(getIntentData().bookingId!!, false)
-        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
-        startActivity(Intent(this@UpdateBookingActivity, UserBookingsDashboardActivity::class.java))
-        finish()
-        return true
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        super.onOptionsItemSelected(item)
+//        var mEditBookingStatus = EditBookingStatus(getIntentData().bookingId!!, false)
+//        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
+//        startActivity(Intent(this@UpdateBookingActivity, UserBookingsDashboardActivity::class.java))
+//        finish()
+//        return true
+//    }
 }

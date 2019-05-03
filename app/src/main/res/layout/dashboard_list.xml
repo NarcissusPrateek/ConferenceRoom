@@ -115,9 +115,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/grey"/>
-            <LinearLayout android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:orientation="horizontal">
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
                 <com.google.android.material.button.MaterialButton
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:text="Show Members"
@@ -128,12 +129,13 @@
                 <com.google.android.material.button.MaterialButton
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:text="Cancel"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="26dp"
                         android:textColor="#F00"
                         android:id="@+id/btnCancel"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-            </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/btnshow"/>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -185,11 +185,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         viewH.nv_profile_name.text = "Hello, ${acct!!.displayName}"
         val personPhoto = acct.photoUrl
         viewH.nv_profile_email.text = acct.email
-        if (personPhoto == null) {
-            viewH.nv_profile_image.setImageResource(R.drawable.cat)
-        } else {
-            Glide.with(applicationContext).load(personPhoto).thumbnail(1.0f).into(viewH.nv_profile_image)
-        }
+        Glide.with(applicationContext).load(personPhoto).thumbnail(1.0f).into(viewH.nv_profile_image)
         setItemInDrawerByRole()
     }
 
@@ -320,6 +316,14 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             if (finalList[position].Status[which] == getString(R.string.cancelled)) {
                 Toasty.info(this, getString(R.string.cancelled_by_hr), Toast.LENGTH_SHORT, true).show()
             } else {
+
+                if (finalList[position].Status[which] == getString(R.string.cancelled)) {
+
+                }  else {
+
+                }
+
+
                 val builder = GetAleretDialog.getDialog(
                     this,
                     getString(R.string.cancel),
@@ -347,7 +351,6 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 dialog.show()
                 ColorOfDialogButton.setColorOfDialogButton(dialog)
             }
-
         }
         val mDialog = builder.create()
         mDialog.show()

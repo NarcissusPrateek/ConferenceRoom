@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.Html.fromHtml
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -312,26 +313,12 @@ class ProjectManagerInputActivity : AppCompatActivity() {
             c1.time = d1
             c2.time = d2
             while (c2.after(c1)) {
-                if (listOfDays.contains(
-                        c1.getDisplayName(
-                            Calendar.DAY_OF_WEEK,
-                            Calendar.LONG_FORMAT,
-                            Locale.US
-                        ).toUpperCase()
-                    )
-                ) {
+                if (listOfDays.contains(c1.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG_FORMAT, Locale.US).toUpperCase())) {
                     dataList.add(simpleDateFormat.format(c1.time).toString())
                 }
                 c1.add(Calendar.DATE, 1)
             }
-            if (listOfDays.contains(
-                    c2.getDisplayName(
-                        Calendar.DAY_OF_WEEK,
-                        Calendar.LONG_FORMAT,
-                        Locale.US
-                    ).toUpperCase()
-                )
-            ) {
+            if (listOfDays.contains(c2.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG_FORMAT, Locale.US).toUpperCase())) {
                 dataList.add(simpleDateFormat.format(c1.time).toString())
             }
             getLists(start, end)
@@ -344,6 +331,8 @@ class ProjectManagerInputActivity : AppCompatActivity() {
      * this function returns all fromdate list and todate list
      */
     private fun getLists(start: String, end: String) {
+        fromTimeList.clear()
+        toTimeList.clear()
         for (item in dataList) {
             fromTimeList.add("$item $start")
             toTimeList.add("$item $end")

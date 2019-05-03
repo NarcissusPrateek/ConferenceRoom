@@ -102,10 +102,10 @@
         <activity
                 android:name=".Activity.AddingBuilding"
                 android:label="Add Building"
+                android:windowSoftInputMode="adjustResize"
                 android:launchMode="singleTop"
                 android:parentActivityName=".Activity.BuildingDashboard"
                 android:screenOrientation="portrait">
-
         </activity>
         <activity
                 android:name=".Activity.AddingConference"

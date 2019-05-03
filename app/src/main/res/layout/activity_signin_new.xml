@@ -10,37 +10,41 @@
     <ImageView
             android:background="@drawable/bg31"
             android:layout_width="match_parent"
-            android:alpha="0.3"
+            android:alpha="0.55"
             android:id="@+id/image"
             android:layout_height="match_parent"/>
-    <TextView
-            android:text="Sign In"
-            android:textSize="28sp"
-            android:padding="8dp"
-            android:textColor="#FFF"
-            android:textStyle="bold"
-            android:fontFamily="casual"
-            android:layout_margin="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+
 
     <TextView
-            android:layout_centerInParent="true"
             android:fontFamily="casual"
             android:textColor="#FFF"
             android:textStyle="bold"
             android:textSize="28sp"
             android:id="@+id/title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="260dp"
             android:text="Conference Room Booking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+    <TextView
+            android:fontFamily="casual"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:id="@+id/subtitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:layout_below="@id/title"
+            android:text="Smart way to book room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     <TableRow
             android:layout_width="250dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
-
             android:layout_height="1dp"
-            android:layout_below="@id/title"
+            android:layout_below="@id/subtitle"
             android:background="#FFF" android:layout_centerVertical="true"/>
 
     <com.shobhitpuri.custombuttons.GoogleSignInButton

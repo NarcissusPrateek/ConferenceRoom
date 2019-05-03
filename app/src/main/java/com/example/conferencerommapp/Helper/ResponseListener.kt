@@ -3,7 +3,7 @@ package com.example.conferencerommapp.Helper
 interface ResponseListener {
 
     /**
-     * interface method for positive response from server whimch will take any type(generic) of value aas argument
+     * interface method for positive response from server which will take any type(generic) of value aas argument
      */
     fun onSuccess(success : Any)
 

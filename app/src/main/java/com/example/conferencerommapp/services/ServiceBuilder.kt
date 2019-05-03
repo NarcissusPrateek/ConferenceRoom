@@ -19,8 +19,8 @@ object ServiceBuilder {
    // private lateinit var mContext: Context
     private val okHttp: OkHttpClient.Builder = OkHttpClient.Builder()
         .addInterceptor(logger)
-        .connectTimeout(900, TimeUnit.SECONDS)
-        .readTimeout(900, TimeUnit.SECONDS)
+        .connectTimeout(100, TimeUnit.SECONDS)
+        .readTimeout(100, TimeUnit.SECONDS)
 
     private val builder: Retrofit.Builder = Retrofit.Builder()
         .baseUrl(Constants.IP_ADDRESS)

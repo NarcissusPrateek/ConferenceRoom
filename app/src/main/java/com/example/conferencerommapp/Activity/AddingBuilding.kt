@@ -45,8 +45,6 @@ class AddingBuilding : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_adding_building)
-        val actionBar = supportActionBar
-        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Add_Buildings) + "</font>")
         ButterKnife.bind(this)
         init()
         textChangeListenerOnBuildingName()
@@ -108,6 +106,8 @@ class AddingBuilding : AppCompatActivity() {
      * initialize all lateinit variables
      */
     fun init() {
+        val actionBar = supportActionBar
+        actionBar!!.title = fromHtml("<font color=\"#FFFFFF\">" + getString(R.string.Add_Buildings) + "</font>")
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mAddBuildingViewModel = ViewModelProviders.of(this).get(AddBuildingViewModel::class.java)
     }

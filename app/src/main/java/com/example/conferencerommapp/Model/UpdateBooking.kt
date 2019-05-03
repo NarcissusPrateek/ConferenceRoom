@@ -25,5 +25,8 @@ data class UpdateBooking(
     var newtotime: String? =null,
 
     @SerializedName("cCMail")
-    var cCMail: String? = null
+    var cCMail: String? = null,
+
+    @SerializedName("bookId")
+    var bookingId: Int? = null
 )

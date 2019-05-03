@@ -26,7 +26,7 @@ class BuildingDashboard : AppCompatActivity() {
      */
     @BindView(R.id.buidingRecyclerView)
     lateinit var recyclerView: RecyclerView
-    private lateinit var buildingAdapter: BuildingAdapter
+    private lateinit var buildingAdapter: BuildingDashboardAdapter
     private lateinit var mBuildingsViewModel: BuildingViewModel
     private lateinit var mProgressDialog: ProgressDialog
 
@@ -81,7 +81,7 @@ class BuildingDashboard : AppCompatActivity() {
                 }
                 else -> {
                     if (!it.isEmpty()) {
-                        buildingAdapter = BuildingAdapter(this, it, object : BuildingAdapter.BtnClickListener {
+                        buildingAdapter = BuildingDashboardAdapter(this, it, object : BuildingDashboardAdapter.BtnClickListener {
                             override fun onBtnClick(buildingId: String?, buildingname: String?) {
                                 val intent = Intent(this@BuildingDashboard, ConferenceDashBoard::class.java)
                                 intent.putExtra(Constants.EXTRA_BUILDING_ID, buildingId)

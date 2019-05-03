@@ -54,7 +54,6 @@ class SignIn : AppCompatActivity() {
         progressDialog = GetProgress.getProgressDialog(getString(R.string.progress_message_processing), this)
         mCheckRegistrationViewModel = ViewModelProviders.of(this).get(CheckRegistrationViewModel::class.java)
         initializeGoogleSignIn()
-
     }
 
     /**
@@ -71,13 +70,10 @@ class SignIn : AppCompatActivity() {
     private fun initializeGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
-            .requestIdToken(getString(R.string.server_client_id_partial))
+            .requestIdToken(getString(R.string.server_client_id))
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
     }
-
-
-
 
     /**
      * fuction will automatically invoked once the control will return from the explict intent and than call another

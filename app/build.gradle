@@ -110,7 +110,7 @@ dependencies {
     // select weekdays
     implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
 
-    //select days materail
+    //day selector
     implementation 'ca.antonious:materialdaypicker:0.4.0'
 
     // for toast
@@ -118,15 +118,7 @@ dependencies {
 
     implementation 'com.github.chivorns:smartmaterialspinner:1.0.4'
 
-
     // custom alert dialog
     implementation 'com.yarolegovich:lovely-dialog:1.1.0'
-
-/**
- *
- androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
- androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
- */
-
 
 }
