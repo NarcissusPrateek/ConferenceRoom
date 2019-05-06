@@ -1,7 +1,5 @@
 package com.example.conferencerommapp.Helper
 
-import android.content.SharedPreferences
-
 class Constants {
     /**
      * it will provides some static final constants

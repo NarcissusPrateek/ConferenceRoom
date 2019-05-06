@@ -61,9 +61,11 @@ class BlockedDashboard : AppCompatActivity() {
         refreshOnPull()
     }
 
+    /**
+     * refresh on pull
+     */
     private fun refreshOnPull() {
         refreshLayout.setOnRefreshListener {
-            refreshLayout.isRefreshing = false
             mBlockedDashboardViewModel.getBlockedList(getUserIdFromPreference(), getTokenFromPreference())
         }
     }
@@ -76,6 +78,7 @@ class BlockedDashboard : AppCompatActivity() {
          * observing data for BlockDashboardList
          */
         mBlockedDashboardViewModel.returnBlockedRoomList().observe(this, Observer {
+            refreshLayout.isRefreshing = false
             progressDialog.dismiss()
             if (it.isEmpty()) {
                 empty_view_blocked.visibility = View.VISIBLE
@@ -97,6 +100,7 @@ class BlockedDashboard : AppCompatActivity() {
 
         })
         mBlockedDashboardViewModel.returnFailureCodeFromBlockedApi().observe(this, Observer {
+            refreshLayout.isRefreshing = false
             progressDialog.dismiss()
             if(it == getString(R.string.invalid_token)) {
                 showAlert()

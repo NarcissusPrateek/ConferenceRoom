@@ -64,17 +64,10 @@ class UpdateBookingActivity : AppCompatActivity() {
         mIntentDataFromActivity = getIntentData()
         init()
         observerData()
-        //setStatusOfBooking(mIntentDataFromActivity.bookingId)
         setValuesInEditText(mIntentDataFromActivity)
         setEditTextPicker()
     }
 
-    // call method of view model
-    private fun setStatusOfBooking(bookingId: Int?) {
-        progressDialog.show()
-        var mEditBookingStatus = EditBookingStatus(bookingId!!, true)
-        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
-    }
 
     private fun addDataToObjects(mIntentDataFromActivity: GetIntentDataFromActvity) {
         val acct = GoogleSignIn.getLastSignedInAccount(applicationContext)
@@ -101,7 +94,7 @@ class UpdateBookingActivity : AppCompatActivity() {
          * If the field contains no values we show a toast to user saying that the value is invalid for particular field
          */
         if (validate()) {
-            val minMilliseconds: Long = 900000
+            val minMilliseconds: Long = 600000
             val maxMilliseconds: Long = 14400000
 
             /**
@@ -145,7 +138,7 @@ class UpdateBookingActivity : AppCompatActivity() {
                  * if the above condition is not true than we show show a message in alert that the meeting duration must be less than 4hours
                  * if above both conditions are true than entered time is correct and user is allowed to go to the next actvity
                  */
-                else if ((minMilliseconds <= elapsed) && (maxMilliseconds >= elapsed)) {
+                else if (minMilliseconds <= elapsed) {
                     updateMeetingDetails()
                 } else {
                     val builder = GetAleretDialog.getDialog(
@@ -247,23 +240,13 @@ class UpdateBookingActivity : AppCompatActivity() {
         oldToTime = mtotime[1]
         purpose.text = mIntentDataFromActivity.purpose!!.toEditable()
         newFromTime.text = simpleDateFormatForTime1.format(simpleDateFormatForTime.parse(mfromtime[1]))
-            .toEditable()//oldFromTime.toString().toEditable()
+            .toEditable()
         newToTime.text = simpleDateFormatForTime1.format(simpleDateFormatForTime.parse(mtotime[1])).toEditable()
         date.text = FormatDate.formatDate(mdate).toEditable()
         buildingName.text = mIntentDataFromActivity.buildingName!!.toEditable()
         roomName.text = mIntentDataFromActivity.roomName!!.toEditable()
     }
-
-//    override fun onBackPressed() {
-//        var mEditBookingStatus = EditBookingStatus(getIntentData().bookingId!!, false)
-//        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
-//        startActivity(Intent(this@UpdateBookingActivity, UserBookingsDashboardActivity::class.java))
-//        finish()
-//    }
-
-
     private fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
-
 
     private fun getIntentData(): GetIntentDataFromActvity {
         return intent.extras!!.get(Constants.EXTRA_INTENT_DATA) as GetIntentDataFromActvity
@@ -304,12 +287,5 @@ class UpdateBookingActivity : AppCompatActivity() {
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        super.onOptionsItemSelected(item)
-//        var mEditBookingStatus = EditBookingStatus(getIntentData().bookingId!!, false)
-//        mUpdateBookingViewModel.changeStatus(mEditBookingStatus, getUserIdFromPreference(), getTokenFromPreference())
-//        startActivity(Intent(this@UpdateBookingActivity, UserBookingsDashboardActivity::class.java))
-//        finish()
-//        return true
-//    }
+
 }

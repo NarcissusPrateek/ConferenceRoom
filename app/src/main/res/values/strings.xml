@@ -58,9 +58,9 @@
     <string name="invalid_capacity">Invalid capacity</string>
     <string name="invalid">Invalid</string>
     <string name="time_validation_message">Meeting time must be more than
-        15 minutes...
+        10 minutes or start time must be less than end time
     </string>
-    <string name="invalid_fromtime">From-Time must be greater than the current time</string>
+    <string name="invalid_fromtime">Start time must be greater than the current time</string>
     <string name="status">Status</string>
     <string name="room_not_available">No Room Available</string>
     <string name="invalid_fromDate_or_toDate">To-Date must be greator than From-Date</string>
@@ -125,7 +125,8 @@
     <string name="room_capacity">Room Capacity</string>
     <string name="select_room_capacity">Select Room Capacity</string>
     <string name="server_client_id">861287179604-0bl5rqopv0mip6ssob9bis5iqpb7e2nh.apps.googleusercontent.com</string>
-    <string name="server_client_id_partial">412993903680-c42t2d0vb3a5rm500scouka9h3ok2eqq.apps.googleusercontent.com</string>
+    <string name="server_client_id_partial">412993903680-c42t2d0vb3a5rm500scouka9h3ok2eqq.apps.googleusercontent.com
+    </string>
     <string name="start_time">Start-Time</string>
     <string name="end_time">End-Time</string>
     <string name="start_date">Start-Date</string>
@@ -141,7 +142,7 @@
     <string name="invalid_token">Invalid Token</string>
     <string name="invalid_building_name">Invalid Building Name</string>
     <string name="invalid_building_place">Invalid Building Place</string>
-    <string name="invalid_emp_id">Please enter in NLI-XXX or NL-XXX</string>
+    <string name="invalid_emp_id">Please enter in NL-XXX</string>
     <string name="invalid_purpose_name">Invalid Purpose Name</string>
     <string name="refresh_token">refresh_token</string>
     <string name="access_token">access_token</string>
@@ -172,4 +173,7 @@
         <item>14</item>
         <item>16</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

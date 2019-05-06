@@ -180,10 +180,12 @@ class SignIn : AppCompatActivity() {
      * get token and userId from local storage
      */
     private fun getTokenFromPreference(): String {
+        Log.i("-------------", getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!)
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("Token", "Not Set")!!
     }
 
     private fun getUserIdFromPreference(): String {
+        Log.i("-------------", getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!)
         return getSharedPreferences("myPref", Context.MODE_PRIVATE).getString("UserId", "Not Set")!!
     }
 }

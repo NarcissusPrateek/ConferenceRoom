@@ -79,7 +79,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      */
     private fun refreshOnPullDown() {
         refreshLayout.setOnRefreshListener {
-            refreshLayout.isRefreshing = false
+            //refreshLayout.isRefreshing = false
             mBookingDashBoardViewModel.getBookingList(acct.email!!, getUserIdFromPreference(), getTokenFromPreference())
         }
     }
@@ -114,6 +114,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
          * observing data for booking list
          */
         mBookingDashBoardViewModel.returnSuccess().observe(this, Observer {
+            refreshLayout.isRefreshing = false
             progressDialog.dismiss()
             if (it.isEmpty()) {
                 empty_view.visibility = View.VISIBLE
@@ -126,6 +127,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             setFilteredDataToAdapter(it)
         })
         mBookingDashBoardViewModel.returnFailure().observe(this, Observer {
+            refreshLayout.isRefreshing = false
             progressDialog.dismiss()
             if (it == getString(R.string.invalid_token)) {
                 showAlert()

@@ -223,12 +223,12 @@ class UserInputActivity : AppCompatActivity() {
                 )
                 builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                 }
-                GetAleretDialog.showDialog(builder)
-
+                var alertDialog = GetAleretDialog.showDialog(builder)
+                ColorOfDialogButton.setColorOfDialogButton(alertDialog)
             }
 
             /**
-             * if MIN_MILLISECONDS <= elapsed that means the meeting duration is more than 15 min
+             * if MIN_MILLISECONDS <= elapsed that means the meeting duration is more than 10 min
              * if the above condition is not true than we show a message in alert that the meeting duration must be greater than 15 min
              * if MAX_MILLISECONDS >= elapsed that means the meeting duration is less than 4hours
              * if the above condition is not true than we show show a message in alert that the meeting duration must be less than 4hours
@@ -244,7 +244,9 @@ class UserInputActivity : AppCompatActivity() {
                 )
                 builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
                 }
-                GetAleretDialog.showDialog(builder)
+                var alertBuilder = GetAleretDialog.showDialog(builder)
+                ColorOfDialogButton.setColorOfDialogButton(alertBuilder)
+
             }
         } catch (e: Exception) {
             Toast.makeText(this@UserInputActivity, getString(R.string.details_invalid), Toast.LENGTH_LONG).show()
