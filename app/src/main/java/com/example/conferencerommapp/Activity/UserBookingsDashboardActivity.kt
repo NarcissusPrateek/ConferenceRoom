@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -82,6 +83,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             mBookingDashBoardViewModel.getBookingList(acct.email!!, getUserIdFromPreference(), getTokenFromPreference())
         }
     }
+
     /**
      * all observer for LiveData
      */
@@ -93,14 +95,18 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
             progressDialog.dismiss()
             Toasty.success(this, getString(R.string.cancelled_successful), Toast.LENGTH_SHORT, true).show()
             // make api call to get the updated list of booking after cancellation
-            mBookingDashBoardViewModel.getBookingList(acct.email.toString(), getUserIdFromPreference(), getTokenFromPreference())
+            mBookingDashBoardViewModel.getBookingList(
+                acct.email.toString(),
+                getUserIdFromPreference(),
+                getTokenFromPreference()
+            )
         })
 
         mBookingDashBoardViewModel.returnCancelFailed().observe(this, Observer {
             progressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
+            if (it == getString(R.string.invalid_token)) {
                 showAlert()
-            }else {
+            } else {
                 ShowToast.show(this, it)
             }
         })
@@ -121,9 +127,9 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         })
         mBookingDashBoardViewModel.returnFailure().observe(this, Observer {
             progressDialog.dismiss()
-            if(it == getString(R.string.invalid_token)) {
+            if (it == getString(R.string.invalid_token)) {
                 showAlert()
-            }else {
+            } else {
                 ShowToast.show(this, it)
             }
         })
@@ -227,7 +233,11 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
     override fun onRestart() {
         super.onRestart()
         val acct = GoogleSignIn.getLastSignedInAccount(application)
-        mBookingDashBoardViewModel.getBookingList(acct!!.email.toString(), getUserIdFromPreference(), getTokenFromPreference())
+        mBookingDashBoardViewModel.getBookingList(
+            acct!!.email.toString(),
+            getUserIdFromPreference(),
+            getTokenFromPreference()
+        )
     }
 
     /**
@@ -319,7 +329,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
 
                 if (finalList[position].Status[which] == getString(R.string.cancelled)) {
 
-                }  else {
+                } else {
 
                 }
 
@@ -327,9 +337,9 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                 val builder = GetAleretDialog.getDialog(
                     this,
                     getString(R.string.cancel),
-                    "Press ok to Cancel the booking for the date '${listItems.get(index = which).toString()}'"
+                    "Press YES to Cancel the booking for the date '${listItems.get(index = which).toString()}'"
                 )
-                builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
+                builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
                     val mCancel = CancelBooking()
                     val date = reverseDateFormat(listItems[which].toString())
                     mCancel.roomId = finalList[position].CId
@@ -340,7 +350,7 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
                         date + "T" + finalList[position].ToTime!!.split("T")[1]
                     cancelBooking(mCancel)
                 }
-                builder.setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                builder.setNegativeButton(getString(R.string.no)) { _, _ ->
                 }
                 //Setting the Update Options
                 builder.setNeutralButton("Update") { _, _ ->
@@ -426,20 +436,25 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      * perform filter task on List of all booking whether they are of recurring type of not
      */
     private fun getFilteredList(dashboardItemList: List<Dashboard>) {
+        var count = 0
         for (item in dashboardItemList) {
             var flag = 0
             for (i in finalList) {
                 if (
                     i.Purpose == item.purpose &&
                     i.FromTime!!.split("T")[1] == item.fromTime!!.split("T")[1] &&
-                    i.ToTime!!.split("T")[1] == item.toTime!!.split("T")[1]
+                    i.ToTime!!.split("T")[1] == item.toTime!!.split("T")[1] &&
+                    i.Status[count] == item.status && count < dashboardItemList.size && !i.Status.contains("Cancelled")
                 ) {
+                    count = increment(count)
                     i.fromlist.add(item.fromTime!!)
                     i.Status.add(item.status!!)
                     i.bookingIdList.add(item.bookingId!!)
                     flag = 1
+                    count = 0
                     break
                 }
+
             }
             if (flag == 0) {
                 val final = Manager()
@@ -460,6 +475,10 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
         }
     }
 
+    private fun increment(count: Int): Int {
+        return count + 1
+    }
+
     /**
      * function will sign out the current user and send control to SignInActivity
      */
@@ -477,8 +496,10 @@ class UserBookingsDashboardActivity : AppCompatActivity(), NavigationView.OnNavi
      * show dialog for session expired
      */
     private fun showAlert() {
-        val dialog = GetAleretDialog.getDialog(this, getString(R.string.session_expired), "Your session is expired!\n" +
-                getString(R.string.session_expired_messgae))
+        val dialog = GetAleretDialog.getDialog(
+            this, getString(R.string.session_expired), "Your session is expired!\n" +
+                    getString(R.string.session_expired_messgae)
+        )
         dialog.setPositiveButton(R.string.ok) { _, _ ->
             signOut()
         }

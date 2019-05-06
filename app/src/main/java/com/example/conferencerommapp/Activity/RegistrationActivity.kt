@@ -71,7 +71,7 @@ class RegistrationActivity : AppCompatActivity() {
     private fun validateId(): Boolean {
         val input = employeeIdEditText.text.toString().trim()
         return if(input.isEmpty()) {
-            employee_id_layout.error = getString(R.string.field_cant_be_empty)
+           // employee_id_layout.error = getString(R.string.field_cant_be_empty)
             false
         } else {
             employee_id_layout.error = null
@@ -97,13 +97,10 @@ class RegistrationActivity : AppCompatActivity() {
 
     private fun validateEmpIdRegrex():Boolean{
 
-            val empIdInternPattern: String = "^[Nn][Ll][Ii][-][0-9][0-9][0-9]$"
             val empIdPattern:String = "^[Nn][Ll][-][0-9][0-9][0-9]\$"
             val pattern: Pattern = Pattern.compile(empIdPattern)
-            val pattern_Intern: Pattern = Pattern.compile(empIdInternPattern)
             val matcher: Matcher = pattern.matcher(employeeIdEditText.text.trim())
-            val matcher_intern : Matcher = pattern_Intern.matcher(employeeIdEditText.text.trim())
-        return if(!matcher.matches() && !matcher_intern.matches()){
+        return if(!matcher.matches()){
             employee_id_layout.error = getString(R.string.invalid_emp_id)
             false
         }
